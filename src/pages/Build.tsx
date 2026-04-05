@@ -38,7 +38,7 @@ const tools = [
     title: 'Slack Digest',
     description:
       'Scans key work channels every morning. Surfaces only what matters. Cuts the noise.',
-    download: null,
+    download: '/commands/slack-digest.md',
   },
   {
     title: 'Slack Reply',
@@ -74,7 +74,7 @@ const tools = [
     title: 'Daily Wrap',
     description:
       'End-of-day summary of what got done, what moved, what needs tomorrow. Keeps me honest.',
-    download: null,
+    download: '/commands/daily-wrap.md',
   },
 ]
 
