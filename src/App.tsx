@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Build from './pages/Build'
+import Stack from './pages/Stack'
 import Living from './pages/Living'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -13,6 +14,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/build" element={<Build />} />
+          <Route path="/stack" element={<Stack />} />
           <Route path="/living" element={<Living />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

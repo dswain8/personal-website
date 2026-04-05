@@ -2,13 +2,13 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const categories = [
   {
-    id: 'water',
-    label: 'Water & Drinking',
-    description: 'Clean water, glass bottles, copper vessels, and alternatives to plastic.',
+    id: 'drinking',
+    label: 'Drinks & Hydration',
+    description: 'Clean water, copper vessels, functional drinks, and natural sodas.',
     items: [
-      { name: 'Borosil', what: 'Glass bottles and cookware. Indian brand, widely available, no leaching.', url: 'https://www.borosil.com' },
-      { name: 'Milton (steel range)', what: 'Stainless steel bottles and tiffins. Durable, plastic-free, everyday carry.', url: 'https://www.milton-india.com' },
-      { name: 'Soma', what: 'Glass water filters with a plant-based filter. Filtered water without plastic.', url: 'https://www.drinksoma.com' },
+      { name: 'Isha Life', what: 'Copper bottles and utensils from Sadhguru\'s wellness store. The way water should be stored.', url: 'https://www.ishalife.com' },
+      { name: 'Plix', what: 'ACV drink, multivitamin top-ups, and sparkling drinks. Clean ingredients across the range. Part of the daily routine.', url: 'https://www.plix.life' },
+      { name: 'Fast&Up', what: 'Daily multivitamin top-up. Clean formulation, good absorption, part of the morning routine.', url: 'https://www.fastandup.in' },
     ],
   },
   {
@@ -16,9 +16,10 @@ const categories = [
     label: 'Food & Eating',
     description: 'Clean ingredients, mindful sourcing, less packaging.',
     items: [
-      { name: 'Two Brothers Organic Farms', what: 'Organic grains, cold-pressed oils, jaggery, spices. Indian, direct-to-consumer.', url: 'https://www.twobrothersindiashop.com' },
       { name: 'The Organic World', what: 'Organic grocery delivery across Indian cities. Wide range, clean sourcing.', url: 'https://www.theorganicworld.in' },
       { name: 'Conscious Food', what: 'Organic staples since 1986. Rice, flours, pulses; clean and reliable.', url: 'https://www.consciousfood.com' },
+      { name: 'Japsons', what: 'Peanut butter done right. Clean ingredients, no hidden oils or sugars.', url: 'https://www.japsons.com' },
+      { name: "Let's Try", what: 'Mindful munching done right. Clean snacks with real ingredients. No junk fillers.', url: 'https://www.letstry.in' },
     ],
   },
   {
@@ -26,9 +27,10 @@ const categories = [
     label: 'Clothing',
     description: 'Natural fibres, ethical production, slow fashion.',
     items: [
-      { name: 'No Nasties', what: 'GOTS-certified organic cotton. Indian brand making everyday clothing without chemicals.', url: 'https://www.nonasties.in' },
-      { name: 'Doodlage', what: 'Upcycled and sustainable fashion. Uses fabric waste to make new clothes.', url: 'https://www.doodlage.in' },
-      { name: 'Nicobar', what: 'Natural fabrics, clean design, responsibly made. Indian lifestyle brand worth knowing.', url: 'https://www.nicobar.com' },
+      { name: 'Velby', what: 'Bamboo cotton clothing. Soft, breathable, and made without synthetic shortcuts.', url: 'https://www.velby.in' },
+      { name: 'Andaman', what: 'Clean Indian menswear. Well-made basics that last.', url: 'https://www.andaman.com' },
+      { name: 'Utkalika', what: 'Authentic handloom cotton from Odisha. Traditional craft, real fabric, no synthetics.', url: 'https://www.utkalika.in' },
+      { name: 'Amrita', what: 'Natural, traditional Indian wear rooted in craft and clean fabric.', url: 'https://www.amrita.in' },
     ],
   },
   {
@@ -36,19 +38,54 @@ const categories = [
     label: 'Skincare',
     description: 'Clean ingredients, no harsh chemicals, minimal packaging.',
     items: [
-      { name: 'Juicy Chemistry', what: 'Certified organic skincare made in India. Transparent about every ingredient.', url: 'https://www.juicychemistry.com' },
-      { name: 'Daughter Earth', what: 'Ayurveda-rooted skincare with clean, plant-based formulations.', url: 'https://www.daughterearth.com' },
+      { name: 'Cetaphil', what: 'Face wash that does exactly what it says. Gentle, no fragrance, dermatologist trusted.', url: 'https://www.cetaphil.in' },
       { name: 'Forest Essentials', what: 'Luxury Ayurvedic skincare. Traditional formulations, quality ingredients.', url: 'https://www.forestessentialsindia.com' },
+      { name: 'Dot & Key', what: 'Clean moisturiser that actually works. Good ingredients, honest brand.', url: 'https://www.dotandkey.com' },
+      { name: 'Idam', what: 'Lip balm and deodorant from a brand that takes ingredients seriously. No toxins.', url: 'https://www.idam.in' },
     ],
   },
   {
     id: 'haircare',
     label: 'Haircare',
-    description: 'Free from sulphates, parabens, and synthetic fragrance.',
+    description: 'Oil-first, chemical-free, back to basics.',
     items: [
-      { name: 'Svayam', what: 'Herbal hair oils and powders. No silicones, no synthetics. Old-school done right.', url: 'https://www.svayam.in' },
-      { name: 'Nat Habit', what: 'Fresh, preservative-free haircare. Ships within days of being made.', url: 'https://www.nathabit.in' },
-      { name: 'Biotique', what: 'Ayurvedic haircare that\'s widely accessible, affordable, and clean.', url: 'https://www.biotique.com' },
+      { name: 'Arata', what: 'Hair wash without sulphates or parabens. Clean scalp, no buildup, everyday use.', url: 'https://www.arata.in' },
+      { name: 'Nat Habit', what: 'Neem oil and almond oil — fresh, preservative-free, made close to when it ships.', url: 'https://www.nathabit.in' },
+    ],
+  },
+  {
+    id: 'footwear',
+    label: 'Footwear',
+    description: 'Supportive, natural materials, made to last.',
+    items: [
+      { name: 'Birkenstock', what: 'Cork and leather footbed, proper arch support. Footwear that\'s built around the foot, not fashion.', url: 'https://www.birkenstock.com/in' },
+    ],
+  },
+  {
+    id: 'mindfulness',
+    label: 'Mindfulness & Practice',
+    description: 'Daily practices for the mind. Not aspirational — actual daily use.',
+    items: [
+      { name: 'Think Right', what: 'Daily meditation and yoga nuggets in a simple app. Consistent, grounded, no fluff. Part of the morning.', url: 'https://www.thinkright.me' },
+      { name: 'Sambhavi Maha Mudra', what: 'Kriya practice from Isha by Sadhguru. Not a product — a practice. The most powerful thing in the routine.', url: 'https://www.ishafoundation.org/inner-engineering' },
+    ],
+  },
+  {
+    id: 'wellness',
+    label: 'Wellness & Sleep',
+    description: 'Tracking recovery, optimising sleep, staying consistent.',
+    items: [
+      { name: 'Whoop', what: 'Wearable that tracks sleep, recovery, and strain. No screen, no distractions — just data on how your body is doing.', url: 'https://www.whoop.com' },
+    ],
+  },
+  {
+    id: 'supplements',
+    label: 'Supplements',
+    description: 'Simple, clean supplementation. Nothing exotic.',
+    items: [
+      { name: 'Magnesium Glycinate', what: 'Most bioavailable form of magnesium. Sleep quality, muscle recovery, calm nervous system. Top-selling brand on Amazon India — that\'s the one.', url: 'https://www.amazon.in/s?k=magnesium+glycinate' },
+      { name: 'Vitamin Gummies', what: 'Daily multivitamin in gummy form. Consistent intake without pill fatigue.', url: 'https://www.amazon.in/s?k=multivitamin+gummies' },
+      { name: 'Hair Health Gummies', what: 'Biotin, vitamins, and minerals for hair strength and growth. Part of the daily stack.', url: 'https://www.amazon.in/s?k=hair+health+gummies' },
     ],
   },
 ]

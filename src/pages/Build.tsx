@@ -5,15 +5,15 @@ const projects = [
     title: 'Trust Website',
     status: 'live' as const,
     description:
-      'A full website for a family trust. My first real shipped project; built from scratch and taken live.',
+      'A full website for a family trust. My first real shipped project; built from scratch with Claude Code and taken live.',
     tags: ['Web', 'First ship'],
-    link: null,
+    link: 'https://www.sppmt.org/',
   },
   {
     title: 'AI Worksheet Generator',
     status: 'built' as const,
     description:
-      'A full-featured AI experience for generating school worksheets across subjects and grade levels. Built end-to-end. Not yet live, but it counts.',
+      'A full-featured AI experience for generating school worksheets across subjects and grade levels. Built end-to-end with Claude Code. Not yet live, but it counts.',
     tags: ['AI', 'Education'],
     link: null,
   },
@@ -21,7 +21,7 @@ const projects = [
     title: 'Sustainable Living Directory',
     status: 'progress' as const,
     description:
-      'A curated directory of brands and products across clean eating, drinking, clothing, skincare, and haircare. Built for people trying to live more intentionally.',
+      'A curated directory of brands and products across clean eating, drinking, clothing, skincare, and haircare. Built with Claude Code for people trying to live more intentionally.',
     tags: ['Directory', 'Sustainability'],
     link: '/living',
   },
