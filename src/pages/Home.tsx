@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const currently = [
-  { label: 'Day job', text: 'Product management. Billing, subscriptions, and quote-to-cash.' },
-  { label: 'Building', text: 'This site. A clean-living directory. AI tools that run parts of my workday.' },
+  { label: 'Vibing with', text: 'Claude. Building things I never thought I could build.' },
+  { label: 'Currently', text: 'EMI tripping. You know how it is.' },
   { label: 'Practice', text: 'Spirituality, clean eating, staying grounded. Ongoing, lifelong work.' },
 ]
 
@@ -25,32 +25,16 @@ export default function Home() {
           paddingBottom: '80px',
         }}
       >
-        <p
-          className="hero-enter"
-          style={{
-            fontSize: '13px',
-            color: 'var(--accent)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            marginBottom: '28px',
-          }}
-        >
-          Debjeet Swain
-        </p>
-
         <h1
           className="hero-enter"
           style={{
-            fontSize: 'clamp(36px, 6vw, 56px)',
+            fontSize: 'clamp(32px, 5.5vw, 52px)',
             letterSpacing: '-0.025em',
-            marginBottom: '32px',
-            lineHeight: 1.1,
+            marginBottom: '28px',
+            lineHeight: 1.15,
           }}
         >
-          Product manager.
-          <br />
-          <span style={{ color: 'var(--text-secondary)' }}>Builder in progress.</span>
+          Hey, I'm Debjeet.
         </h1>
 
         <div
@@ -62,16 +46,17 @@ export default function Home() {
             color: 'var(--text-secondary)',
             fontSize: '17px',
             lineHeight: 1.75,
-            maxWidth: '540px',
+            maxWidth: '520px',
           }}
         >
           <p>
-            I ship fast, make decisions with imperfect information, and believe execution
-            matters more than perfect strategy.
+            I build things with Claude. This site, the tools I use every day at work,
+            the trust website — all of it. Claude is my co-pilot and honestly it's changed
+            how I think about what's possible.
           </p>
           <p>
-            Outside of work: my daughter, our golden retriever, sports, and a quiet
-            pursuit of something more intentional.
+            Outside of that: my daughter, our golden retriever, cricket, and trying to
+            live a little cleaner every day.
           </p>
         </div>
 
@@ -127,7 +112,7 @@ export default function Home() {
               className="reveal"
               style={{
                 display: 'grid',
-                gridTemplateColumns: '88px 1fr',
+                gridTemplateColumns: '100px 1fr',
                 gap: '16px',
                 alignItems: 'baseline',
               }}
