@@ -32,41 +32,49 @@ const tools = [
     title: 'Weekly Update',
     description:
       'Generates my weekly status update from scratch — work items, decisions, blockers, in the right format and tone.',
+    download: '/commands/weekly-update.md',
   },
   {
     title: 'Slack Digest',
     description:
       'Scans key work channels every morning. Surfaces only what matters. Cuts the noise.',
+    download: null,
   },
   {
     title: 'Slack Reply',
     description:
       'Reads a tagged thread, researches context if needed, and drafts a reply for my approval. Never posts without sign-off.',
+    download: '/commands/slack-reply.md',
   },
   {
     title: 'Data Query',
     description:
       'Takes a plain-English question about product data and writes the SQL query. No more context-switching to figure out table names.',
+    download: '/commands/data-query.md',
   },
   {
     title: 'Oncall Triage',
     description:
       'Pulls open tickets from product dashboards and formats a daily briefing. Severity, owner, next step.',
+    download: '/commands/oncall-triage.md',
   },
   {
     title: 'Spec Writer',
     description:
       'Takes a problem statement and produces a full feature spec — problem, goals, requirements, open questions.',
+    download: '/commands/spec-writer.md',
   },
   {
     title: 'DACI Generator',
     description:
       'Takes a decision and maps the Driver, Approver, Consulted, and Informed. Forces the right conversation before the wrong one happens.',
+    download: '/commands/daci-generator.md',
   },
   {
     title: 'Daily Wrap',
     description:
       'End-of-day summary of what got done, what moved, what needs tomorrow. Keeps me honest.',
+    download: null,
   },
 ]
 
@@ -158,16 +166,45 @@ export default function Build() {
               style={{
                 padding: '18px 20px',
                 display: 'grid',
-                gridTemplateColumns: '140px 1fr',
+                gridTemplateColumns: '140px 1fr auto',
                 gap: '16px',
                 borderBottom: i < tools.length - 1 ? '1px solid var(--border)' : 'none',
-                alignItems: 'baseline',
+                alignItems: 'center',
               }}
             >
               <span style={{ fontSize: '14px', fontWeight: 500 }}>{t.title}</span>
               <span style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
                 {t.description}
               </span>
+              {t.download ? (
+                <a
+                  href={t.download}
+                  download
+                  title="Download for Claude Code"
+                  style={{
+                    fontSize: '12px',
+                    color: 'var(--accent)',
+                    border: '1px solid var(--accent-medium)',
+                    borderRadius: '5px',
+                    padding: '4px 10px',
+                    whiteSpace: 'nowrap',
+                    transition: 'background 0.15s, color 0.15s',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--accent)'
+                    e.currentTarget.style.color = '#fff'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.color = 'var(--accent)'
+                  }}
+                >
+                  ↓ Download
+                </a>
+              ) : (
+                <span />
+              )}
             </div>
           ))}
         </div>
