@@ -2,14 +2,6 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const projects = [
   {
-    title: "This Site",
-    status: "live" as const,
-    description:
-      "My personal corner of the internet. Built from scratch with Claude Code — Home, About, Build, Stack, Living. Took it live in a few sessions.",
-    tags: ["Web", "Personal"],
-    link: null,
-  },
-  {
     title: "Trust Website",
     status: "live" as const,
     description:
@@ -157,21 +149,8 @@ export default function Build() {
         </p>
       </header>
 
-      {/* Projects */}
-      <section style={{ marginBottom: "64px" }}>
-        <SectionLabel className="reveal">Projects</SectionLabel>
-        <div
-          className="reveal-stagger"
-          style={{ display: "flex", flexDirection: "column", gap: "14px" }}
-        >
-          {projects.map((p) => (
-            <ProjectCard key={p.title} {...p} />
-          ))}
-        </div>
-      </section>
-
       {/* AI tools */}
-      <section>
+      <section style={{ marginBottom: "64px" }}>
         <SectionLabel className="reveal">AI tools I use daily</SectionLabel>
         <p
           className="reveal"
@@ -250,6 +229,19 @@ export default function Build() {
                 <span />
               )}
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Projects */}
+      <section>
+        <SectionLabel className="reveal">Projects</SectionLabel>
+        <div
+          className="reveal-stagger"
+          style={{ display: "flex", flexDirection: "column", gap: "14px" }}
+        >
+          {projects.map((p) => (
+            <ProjectCard key={p.title} {...p} />
           ))}
         </div>
       </section>
