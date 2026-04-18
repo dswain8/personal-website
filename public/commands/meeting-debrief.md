@@ -1,53 +1,78 @@
-# Meeting Debrief — Post-meeting capture
+<!-- keywords: debrief, after meeting, reflect, retro, what went well, meeting review, post-meeting, post mortem -->
+# PM Dojo — Debrief
 
-Capture what actually happened while it's still fresh.
+Reflect on a meeting, conversation, or interaction using wiki frameworks. Captures what worked, what didn't, and what to practice next.
 
-Input: $ARGUMENTS — meeting name, or paste rough notes.
+Input: $ARGUMENTS — description of what happened, e.g., "just finished the churn review with David", "had a tough 1:1 with Simran", "leadership review didn't go well"
 
-## Step 1 — What was decided
+---
 
-List every decision made in this meeting. If nothing was decided, say so — that's the finding.
+## Step 1 — Get the story
 
-## Step 2 — What I committed to
+Ask these three questions (one at a time, keep it conversational):
 
-List every action item with my name on it. Be specific: what, by when.
+1. **What happened?** (1-2 sentences — the key moment or outcome)
+2. **What felt off?** (or what felt right — either works)
+3. **What would you do differently?** (optional — they might not know yet, that's fine)
 
-## Step 3 — What others committed to
+If the user gives a detailed account upfront, skip the questions and go straight to analysis.
 
-List every action item with someone else's name on it. This becomes your follow-up list.
+## Step 2 — Load relevant wiki
 
-## Step 4 — What I missed
+Based on the situation, read from `~/my-knowledge-base/wiki/`:
+- Meeting dynamics → `meetings-and-real-time.md`
+- Stakeholder interaction → `managing-up.md`, `influence-and-leadership.md`
+- Difficult conversation → `feedback-and-difficult-conversations.md`
+- Communication miss → `communication-and-writing.md`
+- Decision/analysis → `analytical-thinking.md`
 
-Be honest. Was there a moment I could have pushed harder? A signal I read wrong? A point I should have made and didn't?
-
-## Step 5 — Log any product decisions
-
-If this meeting produced a product decision (choosing approach A over B, setting a policy, confirming or denying a feature direction), log it:
-
-```
-DECISION: [What was decided]
-WHY: [The reasoning]
-ALTERNATIVES CONSIDERED: [What else was on the table]
-DATE: [Today's date]
-```
-
-Save to your decisions folder.
-
-## Output format
+## Step 3 — The debrief
 
 ```
-MEETING: [Name / Date]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⚔️  DOJO DEBRIEF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-DECISIONS
-- [Decision 1]
-- [Decision 2]
+  WHAT HAPPENED
+  [1-sentence summary of the situation]
 
-MY COMMITMENTS
-- [Action] — by [date]
+  ✅ WHAT YOU DID WELL
+  • [specific thing] — this maps to [principle (source)]
 
-THEIR COMMITMENTS
-- [Person]: [Action] — by [date]
+  🔧 THE COACHING MOMENT
+  [The one thing that would have changed the outcome most.
+   Explained through a specific wiki principle with a concrete
+   example of what to say/do differently.]
 
-WHAT I MISSED
-[Honest reflection, 2-3 sentences]
+  📖 PRINCIPLE TO PRACTICE
+  [principle name] — [one-line description]
+  Source: [wiki article]
+
+  💡 NEXT TIME, TRY THIS
+  "[Exact sentence or approach to use in a similar situation]"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+## Step 4 — Offer a replay
+
+```
+Want to replay the hard moment? I'll play [the other person] — you try the new approach.
+[Y]es — 2-minute replay | [N]o — I've got it
+```
+
+If yes, run a mini Scenario Replay based on the actual situation. Grade the new response.
+
+## Step 5 — Log it
+
+Append to `~/my-knowledge-base/progress/sessions.jsonl`:
+
+```json
+{"date": "YYYY-MM-DD", "mode": "debrief", "context": "[brief meeting description]", "principle_surfaced": "[principle name]", "practice_area": "[e.g., managing-up, anti-sell]"}
+```
+
+## Rules
+
+- **One coaching moment, not five.** The debrief should surface THE thing to work on, not a laundry list.
+- **No judgment.** This is a training tool, not a performance review. Frame as growth.
+- **Make the "next time" line speakable.** Something they can literally say in the next meeting.
+- **Connect to patterns.** If previous sessions show the same weakness, name it: "This is the third time 'escalate with a recommendation' came up — it's your pattern to break."

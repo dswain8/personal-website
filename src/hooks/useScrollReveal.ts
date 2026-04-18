@@ -7,6 +7,13 @@ export function useScrollReveal<T extends HTMLElement>() {
     const el = ref.current
     if (!el) return
 
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.querySelectorAll('.reveal').forEach((target) => {
+        target.classList.add('visible')
+      })
+      return
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

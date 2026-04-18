@@ -1,0 +1,61 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="80" x2="1050" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F2EB"/>
+      <stop offset="1" stop-color="#EEE5D8"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(246 132) rotate(34.17) scale(448.451 313.162)">
+      <stop stop-color="#7C9AB8" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#7C9AB8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(954 548) rotate(-160.51) scale(460.941 290.628)">
+      <stop stop-color="#D7C1A0" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#D7C1A0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#glowA)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#glowB)"/>
+
+  <circle cx="124" cy="100" r="18" fill="#4F7699"/>
+  <circle cx="124" cy="100" r="34" fill="#4F7699" fill-opacity="0.08"/>
+
+  <text x="168" y="112" fill="#23313A" font-family="Fraunces, Georgia, serif" font-size="42" font-weight="500">
+    Debjeet Swain
+  </text>
+
+  <text x="118" y="264" fill="#23313A" font-family="Fraunces, Georgia, serif" font-size="88" font-weight="500">
+    Product manager.
+  </text>
+  <text x="118" y="354" fill="#7A8791" font-family="Fraunces, Georgia, serif" font-size="88" font-weight="500">
+    Builder in progress.
+  </text>
+
+  <text x="118" y="432" fill="#5B6973" font-family="DM Sans, Arial, sans-serif" font-size="28">
+    Product thinking, practical AI workflows, PM Dojo,
+  </text>
+  <text x="118" y="474" fill="#5B6973" font-family="DM Sans, Arial, sans-serif" font-size="28">
+    and a cleaner approach to work and life.
+  </text>
+
+  <rect x="818" y="156" width="286" height="254" rx="28" fill="#FBF8F2" fill-opacity="0.88" stroke="#DDD4C7"/>
+  <text x="852" y="214" fill="#4F7699" font-family="DM Sans, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="2.5">
+    IN MOTION
+  </text>
+  <text x="852" y="266" fill="#23313A" font-family="DM Sans, Arial, sans-serif" font-size="28" font-weight="500">
+    Billing, CPQ,
+  </text>
+  <text x="852" y="302" fill="#23313A" font-family="DM Sans, Arial, sans-serif" font-size="28" font-weight="500">
+    AI workflows,
+  </text>
+  <text x="852" y="338" fill="#23313A" font-family="DM Sans, Arial, sans-serif" font-size="28" font-weight="500">
+    PM Dojo,
+  </text>
+  <text x="852" y="374" fill="#23313A" font-family="DM Sans, Arial, sans-serif" font-size="28" font-weight="500">
+    and cleaner living.
+  </text>
+
+  <rect x="118" y="538" width="240" height="14" rx="7" fill="#4F7699" fill-opacity="0.18"/>
+  <rect x="378" y="538" width="182" height="14" rx="7" fill="#4F7699" fill-opacity="0.18"/>
+  <rect x="580" y="538" width="162" height="14" rx="7" fill="#4F7699" fill-opacity="0.18"/>
+</svg>
