@@ -16,220 +16,115 @@ export default function Layout() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    setMobileOpen(false)
   }, [pathname])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
+    const onScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [mobileOpen])
 
   return (
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 30,
-          background: scrolled ? 'rgba(246, 248, 251, 0.92)' : 'var(--bg)',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: `1px solid ${scrolled ? 'var(--border)' : 'transparent'}`,
-          padding: '0 var(--page-px)',
-          height: '60px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          transition: 'background 0.3s, border-color 0.3s, backdrop-filter 0.3s',
-        }}
-      >
-        <NavLink
-          to="/"
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '20px',
-            fontWeight: 500,
-            letterSpacing: '-0.01em',
-            color: 'var(--text)',
-          }}
-        >
-          Debjeet Swain
-        </NavLink>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
 
-        {/* Desktop nav */}
-        <nav
-          className="hidden sm:flex"
-          style={{
-            gap: '32px',
-            alignItems: 'center',
-          }}
-        >
-          {navLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              style={({ isActive }) => ({
-                fontSize: '14px',
-                fontWeight: isActive ? 500 : 400,
-                color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
-                transition: 'color 0.2s',
-                position: 'relative',
-              })}
-            >
-              {({ isActive }) => (
-                <>
-                  {label}
-                  {isActive && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        bottom: '-4px',
-                        left: 0,
-                        right: 0,
-                        height: '1.5px',
-                        background: 'var(--accent)',
-                        borderRadius: '1px',
-                      }}
-                    />
-                  )}
-                </>
-              )}
-            </NavLink>
-          ))}
-        </nav>
+      <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
+        <div className="site-header__inner">
+          <NavLink
+            to="/"
+            className="brand-link"
+            aria-label="Debjeet Swain home"
+            onClick={() => setMobileOpen(false)}
+          >
+            <span className="brand-mark" aria-hidden="true" />
+            <span className="brand-text">Debjeet Swain</span>
+          </NavLink>
 
-        {/* Mobile hamburger */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex sm:hidden"
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '8px',
-            flexDirection: 'column',
-            gap: '5px',
-            zIndex: 60,
-          }}
-          aria-label="Toggle navigation"
-        >
-          <span
-            style={{
-              display: 'block',
-              width: '20px',
-              height: '1.5px',
-              background: 'var(--text)',
-              borderRadius: '1px',
-              transition: 'transform 0.3s, opacity 0.3s',
-              transform: mobileOpen ? 'rotate(45deg) translateY(6.5px)' : 'none',
-            }}
-          />
-          <span
-            style={{
-              display: 'block',
-              width: '20px',
-              height: '1.5px',
-              background: 'var(--text)',
-              borderRadius: '1px',
-              transition: 'opacity 0.2s',
-              opacity: mobileOpen ? 0 : 1,
-            }}
-          />
-          <span
-            style={{
-              display: 'block',
-              width: '20px',
-              height: '1.5px',
-              background: 'var(--text)',
-              borderRadius: '1px',
-              transition: 'transform 0.3s, opacity 0.3s',
-              transform: mobileOpen ? 'rotate(-45deg) translateY(-6.5px)' : 'none',
-            }}
-          />
-        </button>
+          <nav className="nav-links desktop-nav" aria-label="Primary navigation">
+            {navLinks.map(({ to, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            className="mobile-menu-button"
+            aria-label="Toggle navigation"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
+          >
+            <span className={`mobile-menu-icon ${mobileOpen ? 'is-open' : ''}`} aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+        </div>
       </header>
 
-      {/* Mobile overlay */}
-      <div
-        className={`mobile-nav-overlay ${mobileOpen ? 'open' : ''}`}
-        onClick={() => setMobileOpen(false)}
-      />
+      {mobileOpen ? (
+        <>
+          <div className="mobile-nav-overlay open" onClick={() => setMobileOpen(false)} />
 
-      {/* Mobile drawer */}
-      <nav className={`mobile-nav-drawer ${mobileOpen ? 'open' : ''}`}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-          {navLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              onClick={() => setMobileOpen(false)}
-              style={({ isActive }) => ({
-                fontFamily: 'var(--font-heading)',
-                fontSize: '24px',
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--accent)' : 'var(--text)',
-                transition: 'color 0.2s',
-              })}
-            >
-              {label}
-            </NavLink>
-          ))}
-        </div>
-      </nav>
+          <nav id="mobile-navigation" className="mobile-nav-drawer open" aria-label="Mobile navigation">
+            <div className="mobile-nav-drawer__links">
+              {navLinks.map(({ to, label }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}
+                >
+                  {label}
+                </NavLink>
+              ))}
+            </div>
+          </nav>
+        </>
+      ) : null}
 
-      {/* Page content */}
-      <main style={{ flex: 1 }} className="page-enter" key={pathname}>
+      <main id="main-content" style={{ flex: 1 }} className="page-enter" key={pathname}>
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer
-        style={{
-          borderTop: '1px solid var(--border)',
-          padding: '28px var(--page-px)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-        }}
-      >
-        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-          &copy; {new Date().getFullYear()} Debjeet Swain
-        </span>
-        <div style={{ display: 'flex', gap: '24px' }}>
-          <a
-            href="https://linkedin.com/in/debjeetswain"
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              transition: 'color 0.15s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
-          >
-            LinkedIn
-          </a>
-          <a
-            href="mailto:debjeet.swain87@gmail.com"
-            style={{
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              transition: 'color 0.15s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
-          >
-            Email
-          </a>
+      <footer className="site-footer">
+        <div className="site-footer__inner">
+          <div className="footer-note">
+            <span>&copy; {new Date().getFullYear()} Debjeet Swain</span>
+            <small>
+              Product, systems, and cleaner living from India. Built with a bias to ship.
+            </small>
+          </div>
+          <div className="footer-links">
+            <a
+              className="footer-link"
+              href="https://linkedin.com/in/debjeetswain"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+            <a className="footer-link" href="mailto:debjeet.swain87@gmail.com">
+              Email
+            </a>
+          </div>
         </div>
       </footer>
     </div>

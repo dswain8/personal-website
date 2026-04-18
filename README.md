@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# Debjeet Swain — Personal Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal site for [debjeetswain.com](https://debjeetswain.com), built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+The site is structured as a calm editorial portfolio with six primary sections:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `/` home
+- `/build` projects, experiments, and AI tools
+- `/pm-dojo` PM Dojo project page
+- `/stack` workflow and tooling
+- `/living` curated directory for intentional living
+- `/about` longer personal narrative
+- `/contact` outreach page
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Tailwind v4 utilities plus custom CSS system
+- Vercel for deployment
 
-## Expanding the ESLint configuration
+## Local Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The local production preview flow:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm run preview
 ```
+
+## Deployment
+
+This repo is linked to Vercel and deploys as a static SPA.
+
+- `vercel.json` rewrites all routes to `index.html`
+- `public/sitemap.xml` contains the published routes
+- `public/robots.txt` points crawlers to the sitemap
+
+## Notes
+
+- The main visual system lives in `src/index.css`.
+- Shared page chrome lives in `src/components/Layout.tsx`.
+- Route definitions live in `src/App.tsx`.
+- Downloadable prompt files for the Build and PM Dojo pages live in `public/commands/`.

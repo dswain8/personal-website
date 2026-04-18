@@ -1,48 +1,83 @@
-# Meeting Prep — Pre-meeting context pull
+<!-- keywords: prep, meeting prep, prepare, meeting, leadership review, design critique, 1:1, one on one, skip level -->
+# PM Dojo — Meeting Prep
 
-Get fully prepared before any important meeting.
+Prepare for a meeting using wiki-informed frameworks. Produces a structured prep doc with audience analysis, key decisions, and anti-sell framing.
 
-Input: $ARGUMENTS — meeting name, Jira ticket, Slack thread URL, or a description of what the meeting is about.
+Input: $ARGUMENTS — meeting description, e.g., "churn review with Kyle and David", "skip-level with Parker", "design critique for BSC redesign", or a calendar event link.
 
-## Step 1 — Get the context
+---
 
-Pull everything relevant in parallel:
-- If a ticket ID is given, fetch it from Jira.
-- Search Slack for recent threads mentioning the topic or the attendees.
-- Check your notes or docs folder for prior decisions on this topic.
-- If a specific person is mentioned, check your stakeholder knowledge base for their profile.
+## Step 1 — Understand the meeting
 
-## Step 2 — Identify the key question
+Parse the input to determine:
+- **Who's in the room?** (check `~/work/knowledge/people/` for stakeholder profiles)
+- **What type of meeting?** (leadership review, 1:1, design critique, cross-functional alignment, escalation)
+- **What's the goal?** (get a decision, align on direction, present work, resolve conflict)
 
-What is the ONE thing this meeting needs to resolve? If you can't name it, the meeting probably shouldn't exist.
+If the meeting context is unclear, ask one focused question — don't interrogate.
 
-## Step 3 — Prepare a one-page brief
+## Step 2 — Load wiki frameworks
 
-Use this structure:
+Read from `~/my-knowledge-base/wiki/`:
+- `meetings-and-real-time.md` — always
+- `managing-up.md` — if leadership is in the room
+- `influence-and-leadership.md` — if you need buy-in or are navigating disagreement
+- `feedback-and-difficult-conversations.md` — if delivering bad news or giving feedback
+- `communication-and-writing.md` — for framing and conciseness
+
+## Step 3 — Generate the prep doc
 
 ```
-MEETING: [Name / Date]
-KEY QUESTION: [The one thing to resolve]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⚔️  DOJO PREP — [Meeting Name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Context
-[2-3 sentences: what's going on, what's at stake, how we got here]
+  THE ONE THING
+  What is the single most important outcome from this meeting?
+  → [one sentence]
 
-What I know
-[Bullets: key facts, prior decisions, relevant data]
+  AUDIENCE MAP
+  [Name] — [their incentive/concern] — [what they need to hear]
+  [Name] — [their incentive/concern] — [what they need to hear]
 
-What I don't know
-[Bullets: open questions, assumptions worth stress-testing]
+  YOUR OPENING LINE
+  If you only get 30 seconds, say this:
+  → "[draft opening that front-loads the point]"
 
-My position
-[What I plan to say or recommend. Be specific — no "it depends".]
+  ANTI-SELL FRAMING
+  Name your tradeoffs before anyone else does:
+  → "[the honest tradeoff or risk you should surface proactively]"
 
-Likely pushback
-[1-2 things the other side might say. How I'll respond.]
+  LANDMINES
+  Questions or objections you should prepare for:
+  1. [likely challenge] → [your prepared response]
+  2. [likely challenge] → [your prepared response]
+
+  IF THINGS GO SIDEWAYS
+  Fallback phrases (from wiki):
+  → "That's a fair point. Here's what I'd need to see to change my mind..."
+  → "Can we separate the decision from the timeline?"
+  → [situation-specific fallback]
+
+  DECISION TO DRIVE
+  What specific decision or commitment are you leaving with?
+  → [explicit ask]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-## Step 4 — Optional: role-play the hard moment
+## Step 4 — Offer the dojo moment
 
-If there's a difficult conversation embedded in this meeting, ask:
-"Simulate [stakeholder name] pushing back on [position]. I'll respond."
+```
+Want to rehearse? I'll play [most senior person in the room] and throw the hardest question at you.
+[Y]es — 2-minute role-play | [N]o — I'm prepped
+```
 
-Run the simulation, then critique the response.
+If yes, run a mini Scenario Replay where Claude plays the most challenging attendee and throws the landmine questions. Grade the response using the standard scorecard.
+
+## Rules
+
+- **"The one thing" must be ONE sentence.** If you can't articulate the meeting's purpose in one sentence, the meeting isn't ready.
+- **Audience map must reflect real incentives**, not org chart. What does each person actually care about?
+- **The opening line should be speakable.** Not a paragraph — a sentence you could actually say aloud.
+- **Landmines must be realistic.** Base them on stakeholder profiles and meeting context.
+- Save the prep doc to `~/work/projects/[relevant-project]/YYYY-MM-DD-[meeting]-prep.md`
