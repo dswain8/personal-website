@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Build from "./pages/Build";
 import PmDojo from "./pages/PmDojo";
+import PostcardDesk from "./pages/PostcardDesk";
 import Stack from "./pages/Stack";
 import Living from "./pages/Living";
 import About from "./pages/About";
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/build" element={<Build />} />
           <Route path="/pm-dojo" element={<PmDojo />} />
+          <Route path="/postcard-desk" element={<PostcardDesk />} />
           <Route path="/stack" element={<Stack />} />
           <Route path="/living" element={<Living />} />
           <Route path="/about" element={<About />} />
