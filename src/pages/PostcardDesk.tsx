@@ -87,6 +87,29 @@ const postcards = [
   },
 ];
 
+const nextMoves = [
+  {
+    label: "Slack",
+    actions: "draft reply · summarize thread · suggest emoji react",
+  },
+  {
+    label: "GitHub PRs",
+    actions: "review code · draft summary comment · check CI status",
+  },
+  {
+    label: "Jira",
+    actions: "propose next step · rewrite description · suggest assignee",
+  },
+  {
+    label: "Calendar",
+    actions: "draft pre-read · pull related Slack context · summarize agenda",
+  },
+  {
+    label: "Drive",
+    actions: "summarize for Slack reply · extract action items",
+  },
+];
+
 const responsiveCSS = `
   .postcard-row {
     display: grid;
@@ -375,6 +398,80 @@ export default function PostcardDesk() {
             the integration layer. You don&apos;t need a backend if you have a
             brain that can run errands.
           </p>
+        </div>
+      </section>
+
+      {/* What's next — v2 vision */}
+      <section style={{ marginBottom: "64px" }}>
+        <SectionLabel className="reveal">What&apos;s next</SectionLabel>
+        <div
+          className="reveal"
+          style={{
+            fontSize: "15px",
+            color: "var(--text-secondary)",
+            lineHeight: 1.75,
+            maxWidth: "720px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            marginBottom: "28px",
+          }}
+        >
+          <p>
+            Right now the desk is a view. Next move: make it a dispatch surface.
+            Click a Slack thread and spawn a sub-agent to draft a reply. Click a
+            PR and spawn one to review the diff. Each spawn is a fresh headless
+            Claude Code session — same model, just pointed at one item with the
+            full context fetched live through MCP.
+          </p>
+          <p>
+            Five spawns run in parallel, write drafts to disk, the desk shows a
+            badge when each one is ready. You review, send, or discard. The
+            agent never dispatches without an explicit human click — that line
+            stays bright.
+          </p>
+          <p>
+            The desk stops being a notification feed and becomes a triage
+            cockpit. Every item is a workstream the agent can pick up while you
+            stay in flow.
+          </p>
+        </div>
+        <div
+          className="reveal"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            border: "1px solid var(--border)",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
+        >
+          {nextMoves.map((m, i) => (
+            <div
+              key={m.label}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "160px 1fr",
+                gap: "16px",
+                padding: "14px 20px",
+                borderBottom:
+                  i < nextMoves.length - 1 ? "1px solid var(--border)" : "none",
+              }}
+            >
+              <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                {m.label}
+              </span>
+              <span
+                style={{
+                  fontSize: "14px",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.65,
+                }}
+              >
+                {m.actions}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 
