@@ -218,8 +218,8 @@ export default function PostcardDesk() {
         }}
       >
         <img
-          src="/postcard-desk/demo.gif"
-          alt="The Postcard Desk in motion — drag, focus timer, sync"
+          src="/postcard-desk/demo.png"
+          alt="The Postcard Desk — Alex's dashboard with Slack, GitHub, Jira, Calendar, Drive, Confluence postcards plus intention, to-do, affirmation, and focus timer"
           style={{
             display: "block",
             width: "100%",
