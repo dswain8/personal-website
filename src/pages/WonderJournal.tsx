@@ -152,7 +152,10 @@ export default function WonderJournal() {
             journal entry.
           </p>
           <div className="page-cta-row">
-            <a href={REPO_URL} target="_blank" rel="noreferrer" className="btn-primary">
+            <a href="#current-experience" className="btn-primary">
+              View screenshots
+            </a>
+            <a href={REPO_URL} target="_blank" rel="noreferrer" className="btn-secondary">
               View GitHub
             </a>
             <a href={RAW_SETUP_URL} target="_blank" rel="noreferrer" className="btn-secondary">
@@ -171,6 +174,46 @@ export default function WonderJournal() {
           />
         </figure>
       </header>
+
+      <section id="current-experience" className="section-stack" style={{ marginBottom: "70px" }}>
+        <div className="section-heading reveal">
+          <span className="section-kicker">Current experience</span>
+          <h2 className="section-title">
+            See the working prototype screen by screen.
+          </h2>
+          <p className="section-summary">
+            These are full-length captures from the local app. Scroll sideways
+            through the carousel, or open any image to inspect the complete
+            flow.
+          </p>
+        </div>
+
+        <div className="experience-carousel reveal" aria-label="Wonder Journal experience screenshots">
+          {experienceShots.map((shot, index) => (
+            <article key={shot.title} className="experience-slide">
+              <div className="experience-slide__meta">
+                <span className="workflow-step__index">{index + 1}</span>
+                <div>
+                  <h3>{shot.title}</h3>
+                  <p>{shot.body}</p>
+                </div>
+              </div>
+              <a
+                href={shot.image}
+                target="_blank"
+                rel="noreferrer"
+                className="experience-shot"
+                aria-label={`Open full-size screenshot: ${shot.title}`}
+              >
+                <img src={shot.image} alt={`${shot.title} screenshot`} loading="lazy" />
+              </a>
+              <a href={shot.image} target="_blank" rel="noreferrer" className="btn-tertiary">
+                Open full image
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="section-stack" style={{ marginBottom: "70px" }}>
         <div className="section-heading reveal">
@@ -209,46 +252,6 @@ export default function WonderJournal() {
               local model contract on a personal laptop.
             </p>
           </div>
-        </div>
-      </section>
-
-      <section className="section-stack" style={{ marginBottom: "70px" }}>
-        <div className="section-heading reveal">
-          <span className="section-kicker">Current experience</span>
-          <h2 className="section-title">
-            A carousel of the working prototype.
-          </h2>
-          <p className="section-summary">
-            These are full-length captures from the local app. Scroll sideways
-            to move through the flow, and scroll inside any phone frame to see
-            the complete screen.
-          </p>
-        </div>
-
-        <div className="experience-carousel reveal" aria-label="Wonder Journal experience screenshots">
-          {experienceShots.map((shot, index) => (
-            <article key={shot.title} className="experience-slide">
-              <div className="experience-slide__meta">
-                <span className="workflow-step__index">{index + 1}</span>
-                <div>
-                  <h3>{shot.title}</h3>
-                  <p>{shot.body}</p>
-                </div>
-              </div>
-              <a
-                href={shot.image}
-                target="_blank"
-                rel="noreferrer"
-                className="experience-shot"
-                aria-label={`Open full-size screenshot: ${shot.title}`}
-              >
-                <img src={shot.image} alt={`${shot.title} screenshot`} loading="lazy" />
-              </a>
-              <a href={shot.image} target="_blank" rel="noreferrer" className="btn-tertiary">
-                Open full image
-              </a>
-            </article>
-          ))}
         </div>
       </section>
 
