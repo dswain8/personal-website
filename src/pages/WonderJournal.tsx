@@ -79,6 +79,39 @@ const workflow = [
   },
 ];
 
+const experienceShots = [
+  {
+    title: "Family setup",
+    body: "The parent sets up the child profile and chooses the curiosity guide before the child-facing flow begins.",
+    image: "/projects/wonder-journal-gallery/01-onboarding.webp",
+  },
+  {
+    title: "Home screen",
+    body: "The child sees a playful, voice-first surface with a few starter questions and a quiet text path for the parent.",
+    image: "/projects/wonder-journal-gallery/02-home.webp",
+  },
+  {
+    title: "Thinking state",
+    body: "The wait is turned into a gentle visual moment while the local model prepares the answer.",
+    image: "/projects/wonder-journal-gallery/03-thinking.webp",
+  },
+  {
+    title: "Answer first",
+    body: "The answer screen starts with the truth anchor, then adds a visual clue and slow read-aloud narration.",
+    image: "/projects/wonder-journal-gallery/04-answer.webp",
+  },
+  {
+    title: "Story answer",
+    body: "The story stays optional: it expands only when the family wants a more playful explanation.",
+    image: "/projects/wonder-journal-gallery/05-story-answer.webp",
+  },
+  {
+    title: "Journal",
+    body: "Successful answers become keepsakes that parents can revisit later.",
+    image: "/projects/wonder-journal-gallery/06-journal.webp",
+  },
+];
+
 const setupSteps = [
   {
     title: "Clone the project",
@@ -176,6 +209,46 @@ export default function WonderJournal() {
               local model contract on a personal laptop.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="section-stack" style={{ marginBottom: "70px" }}>
+        <div className="section-heading reveal">
+          <span className="section-kicker">Current experience</span>
+          <h2 className="section-title">
+            A carousel of the working prototype.
+          </h2>
+          <p className="section-summary">
+            These are full-length captures from the local app. Scroll sideways
+            to move through the flow, and scroll inside any phone frame to see
+            the complete screen.
+          </p>
+        </div>
+
+        <div className="experience-carousel reveal" aria-label="Wonder Journal experience screenshots">
+          {experienceShots.map((shot, index) => (
+            <article key={shot.title} className="experience-slide">
+              <div className="experience-slide__meta">
+                <span className="workflow-step__index">{index + 1}</span>
+                <div>
+                  <h3>{shot.title}</h3>
+                  <p>{shot.body}</p>
+                </div>
+              </div>
+              <a
+                href={shot.image}
+                target="_blank"
+                rel="noreferrer"
+                className="experience-shot"
+                aria-label={`Open full-size screenshot: ${shot.title}`}
+              >
+                <img src={shot.image} alt={`${shot.title} screenshot`} loading="lazy" />
+              </a>
+              <a href={shot.image} target="_blank" rel="noreferrer" className="btn-tertiary">
+                Open full image
+              </a>
+            </article>
+          ))}
         </div>
       </section>
 
