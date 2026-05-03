@@ -751,21 +751,16 @@ code {
   height: auto;
 }
 
-.experience-carousel {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  padding: 4px 2px 20px;
-  scroll-padding: 2px;
-  scroll-snap-type: x mandatory;
+.experience-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .experience-slide {
-  flex: 0 0 min(360px, 82vw);
-  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .experience-slide__meta {
@@ -773,7 +768,7 @@ code {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 12px;
   align-items: start;
-  min-height: 122px;
+  min-height: 112px;
 }
 
 .experience-slide__meta h3 {
@@ -789,9 +784,9 @@ code {
 
 .experience-shot {
   display: block;
-  overflow-y: auto;
-  max-height: min(720px, 72vh);
-  border-radius: 28px;
+  overflow: hidden;
+  aspect-ratio: 9 / 13;
+  border-radius: 24px;
   border: 1px solid var(--border);
   background: rgba(35, 49, 58, 0.08);
   box-shadow: 0 18px 42px rgba(19, 22, 34, 0.14);
@@ -800,13 +795,19 @@ code {
 .experience-shot img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
 }
 
 .artifact-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+}
+
+.artifact-grid--compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .artifact-card {
@@ -1202,7 +1203,9 @@ code {
   .proof-strip,
   .home-path-grid,
   .workflow-strip,
-  .artifact-grid {
+  .artifact-grid,
+  .artifact-grid--compact,
+  .experience-strip {
     grid-template-columns: 1fr;
   }
 
