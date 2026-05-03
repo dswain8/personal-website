@@ -725,6 +725,86 @@ code {
   align-items: center;
 }
 
+.project-hero-shot {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: rgba(251, 248, 242, 0.82);
+  box-shadow: var(--shadow-md);
+}
+
+.project-hero-shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.artifact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.artifact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100%;
+}
+
+.artifact-card__title {
+  font-size: 23px;
+}
+
+.artifact-card__body,
+.wonder-step-body {
+  font-size: 15px;
+  line-height: 1.72;
+  color: var(--text-secondary);
+}
+
+.wonder-step-title {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.setup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.setup-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(251, 248, 242, 0.78);
+  padding: 18px;
+}
+
+.setup-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.setup-card pre {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background: rgba(35, 49, 58, 0.07);
+  padding: 14px;
+}
+
+.setup-card code {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre;
+}
+
 .utility-list {
   display: flex;
   flex-direction: column;
@@ -1053,7 +1133,8 @@ code {
 
   .proof-strip,
   .home-path-grid,
-  .workflow-strip {
+  .workflow-strip,
+  .artifact-grid {
     grid-template-columns: 1fr;
   }
 

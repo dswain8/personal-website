@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Build from "./pages/Build";
 import PmDojo from "./pages/PmDojo";
 import PostcardDesk from "./pages/PostcardDesk";
+import WonderJournal from "./pages/WonderJournal";
 import Stack from "./pages/Stack";
 import Living from "./pages/Living";
 import About from "./pages/About";
@@ -16,6 +17,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/build" element={<Build />} />
+          <Route path="/wonder-journal" element={<WonderJournal />} />
           <Route path="/pm-dojo" element={<PmDojo />} />
           <Route path="/postcard-desk" element={<PostcardDesk />} />
           <Route path="/stack" element={<Stack />} />

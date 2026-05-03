@@ -10,8 +10,8 @@ const projects = [
     description:
       "Built with Next.js, SQLite, Web Speech, and Ollama running locally. A parent or child asks a question, the app answers first, shows a playful visual clue, reads it aloud slowly, and saves the moment to a private journal. The thesis is simple: kids do not need another chatbot; they need curiosity answered in a way that feels warm, safe, visual, and memorable.",
     tags: ["Local AI", "Ollama", "Kids UX"],
-    link: "https://github.com/dswain8/wonder-journal",
-    cta: "View GitHub",
+    link: "/wonder-journal",
+    cta: "Open project",
     variant: "lead" as const,
     image: "/projects/wonder-journal-card.png",
   },
