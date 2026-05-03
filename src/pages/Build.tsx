@@ -3,6 +3,19 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const projects = [
   {
+    title: "Wonder Journal",
+    status: "built" as const,
+    summary:
+      "A local-first AI curiosity journal that answers a child’s question with a clear answer, visual clue, and read-aloud story.",
+    description:
+      "Built with Next.js, SQLite, Web Speech, and Ollama running locally. A parent or child asks a question, the app answers first, shows a playful visual clue, reads it aloud slowly, and saves the moment to a private journal. The thesis is simple: kids do not need another chatbot; they need curiosity answered in a way that feels warm, safe, visual, and memorable.",
+    tags: ["Local AI", "Ollama", "Kids UX"],
+    link: "https://github.com/dswain8/wonder-journal",
+    cta: "View GitHub",
+    variant: "lead" as const,
+    image: "/projects/wonder-journal-card.png",
+  },
+  {
     title: "The Postcard Desk",
     status: "live" as const,
     summary:
@@ -320,6 +333,15 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
         .filter(Boolean)
         .join(" ")}
     >
+      {project.image ? (
+        <img
+          src={project.image}
+          alt={`${project.title} screenshot`}
+          className="feature-card__image"
+          loading="lazy"
+        />
+      ) : null}
+
       <div className="feature-card__header">
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <div className="tag-row">
