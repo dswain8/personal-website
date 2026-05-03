@@ -142,7 +142,7 @@ export default function WonderJournal() {
 
   return (
     <div ref={ref} className="shell shell--wide page">
-      <header className="page-intro page-intro--split reveal">
+      <header className="page-intro page-intro--split wonder-hero reveal">
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <p className="page-label">Project · Wonder Journal</p>
           <h1 className="page-title page-title--compact">
@@ -186,18 +186,10 @@ export default function WonderJournal() {
                     alt={`${shot.title} screen from Wonder Journal`}
                     loading={index === 0 ? "eager" : "lazy"}
                   />
-                  <span className="project-hero-carousel__caption">
-                    <span>{shot.title}</span>
-                    <span>{index === heroCarouselShots.length - 1 ? 1 : index + 1}/6</span>
-                  </span>
                 </a>
               ))}
             </div>
           </div>
-          <figcaption className="project-hero-carousel__footer">
-            <span>Auto-rotating prototype screens</span>
-            <span>Click any screen to open it</span>
-          </figcaption>
         </figure>
       </header>
 
