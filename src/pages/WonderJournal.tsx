@@ -112,6 +112,8 @@ const experienceShots = [
   },
 ];
 
+const heroCarouselShots = [...experienceShots, experienceShots[0]];
+
 const setupSteps = [
   {
     title: "Clone the project",
@@ -167,11 +169,35 @@ export default function WonderJournal() {
           </div>
         </div>
 
-        <figure className="project-hero-shot">
-          <img
-            src="/projects/wonder-journal-card.png"
-            alt="Wonder Journal answer screen showing the moon following a car question"
-          />
+        <figure className="project-hero-carousel" aria-label="Auto-rotating Wonder Journal screens">
+          <div className="project-hero-carousel__viewport">
+            <div className="project-hero-carousel__track">
+              {heroCarouselShots.map((shot, index) => (
+                <a
+                  key={`${shot.title}-${index}`}
+                  href={shot.image}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="project-hero-carousel__slide"
+                  aria-label={`Open ${shot.title} screenshot`}
+                >
+                  <img
+                    src={shot.image}
+                    alt={`${shot.title} screen from Wonder Journal`}
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
+                  <span className="project-hero-carousel__caption">
+                    <span>{shot.title}</span>
+                    <span>{index === heroCarouselShots.length - 1 ? 1 : index + 1}/6</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <figcaption className="project-hero-carousel__footer">
+            <span>Auto-rotating prototype screens</span>
+            <span>Click any screen to open it</span>
+          </figcaption>
         </figure>
       </header>
 

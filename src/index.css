@@ -725,20 +725,121 @@ code {
   align-items: center;
 }
 
-.project-hero-shot {
+.project-hero-carousel {
+  position: relative;
   overflow: hidden;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  background: rgba(251, 248, 242, 0.82);
+  background:
+    radial-gradient(circle at 70% 12%, rgba(255, 201, 88, 0.24), transparent 32%),
+    rgba(251, 248, 242, 0.82);
   box-shadow: var(--shadow-md);
+  isolation: isolate;
 }
 
-.project-hero-shot img {
+.project-hero-carousel::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: calc(var(--radius-lg) - 12px);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.project-hero-carousel__viewport {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.project-hero-carousel__track {
+  display: flex;
+  height: 100%;
+  animation: hero-carousel-slide 36s ease-in-out infinite;
+  will-change: transform;
+}
+
+.project-hero-carousel:hover .project-hero-carousel__track {
+  animation-play-state: paused;
+}
+
+.project-hero-carousel__slide {
+  position: relative;
+  flex: 0 0 100%;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.project-hero-carousel__slide img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: 100%;
   object-fit: cover;
   object-position: top center;
+}
+
+.project-hero-carousel__caption {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(18, 13, 37, 0.72);
+  color: #fff8e8;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(14px);
+}
+
+.project-hero-carousel__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+@keyframes hero-carousel-slide {
+  0%,
+  10% {
+    transform: translateX(0);
+  }
+  14%,
+  24% {
+    transform: translateX(-100%);
+  }
+  28%,
+  38% {
+    transform: translateX(-200%);
+  }
+  42%,
+  52% {
+    transform: translateX(-300%);
+  }
+  56%,
+  66% {
+    transform: translateX(-400%);
+  }
+  70%,
+  80% {
+    transform: translateX(-500%);
+  }
+  84%,
+  100% {
+    transform: translateX(-600%);
+  }
 }
 
 .experience-carousel {
@@ -1292,5 +1393,10 @@ code {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .project-hero-carousel__track {
+    animation: none;
+    transform: none;
   }
 }
