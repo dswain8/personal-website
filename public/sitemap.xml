@@ -17,6 +17,10 @@
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://debjeetswain.com/postcard-desk</loc>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://debjeetswain.com/stack</loc>
     <priority>0.8</priority>
   </url>

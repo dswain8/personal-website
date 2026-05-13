@@ -76,6 +76,68 @@ const projects = [
   },
 ];
 
+const loopTools = [
+  {
+    title: "Review",
+    kind: "Editing",
+    cadence: "Before sending",
+    description:
+      "Scores any draft against a universal rubric (front-loaded? specific? recommendation? tradeoffs named?) and rewrites the weakest sections. The same spine reviews a Slack message, a spec, or a launch note.",
+    download: "/commands/review.md",
+  },
+  {
+    title: "Spec",
+    kind: "Product",
+    cadence: "As needed",
+    description:
+      "Writes a PRD, scores itself against ten spec criteria, hands the draft to Codex for an outside review, scores the feedback back, and iterates until every dimension hits 10/10.",
+    download: "/commands/spec.md",
+  },
+  {
+    title: "Launch Draft",
+    kind: "Communication",
+    cadence: "When shipping",
+    description:
+      "Drafts a launch announcement, scores it across six dimensions, runs it through Codex, and loops until the score is clean. Caps at five iterations so it never spirals.",
+    download: "/commands/launch-draft.md",
+  },
+  {
+    title: "Universal Rubric",
+    kind: "Foundation",
+    cadence: "Shared by all three",
+    description:
+      "The seven-criterion spine every review starts from. Lives in one file so all three skills score on the same axes and overlays add only the type-specific extras.",
+    download: "/commands/universal-rubric.md",
+  },
+];
+
+const selfImprovementTools = [
+  {
+    title: "Find Session",
+    kind: "Search",
+    cadence: "When memory fails",
+    description:
+      "Greps every past Claude Code session by keyword and prints the resume command. The native search misses too much, so this one does it properly.",
+    download: "/commands/find-session.md",
+  },
+  {
+    title: "Skill Discovery",
+    kind: "Meta",
+    cadence: "Every Friday",
+    description:
+      "Scans the week of sessions, commits, and memory edits. Surfaces one to three skill candidates with evidence so the system grows from real signal, not vibes.",
+    download: "/commands/skill-discovery.md",
+  },
+  {
+    title: "Ingest",
+    kind: "Learning",
+    cadence: "On any source",
+    description:
+      "Takes a YouTube link, article, screenshot, or pasted transcript and diffs it against my current setup. Returns a ranked list of what to adopt, skip, or research further.",
+    download: "/commands/ingest.md",
+  },
+];
+
 const tools = [
   {
     title: "Weekly Update",
@@ -118,20 +180,12 @@ const tools = [
     download: "/commands/oncall-triage.md",
   },
   {
-    title: "Spec Writer",
-    kind: "Product",
-    cadence: "As needed",
-    description:
-      "Starts from a problem statement and returns a full feature spec with goals, requirements, and open questions.",
-    download: "/commands/spec-writer.md",
-  },
-  {
-    title: "DACI Generator",
+    title: "DACI Draft",
     kind: "Decision-making",
     cadence: "As needed",
     description:
       "Maps the driver, approver, consulted, and informed so the right people are involved before the wrong debate starts.",
-    download: "/commands/daci-generator.md",
+    download: "/commands/daci-draft.md",
   },
   {
     title: "Daily Wrap",
@@ -142,28 +196,92 @@ const tools = [
     download: "/commands/daily-wrap.md",
   },
   {
-    title: "Meeting Prep",
+    title: "Prep",
     kind: "Preparation",
     cadence: "Before key meetings",
     description:
       "Pulls ticket context, stakeholder profiles, and relevant Slack history into one useful pre-read.",
-    download: "/commands/meeting-prep.md",
+    download: "/commands/prep.md",
   },
   {
-    title: "Draft Review",
-    kind: "Editing",
-    cadence: "Before sending",
-    description:
-      "Reviews Slack messages, specs, and docs against PM communication principles and tightens the point.",
-    download: "/commands/draft-review.md",
-  },
-  {
-    title: "Meeting Debrief",
+    title: "Debrief",
     kind: "Reflection",
     cadence: "After important meetings",
     description:
       "Captures decisions, commitments, and misses immediately so they do not dissolve into memory.",
-    download: "/commands/meeting-debrief.md",
+    download: "/commands/debrief.md",
+  },
+  {
+    title: "Slack Style",
+    kind: "Voice",
+    cadence: "Every Slack draft",
+    description:
+      "Polishes a Slack message to my voice before it goes out. Tight, direct, no preamble, no closer fluff.",
+    download: "/commands/slack-style.md",
+  },
+  {
+    title: "House Style",
+    kind: "Design",
+    cadence: "Every UI build",
+    description:
+      "The aesthetic discipline for everything I ship. Editorial warm defaults, hard nos for AI-tell fonts, gradients, and chips. So things stop looking like every other AI side project.",
+    download: "/commands/house-style.md",
+  },
+  {
+    title: "Handoff",
+    kind: "Continuity",
+    cadence: "Between agents",
+    description:
+      "Compacts the current conversation into a handoff doc so the next agent (or future me) picks up without losing what already got decided.",
+    download: "/commands/handoff.md",
+  },
+  {
+    title: "Write a Skill",
+    kind: "Meta",
+    cadence: "When a pattern repeats",
+    description:
+      "Turns a repeated workflow into a proper skill file, with the keyword header that lets the matcher auto-fire it.",
+    download: "/commands/write-a-skill.md",
+  },
+  {
+    title: "PRD Review",
+    kind: "Product",
+    cadence: "Before review meetings",
+    description:
+      "Reads a PRD and asks the questions a sharp cross-functional reviewer would: missing tradeoffs, fuzzy success criteria, scope creep.",
+    download: "/commands/prd-review.md",
+  },
+  {
+    title: "Grill Me",
+    kind: "Pressure-test",
+    cadence: "Before a hard meeting",
+    description:
+      "Plays the role of a skeptical exec or partner. Asks the hardest version of every question so the soft answers fall apart in private, not live.",
+    download: "/commands/grill-me.md",
+  },
+  {
+    title: "Zoom Out",
+    kind: "Strategy",
+    cadence: "When stuck",
+    description:
+      "Pulls the conversation up two altitudes when I am rabbit-holed in a detail. Forces the question of what we are actually optimizing for.",
+    download: "/commands/zoom-out.md",
+  },
+  {
+    title: "Autodecision",
+    kind: "Decision-making",
+    cadence: "When the call is yours",
+    description:
+      "Lays out a decision in small, honest steps. Subcommands for /plan, /challenge, /compare, /summarize, /revise, /publish, /review, /export, /quick — each downloadable below the main file.",
+    download: "/commands/autodecision.md",
+  },
+  {
+    title: "Writing Style",
+    kind: "Voice",
+    cadence: "Every written output",
+    description:
+      "Enforces my prose rules. No em dashes, no banned words, no AI bombast. A final scan before anything goes out.",
+    download: "/commands/writing-style.md",
   },
 ];
 
@@ -186,9 +304,11 @@ export default function Build() {
           </h1>
         </div>
         <p className="page-support" style={{ maxWidth: "46rem" }}>
-          Eleven prompts and routines I run every week — weekly updates, Slack
-          triage, specs, debriefs. Wired to fire automatically based on what I
-          type, no slash commands to remember. All downloadable. Projects below.
+          The skills I actually run at work, grouped by what they do. A
+          rubric-gated iteration loop for serious writing, a self-improving
+          system that finds its own gaps, and the daily toolkit underneath it
+          all. Wired to fire automatically from plain language. All
+          downloadable. Projects below.
         </p>
       </header>
 
@@ -256,6 +376,83 @@ export default function Build() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section-stack" style={{ marginBottom: "68px" }}>
+        <div className="section-heading reveal">
+          <span className="section-kicker">The 10/10 iteration loop</span>
+          <h2 className="section-title">
+            Rubric-gated Claude ↔ Codex review until every score is clean.
+          </h2>
+          <p className="section-summary">
+            The pattern matters more than any single skill. Claude drafts.
+            Claude scores against a rubric. Codex reviews from the outside.
+            Claude scores the feedback back. The loop runs until every dimension
+            hits 10/10 (or hits the iteration cap and surfaces what it could not
+            fix). The same spine drives three skills below.
+          </p>
+        </div>
+
+        <div className="utility-list reveal-stagger">
+          {loopTools.map((tool) => (
+            <div key={tool.title} className="utility-card reveal utility-row">
+              <div className="utility-row__title">
+                <span className="utility-row__name">{tool.title}</span>
+                <div className="tag-row">
+                  <span className="tag">{tool.kind}</span>
+                  <span className="tag tag--soft">{tool.cadence}</span>
+                </div>
+              </div>
+
+              <p className="utility-row__body">{tool.description}</p>
+
+              <div className="utility-row__cta">
+                <a href={tool.download} download className="btn-secondary">
+                  Download
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-stack" style={{ marginBottom: "68px" }}>
+        <div className="section-heading reveal">
+          <span className="section-kicker">A system that improves itself</span>
+          <h2 className="section-title">
+            Find what you forgot. Spot what is missing. Pull in what works.
+          </h2>
+          <p className="section-summary">
+            Three skills that keep the toolkit honest. One searches every past
+            session because the native search misses too much. One scans last
+            week for repeat patterns and proposes new skills with evidence. One
+            takes any external source (a YouTube video, an article, a
+            screenshot) and diffs it against my current setup so adoption is a
+            decision, not an accumulation.
+          </p>
+        </div>
+
+        <div className="utility-list reveal-stagger">
+          {selfImprovementTools.map((tool) => (
+            <div key={tool.title} className="utility-card reveal utility-row">
+              <div className="utility-row__title">
+                <span className="utility-row__name">{tool.title}</span>
+                <div className="tag-row">
+                  <span className="tag">{tool.kind}</span>
+                  <span className="tag tag--soft">{tool.cadence}</span>
+                </div>
+              </div>
+
+              <p className="utility-row__body">{tool.description}</p>
+
+              <div className="utility-row__cta">
+                <a href={tool.download} download className="btn-secondary">
+                  Download
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Debjeet Swain</title>
+    <link>https://debjeetswain.com/</link>
+    <description>Product, systems, and cleaner living. Notes from a builder PM working in billing, CPQ, and AI workflows.</description>
+    <language>en-us</language>
+    <atom:link href="https://debjeetswain.com/rss.xml" rel="self" type="application/rss+xml" />
+    <managingEditor>debjeet.swain87@gmail.com (Debjeet Swain)</managingEditor>
+    <webMaster>debjeet.swain87@gmail.com (Debjeet Swain)</webMaster>
+
+    <item>
+      <title>Postcard Desk — a daily desk for inbound work</title>
+      <link>https://debjeetswain.com/postcard-desk</link>
+      <guid isPermaLink="true">https://debjeetswain.com/postcard-desk</guid>
+      <description>One desk that pulls Slack, PRs, Jira, calendar, and docs into postcards I can triage in the first 90 minutes of the day. Local-first. Drafts replies via headless Claude with a tight allowlist.</description>
+      <pubDate>Mon, 28 Apr 2026 09:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>PM Dojo — a sparring arena for PM craft</title>
+      <link>https://debjeetswain.com/pm-dojo</link>
+      <guid isPermaLink="true">https://debjeetswain.com/pm-dojo</guid>
+      <description>A practice gym for the messy, real moments PMs face: Inbox Fire, Red Pen, First Principles, The Room. Built on a wiki of Shreyas Doshi, Wes Kao, April Dunford, and 250+ other sources.</description>
+      <pubDate>Tue, 15 Apr 2026 09:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Wonder Journal — a thinking-tool for kids</title>
+      <link>https://debjeetswain.com/wonder-journal</link>
+      <guid isPermaLink="true">https://debjeetswain.com/wonder-journal</guid>
+      <description>A journal that prompts curiosity instead of recording it. Built for my daughter, designed to scale.</description>
+      <pubDate>Wed, 02 Apr 2026 09:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Build — what I'm shipping right now</title>
+      <link>https://debjeetswain.com/build</link>
+      <guid isPermaLink="true">https://debjeetswain.com/build</guid>
+      <description>Current projects, current bets. Updated as I ship.</description>
+      <pubDate>Mon, 17 Mar 2026 09:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Stack — what I use and why</title>
+      <link>https://debjeetswain.com/stack</link>
+      <guid isPermaLink="true">https://debjeetswain.com/stack</guid>
+      <description>My toolchain for product work, AI workflows, and writing. Opinionated. Stable. Tuned over years.</description>
+      <pubDate>Wed, 04 Mar 2026 09:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
