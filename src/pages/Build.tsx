@@ -383,24 +383,36 @@ export default function Build() {
         <div className="section-heading reveal">
           <span className="section-kicker">The 10/10 iteration loop</span>
           <h2 className="section-title">
-            One universal rubric. Overlays when the work demands it. Two models
-            grading each other.
+            How do you get one model to review the work of another model?
           </h2>
           <p className="section-summary">
-            <code>/review</code> is the generic one, a seven-criterion spine
-            that works on any draft. <code>/spec</code> and{" "}
-            <code>/launch-draft</code> use the same spine and add a tighter
-            sub-scale on top, because PRDs and launch notes need more nuance
-            than a generic rubric can catch.
+            Claude grading Claude is grade inflation. Same training, same blind
+            spots, same defense of a draft it just wrote. A real review needs a
+            different model, from cold, with no context on why you made the
+            choices you made. The hard part is the plumbing. Two answers,
+            depending on where the work lives.
           </p>
           <p className="section-summary">
-            Claude grading Claude is grade inflation, so the second pass goes
-            through Codex. Two ways it runs. When the work is in Claude, the
-            skill calls the Codex CLI from inside the session, hands over the
-            draft, pulls the critique back, scores, edits, loops. When the work
-            is in Codex, both windows stay open and Codex uses computer-use to
-            toggle between them, pasting drafts into Claude and bringing the
-            review back, until every dimension hits 10/10.
+            <strong>When the work is in Claude:</strong> Claude calls the Codex
+            CLI from inside its own session. It writes, pipes the draft to Codex
+            with a rubric, reads the critique, scores, edits, calls Codex again.
+            The whole loop runs in one terminal.
+          </p>
+          <p className="section-summary">
+            <strong>When the work is in Codex:</strong> both windows stay open.
+            Codex uses computer-use to toggle to the Claude window, pastes its
+            draft in, reads the review, brings the feedback back, edits,
+            repeats. Two windows iterating with each other while you do
+            something else.
+          </p>
+          <p className="section-summary">
+            The rubric is the part you cannot skip. <code>/review</code> holds a
+            universal seven-criterion spine that works on any draft.{" "}
+            <code>/spec</code> and <code>/launch-draft</code> hydrate the same
+            engine and add a tighter sub-scale on top because PRDs and launch
+            notes need more nuance than a generic rubric can catch. All three
+            call the Codex CLI under the hood and loop until every dimension
+            hits 10/10.
           </p>
         </div>
 
