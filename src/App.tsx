@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Build from "./pages/Build";
+import Projects from "./pages/Projects";
 import PmDojo from "./pages/PmDojo";
 import PostcardDesk from "./pages/PostcardDesk";
 import WonderJournal from "./pages/WonderJournal";
@@ -17,6 +18,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/build" element={<Build />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/wonder-journal" element={<WonderJournal />} />
           <Route path="/pm-dojo" element={<PmDojo />} />
           <Route path="/postcard-desk" element={<PostcardDesk />} />

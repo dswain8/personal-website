@@ -1,113 +1,38 @@
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
-const projects = [
-  {
-    title: "Wonder Journal",
-    status: "built" as const,
-    summary:
-      "A local-first AI curiosity journal that answers a child’s question with a clear answer, visual clue, and read-aloud story.",
-    description:
-      "Built with Next.js, SQLite, Web Speech, and Ollama running locally. A parent or child asks a question, the app answers first, shows a playful visual clue, reads it aloud slowly, and saves the moment to a private journal. The thesis is simple: kids do not need another chatbot; they need curiosity answered in a way that feels warm, safe, visual, and memorable.",
-    tags: ["Local AI", "Ollama", "Kids UX"],
-    link: "/wonder-journal",
-    cta: "Open project",
-    variant: "lead" as const,
-    image: "/projects/wonder-journal-card.png",
-  },
-  {
-    title: "The Postcard Desk",
-    status: "live" as const,
-    summary:
-      "Claude Code as the backend for my personal dashboard — no webhooks, no database, no drift.",
-    description:
-      "Every AI dashboard tries to be live and ends up stale. This one is honest about it. Ten postcards — Slack, GitHub, Jira, Calendar, Drive, Confluence, plus intention, to-do, affirmation, and focus timer — are served from JSON files on disk. A cron job runs every minute during work hours and tells a headless Claude Code agent to refresh them through my MCPs. The React app just reads the files. When a source drops, I fix the prompt instead of spelunking through someone else's webhook code. Open source with a live demo.",
-    tags: ["Open source", "Claude Code", "Agentic backend"],
-    link: "/postcard-desk",
-    cta: "Open project",
-    variant: "lead" as const,
-  },
-  {
-    title: "PM Dojo",
-    status: "live" as const,
-    summary: "A sparring arena for PM judgment, communication, and reps.",
-    description:
-      "Built from my own PM knowledge base. Scenarios, rewrites, scorecards, and model answers designed to turn fuzzy advice into practical repetition.",
-    tags: ["AI product", "PM skills"],
-    link: "/pm-dojo",
-    cta: "Open project",
-    variant: "lead" as const,
-  },
-  {
-    title: "Trust Website",
-    status: "live" as const,
-    summary:
-      "My first real shipped website, built from scratch and taken live.",
-    description:
-      "A full site for a family trust. It taught me the difference between finishing something and actually shipping it.",
-    tags: ["Web", "First ship"],
-    link: "https://www.sppmt.org/",
-    cta: "Visit site",
-    variant: "support" as const,
-  },
-  {
-    title: "Sustainable Living Directory",
-    status: "progress" as const,
-    summary:
-      "A cleaner-living directory built around products I genuinely use or want to try.",
-    description:
-      "A curated catalog across food, drink, clothing, skincare, and more. Less “content project,” more personal operating system.",
-    tags: ["Directory", "Lifestyle"],
-    link: "/living",
-    cta: "View directory",
-    variant: "default" as const,
-  },
-  {
-    title: "AI Worksheet Generator",
-    status: "built" as const,
-    summary:
-      "An AI experience for generating school worksheets across grades and subjects.",
-    description:
-      "Built end-to-end with Claude Code. Not public yet, but fully shaped enough to count as real work.",
-    tags: ["Education", "AI tooling"],
-    link: null,
-    cta: "Private build",
-    variant: "default" as const,
-  },
-];
-
 const loopTools = [
   {
-    title: "Review",
-    kind: "Editing",
-    cadence: "Before sending",
+    title: "Universal Rubric",
+    kind: "Foundation",
+    cadence: "The spine",
     description:
-      "Scores any draft against a universal rubric (front-loaded? specific? recommendation? tradeoffs named?) and rewrites the weakest sections. The same spine reviews a Slack message, a spec, or a launch note.",
+      "Seven criteria every review starts from — front-loaded, specific, recommendation present, audience-matched, tradeoffs named, assumptions surfaced, actionable close. Lives in one file. Every specialized skill reads it first, then layers its own sub-scale on top. One spine. Forked into specialized skills.",
+    download: "/commands/universal-rubric.md",
+  },
+  {
+    title: "Review",
+    kind: "Generic",
+    cadence: "Any draft",
+    description:
+      "The generic application of the spine. Point it at any draft — a Slack message, a memo, a status note — and it scores the seven universal criteria, runs a communication scan, and rewrites the weakest sections. No overlay. Just the spine.",
     download: "/commands/review.md",
   },
   {
     title: "Spec",
-    kind: "Product",
-    cadence: "As needed",
+    kind: "Forked",
+    cadence: "PRDs",
     description:
-      "Writes a PRD, scores itself against ten spec criteria, hands the draft to Codex for an outside review, scores the feedback back, and iterates until every dimension hits 10/10.",
+      "Forks the spine and adds ten spec-specific criteria — tables with Why columns, falsification checks, decision shape. Writes a PRD, scores itself, hands the draft to Codex for an outside review, and iterates until every dimension hits 10/10.",
     download: "/commands/spec.md",
   },
   {
     title: "Launch Draft",
-    kind: "Communication",
-    cadence: "When shipping",
+    kind: "Forked",
+    cadence: "Announcements",
     description:
-      "Drafts a launch announcement, scores it across six dimensions, runs it through Codex, and loops until the score is clean. Caps at five iterations so it never spirals.",
+      "Forks the spine and adds a launch sub-scale — hook strength, screenshot earns its place, CTA present. Drafts the post, runs it through Codex, loops until clean. Caps at five iterations so it never spirals.",
     download: "/commands/launch-draft.md",
-  },
-  {
-    title: "Universal Rubric",
-    kind: "Foundation",
-    cadence: "Shared by all three",
-    description:
-      "The seven-criterion spine every review starts from. Lives in one file so all three skills score on the same axes and overlays add only the type-specific extras.",
-    download: "/commands/universal-rubric.md",
   },
 ];
 
@@ -285,12 +210,6 @@ const tools = [
   },
 ];
 
-const statusConfig = {
-  live: { label: "Live", className: "badge badge-live" },
-  built: { label: "Built", className: "badge badge-built" },
-  progress: { label: "In progress", className: "badge badge-progress" },
-};
-
 export default function Build() {
   const ref = useScrollReveal<HTMLDivElement>();
 
@@ -304,17 +223,16 @@ export default function Build() {
           </h1>
         </div>
         <p className="page-support" style={{ maxWidth: "46rem" }}>
-          The skills I actually run at work, grouped by what they do. A
-          rubric-gated iteration loop for serious writing, a self-improving
-          system that finds its own gaps, and the daily toolkit underneath it
-          all. Wired to fire automatically from plain language. All
-          downloadable. Projects below.
+          The setup that makes skills fire from plain language. The workflows
+          that turn one model into a real reviewer of another. The daily toolkit
+          underneath it all. All downloadable. For finished projects, see{" "}
+          <Link to="/projects">Projects</Link>.
         </p>
       </header>
 
       <section className="section-stack" style={{ marginBottom: "68px" }}>
         <div className="section-heading reveal">
-          <span className="section-kicker">How it fires automatically</span>
+          <span className="section-kicker">Setup</span>
           <h2 className="section-title">
             One hook + one config file. Skills invoke themselves.
           </h2>
@@ -381,7 +299,7 @@ export default function Build() {
 
       <section className="section-stack" style={{ marginBottom: "68px" }}>
         <div className="section-heading reveal">
-          <span className="section-kicker">The 10/10 iteration loop</span>
+          <span className="section-kicker">Workflows — the iteration loop</span>
           <h2 className="section-title">
             How do you get one model to review the work of another model?
           </h2>
@@ -406,13 +324,14 @@ export default function Build() {
             something else.
           </p>
           <p className="section-summary">
-            The rubric is the part you cannot skip. <code>/review</code> holds a
-            universal seven-criterion spine that works on any draft.{" "}
-            <code>/spec</code> and <code>/launch-draft</code> hydrate the same
-            engine and add a tighter sub-scale on top because PRDs and launch
-            notes need more nuance than a generic rubric can catch. All three
-            call the Codex CLI under the hood and loop until every dimension
-            hits 10/10.
+            The rubric is the part you cannot skip.{" "}
+            <strong>One spine. Forked into specialized skills.</strong>{" "}
+            <code>universal-rubric.md</code> holds the seven criteria every
+            review starts from. <code>/review</code> applies that spine to any
+            draft. <code>/spec</code> and <code>/launch-draft</code> fork the
+            spine and add their own sub-scales on top — because PRDs and launch
+            notes have failure modes a generic rubric cannot catch. All three
+            call Codex under the hood and loop until every dimension hits 10/10.
           </p>
         </div>
 
@@ -441,7 +360,9 @@ export default function Build() {
 
       <section className="section-stack" style={{ marginBottom: "68px" }}>
         <div className="section-heading reveal">
-          <span className="section-kicker">A system that improves itself</span>
+          <span className="section-kicker">
+            Workflows — a self-improving system
+          </span>
           <h2 className="section-title">
             Find what you forgot. Spot what is missing. Pull in what works.
           </h2>
@@ -478,11 +399,11 @@ export default function Build() {
         </div>
       </section>
 
-      <section className="section-stack" style={{ marginBottom: "68px" }}>
+      <section className="section-stack">
         <div className="section-heading reveal">
-          <span className="section-kicker">Daily AI toolkit</span>
+          <span className="section-kicker">Toolkit</span>
           <h2 className="section-title">
-            The workflows I actually use at work.
+            The daily skills underneath all of it.
           </h2>
           <p className="section-summary">
             These are not “AI ideas.” They are working prompts and repeatable
@@ -513,94 +434,6 @@ export default function Build() {
           ))}
         </div>
       </section>
-
-      <section className="section-stack">
-        <div className="section-heading reveal">
-          <span className="section-kicker">Featured work</span>
-          <h2 className="section-title">
-            The projects carrying the clearest point of view.
-          </h2>
-          <p className="section-summary">
-            These are the projects that best show the overlap between product
-            thinking, practical AI use, and a bias toward shipping instead of
-            polishing forever.
-          </p>
-        </div>
-
-        <div className="feature-grid reveal-stagger">
-          {projects.map((project) => (
-            <ProjectCard key={project.title} project={project} />
-          ))}
-        </div>
-      </section>
     </div>
   );
-}
-
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
-  const { label, className } = statusConfig[project.status];
-
-  const content = (
-    <article
-      className={[
-        "editorial-card",
-        "feature-card",
-        "reveal",
-        project.variant === "lead" ? "feature-card--lead" : "",
-        project.variant === "support" ? "feature-card--support" : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {project.image ? (
-        <img
-          src={project.image}
-          alt={`${project.title} screenshot`}
-          className="feature-card__image"
-          loading="lazy"
-        />
-      ) : null}
-
-      <div className="feature-card__header">
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div className="tag-row">
-            <span className={className}>{label}</span>
-            {project.tags.map((tag) => (
-              <span key={tag} className="tag tag--soft">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <h3 className="feature-card__title">{project.title}</h3>
-        </div>
-      </div>
-
-      <p className="feature-card__dek">{project.summary}</p>
-      <p className="feature-card__body">{project.description}</p>
-
-      <div className="feature-card__footer">
-        <span
-          className="section-kicker"
-          style={{ color: "var(--text-tertiary)" }}
-        >
-          Built to learn by shipping
-        </span>
-        <span className="btn-tertiary">{project.cta}</span>
-      </div>
-    </article>
-  );
-
-  if (project.link?.startsWith("/")) {
-    return <Link to={project.link}>{content}</Link>;
-  }
-
-  if (project.link) {
-    return (
-      <a href={project.link} target="_blank" rel="noreferrer">
-        {content}
-      </a>
-    );
-  }
-
-  return content;
 }
