@@ -383,14 +383,24 @@ export default function Build() {
         <div className="section-heading reveal">
           <span className="section-kicker">The 10/10 iteration loop</span>
           <h2 className="section-title">
-            Rubric-gated Claude ↔ Codex review until every score is clean.
+            One universal rubric. Overlays when the work demands it. Two models
+            grading each other.
           </h2>
           <p className="section-summary">
-            The pattern matters more than any single skill. Claude drafts.
-            Claude scores against a rubric. Codex reviews from the outside.
-            Claude scores the feedback back. The loop runs until every dimension
-            hits 10/10 (or hits the iteration cap and surfaces what it could not
-            fix). The same spine drives three skills below.
+            <code>/review</code> is the generic one, a seven-criterion spine
+            that works on any draft. <code>/spec</code> and{" "}
+            <code>/launch-draft</code> use the same spine and add a tighter
+            sub-scale on top, because PRDs and launch notes need more nuance
+            than a generic rubric can catch.
+          </p>
+          <p className="section-summary">
+            Claude grading Claude is grade inflation, so the second pass goes
+            through Codex. Two ways it runs. When the work is in Claude, the
+            skill calls the Codex CLI from inside the session, hands over the
+            draft, pulls the critique back, scores, edits, loops. When the work
+            is in Codex, both windows stay open and Codex uses computer-use to
+            toggle between them, pasting drafts into Claude and bringing the
+            review back, until every dimension hits 10/10.
           </p>
         </div>
 
