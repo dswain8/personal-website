@@ -52,7 +52,11 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(79, 118, 153, 0.12), transparent 28%),
+    radial-gradient(
+      circle at top left,
+      rgba(79, 118, 153, 0.12),
+      transparent 28%
+    ),
     linear-gradient(180deg, #f7f2eb 0%, var(--bg) 28%, #f1ebe2 100%);
   color: var(--text);
 }
@@ -430,7 +434,9 @@ code {
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid transparent;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .site-header.is-scrolled {
@@ -739,7 +745,11 @@ code {
   border-radius: 28px;
   border: 1px solid var(--border);
   background:
-    radial-gradient(circle at 70% 12%, rgba(255, 201, 88, 0.24), transparent 32%),
+    radial-gradient(
+      circle at 70% 12%,
+      rgba(255, 201, 88, 0.24),
+      transparent 32%
+    ),
     rgba(251, 248, 242, 0.82);
   box-shadow: var(--shadow-md);
   isolation: isolate;
@@ -901,6 +911,78 @@ code {
 
 .utility-row__cta {
   justify-self: end;
+}
+
+.loop-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px 28px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(251, 248, 242, 0.55);
+}
+
+.loop-diagram__flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+}
+
+.loop-step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 92px;
+}
+
+.loop-step__actor {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.loop-step__verb {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.005em;
+}
+
+.loop-arrow {
+  font-size: 18px;
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.loop-arrow--loop {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.loop-diagram__caption {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .loop-diagram {
+    padding: 24px 20px;
+  }
+  .loop-diagram__flow {
+    gap: 10px 16px;
+  }
+  .loop-step {
+    min-width: 80px;
+  }
+  .loop-step__verb {
+    font-size: 15px;
+  }
 }
 
 .proof-strip {
@@ -1312,5 +1394,4 @@ code {
     transform: none;
     transition: none;
   }
-
 }

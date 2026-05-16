@@ -155,12 +155,6 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
       <p className="feature-card__body">{project.description}</p>
 
       <div className="feature-card__footer">
-        <span
-          className="section-kicker"
-          style={{ color: "var(--text-tertiary)" }}
-        >
-          Built to learn by shipping
-        </span>
         <span className="btn-tertiary">{project.cta}</span>
       </div>
     </article>
