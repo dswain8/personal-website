@@ -1,0 +1,134 @@
+export type BenchLink = [string, string];
+
+export type BenchProject = {
+  key: string;
+  name: string;
+  status: string;
+  what: string;
+  why: string;
+  trick: string;
+  stack: string[];
+  links: BenchLink[];
+};
+
+export const TOOLS = [
+  "Claude Code",
+  "MCP",
+  "cron",
+  "React",
+  "Next.js",
+  "SQLite",
+  "Ollama",
+  "Web Speech",
+  "Vercel",
+  "Anthropic API",
+  "Cursor",
+];
+
+/** Exact bench data from prototype app.js — deep links use React Router paths. */
+export const BENCH: BenchProject[] = [
+  {
+    key: "desk",
+    name: "The Postcard Desk",
+    status: "Live",
+    what: "A personal dashboard where Claude Code is the backend. A cron job pokes a headless agent; the agent writes JSON; the app reads it.",
+    why: "Every AI dashboard tries to be live and ends up stale. This one is honest about it.",
+    trick:
+      "For personal tools, the agent is the integration layer. Total backend code: zero lines.",
+    stack: ["Claude Code", "MCP", "cron", "React", "Vercel"],
+    links: [
+      ["Open the demo", "https://postcard-desk.vercel.app"],
+      ["Source", "https://github.com/dswain8/postcard-desk"],
+      ["Write-up", "/postcard-desk"],
+    ],
+  },
+  {
+    key: "journal",
+    name: "Wonder Journal",
+    status: "Runs on your laptop",
+    what: "A curiosity journal I built for my daughter. A picture clue, a slow read-aloud, and a journal that stays on the laptop.",
+    why: "Kids do not need another chatbot. They need curiosity answered well.",
+    trick:
+      "Answer first. Every response starts with the simple factual answer before the story or visual layer.",
+    stack: ["Next.js", "SQLite", "Ollama", "Web Speech"],
+    links: [
+      ["Source", "https://github.com/dswain8/wonder-journal"],
+      [
+        "Setup guide",
+        "https://github.com/dswain8/wonder-journal/blob/main/docs/personal-laptop-setup.md",
+      ],
+      ["Write-up", "/wonder-journal"],
+    ],
+  },
+  {
+    key: "dojo",
+    name: "PM Dojo",
+    status: "Live",
+    what: "A sparring arena for PM writing and judgment, built on a wiki of 258+ sources. Timed rounds and scored rewrites.",
+    why: "PM knowledge compounds slowly. The principle was right there; the muscle wasn't.",
+    trick:
+      "It's a stack. Each layer is useful on its own; stacked, they turn any AI conversation into a sparring coach.",
+    stack: ["Claude Code", "Vercel", "Anthropic API"],
+    links: [
+      ["Spar a round", "https://app-two-omega-syz9qw9qo8.vercel.app"],
+      ["Source", "https://github.com/dswain8/pm-dojo"],
+      ["Its skills", "/build"],
+    ],
+  },
+  {
+    key: "radio",
+    name: "This website",
+    status: "You're on it",
+    what: "A pocket radio with four stations. Ported into React + Vite from the radio redesign.",
+    why: "One person, multiple sides; visitors choose where their curiosity takes them.",
+    trick: "Every room is a station. Press a key twice and you're in.",
+    stack: ["Claude Code", "React", "Vite"],
+    links: [["Back to the dial", "/"]],
+  },
+  {
+    key: "site",
+    name: "Trust website",
+    status: "Live",
+    what: "My first real shipped site, built from scratch for a family trust.",
+    why: "It taught me the difference between finishing something and actually shipping it.",
+    trick: "",
+    stack: [],
+    links: [["Visit the site", "https://www.sppmt.org/"]],
+  },
+  {
+    key: "sheets",
+    name: "AI worksheet generator",
+    status: "Private",
+    what: "School worksheets across grades and subjects, built end to end with Claude Code.",
+    why: "Not public yet, but fully shaped enough to count as real work.",
+    trick: "",
+    stack: ["Claude Code"],
+    links: [],
+  },
+];
+
+export const GADGET_SVG: Record<string, string> = {
+  desk: `<rect x="8" y="46" width="84" height="8" rx="2" fill="#8a5f3c"/><rect x="14" y="54" width="6" height="22" fill="#6e4a2c"/><rect x="80" y="54" width="6" height="22" fill="#6e4a2c"/>
+      <rect x="16" y="20" width="22" height="16" fill="#fbf4e4" transform="rotate(-6 27 28)"/><rect x="42" y="16" width="22" height="18" fill="#fff7a8" transform="rotate(4 53 25)"/><rect x="66" y="22" width="20" height="16" fill="#f6d8c8" transform="rotate(-3 76 30)"/>
+      <circle cx="27" cy="21" r="2" fill="#e2501c"/><circle cx="53" cy="16" r="2" fill="#e2501c"/><circle cx="76" cy="22" r="2" fill="#e2501c"/>`,
+  journal: `<rect x="18" y="14" width="64" height="60" rx="6" fill="#4b2f6b"/><rect x="22" y="14" width="6" height="60" fill="#3a2354"/>
+      <circle cx="58" cy="38" r="12" fill="#f6eecf"/><circle cx="63" cy="34" r="10" fill="#4b2f6b"/><circle cx="40" cy="26" r="1.6" fill="#f6eecf"/><circle cx="72" cy="56" r="1.6" fill="#f6eecf"/><circle cx="46" cy="60" r="1.2" fill="#f6eecf"/>`,
+  dojo: `<path d="M50 4v12" stroke="#5b4a3a" stroke-width="3"/><rect x="34" y="16" width="32" height="56" rx="14" fill="#b8432b"/><rect x="34" y="30" width="32" height="5" fill="#8f2f1c"/><rect x="34" y="52" width="32" height="5" fill="#8f2f1c"/>
+      <ellipse cx="50" cy="76" rx="20" ry="3" fill="rgba(0,0,0,.2)"/>`,
+  radio: `<rect x="12" y="20" width="76" height="52" rx="8" fill="#e8e4db" stroke="#b3ac9e" stroke-width="2"/><rect x="18" y="26" width="42" height="24" rx="3" fill="#15171c"/>
+      <text x="22" y="43" font-family="JetBrains Mono, monospace" font-size="11" fill="#ece7da">90.5</text><circle cx="74" cy="38" r="9" fill="#efebe3" stroke="#8f887b"/><path d="M74 31v6" stroke="#e2501c" stroke-width="2"/>
+      <rect x="18" y="56" width="16" height="9" rx="2" fill="#f2efe8" stroke="#8f887b"/><rect x="38" y="56" width="16" height="9" rx="2" fill="#f2efe8" stroke="#8f887b"/><rect x="58" y="56" width="16" height="9" rx="2" fill="#dcd6ca" stroke="#8f887b"/>`,
+  site: `<rect x="12" y="16" width="76" height="56" rx="5" fill="#fff" stroke="#3a2a20" stroke-width="3"/><rect x="12" y="16" width="76" height="11" fill="#d9d2c4"/><circle cx="19" cy="21.5" r="2" fill="#e2501c"/><circle cx="26" cy="21.5" r="2" fill="#d9a514"/>
+      <rect x="20" y="34" width="36" height="5" fill="#3a2a20"/><rect x="20" y="44" width="56" height="3" fill="#c9bfae"/><rect x="20" y="51" width="50" height="3" fill="#c9bfae"/><rect x="20" y="58" width="30" height="8" rx="4" fill="#5d6b3a"/>`,
+  sheets: `<rect x="20" y="24" width="56" height="44" fill="#f4f1e8" stroke="#c9bfae" transform="rotate(-5 48 46)"/><rect x="24" y="22" width="56" height="44" fill="#fbf9f2" stroke="#c9bfae"/>
+      <rect x="30" y="30" width="30" height="3" fill="#9aa5ae"/><rect x="30" y="37" width="40" height="3" fill="#c9cfd5"/><rect x="30" y="44" width="36" height="3" fill="#c9cfd5"/>
+      <rect x="58" y="50" width="22" height="18" rx="3" fill="#d9a514"/><path d="M62 50v-6a7 7 0 0 1 14 0v6" stroke="#8a6a1f" stroke-width="3" fill="none"/>`,
+};
+
+export const TOOL_SHAPES = [
+  `<rect x="18" y="4" width="6" height="34" rx="3" fill="#9aa5ae"/><circle cx="21" cy="40" r="7" fill="none" stroke="#9aa5ae" stroke-width="4"/>`,
+  `<rect x="17" y="2" width="8" height="18" rx="3" fill="#d9a514"/><rect x="19.5" y="20" width="3" height="24" fill="#9aa5ae"/>`,
+  `<rect x="10" y="4" width="22" height="9" rx="2" fill="#7d8790"/><rect x="18.5" y="13" width="5" height="32" rx="2" fill="#a8391f"/>`,
+  `<path d="M14 4l7 22 7-22" stroke="#9aa5ae" stroke-width="4" fill="none"/><rect x="11" y="26" width="6" height="18" rx="3" fill="#3e5a73"/><rect x="25" y="26" width="6" height="18" rx="3" fill="#3e5a73"/>`,
+  `<circle cx="21" cy="24" r="14" fill="#d9a514"/><circle cx="21" cy="24" r="5" fill="#2b2620"/><rect x="21" y="34" width="14" height="6" fill="#d9a514"/>`,
+];
