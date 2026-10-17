@@ -8,7 +8,6 @@ import {
 } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { makeStaticSound } from "./audio";
-import DeskScene from "./DeskScene";
 import {
   BETWEEN,
   DIAL_MAX,
@@ -120,6 +119,7 @@ export default function PocketRadio() {
   const [touched, setTouched] = useState(!!tuneTo);
   const [gliding, setGliding] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [creditsOpen, setCreditsOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
 
   const vRef = useRef(v);
@@ -235,11 +235,13 @@ export default function PocketRadio() {
       ) {
         e.preventDefault();
         goIn(lockedRef.current);
+      } else if (e.key === "Escape" && creditsOpen) {
+        setCreditsOpen(false);
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [apply, goIn]);
+  }, [apply, goIn, creditsOpen]);
 
   useEffect(() => {
     return () => {
@@ -274,77 +276,70 @@ export default function PocketRadio() {
   ));
 
   return (
-    <div className="home home-scene">
+    <div className="wrap home">
       <div className="radio-stage">
-        <DeskScene />
-        <div className="scene-content">
-          <header className="scene-narrative">
-            <h1 id="who" className="scene-brand">
-              Debjeet
-            </h1>
-            <p className="scene-headline">Tune in.</p>
-            <p className="scene-support">
-              Product at Rippling · Bengaluru
-            </p>
-          </header>
-
-          <section
-            className={`radio${gliding ? " gliding" : ""}${dragging ? " dragging" : ""}`}
-            aria-labelledby="who"
-            id="radio"
-            data-locked={locked?.key ?? ""}
-            data-idle={String(!locked && !touched)}
-          >
-            <div className="r-top">
-              <div className="screen">
-                <div className="readout">
-                  <span className="led" aria-hidden="true" />
-                  <b id="freq">{freqAt(v)}</b>
-                  <span>MHz</span>
-                  <span className="fm" aria-hidden="true">
-                    <i>MW</i>
-                    <i>SW</i>
-                    <em>FM</em>
-                  </span>
-                </div>
-                <canvas
-                  className="static"
-                  id="static"
-                  ref={canvasRef}
-                  width={160}
-                  height={100}
-                  aria-hidden="true"
-                />
-                <div className="scan" aria-hidden="true" />
-                <div className="idle">
-                  <p className="idle-freq" aria-hidden="true">
-                    <span id="idle-freq">{freqAt(v)}</span>
-                    <small>MHz</small>
-                  </p>
-                  <p className="idle-list">
-                    {STATIONS.map((x) => (
-                      <span key={x.key}>
-                        {x.freq} {x.short}
-                      </span>
-                    ))}
-                  </p>
-                  <p className="idle-hint">Dial · keys 1–4 · go in</p>
-                </div>
-                <p className="between" id="between" aria-live="polite">
-                  {betweenLine}
-                </p>
-                <div className="preview" id="preview" aria-live="polite">
-                  {locked ? <StationPreview s={locked} /> : null}
-                </div>
+        <section
+          className={`radio${gliding ? " gliding" : ""}${dragging ? " dragging" : ""}`}
+          aria-labelledby="who"
+          id="radio"
+          data-locked={locked?.key ?? ""}
+          data-idle={String(!locked && !touched)}
+        >
+          <div className="r-top">
+            <div className="screen">
+              <div className="readout">
+                <span className="led" aria-hidden="true" />
+                <b id="freq">{freqAt(v)}</b>
+                <span>MHz</span>
+                <span className="fm" aria-hidden="true">
+                  <i>MW</i>
+                  <i>SW</i>
+                  <em>FM</em>
+                </span>
               </div>
-              <div className="side-col">
-                <div className="badge">
-                  <span className="badge-name">DS–1</span>
-                  <span>Bengaluru</span>
-                </div>
-                <div className="grille" aria-hidden="true" />
+              <canvas
+                className="static"
+                id="static"
+                ref={canvasRef}
+                width={160}
+                height={100}
+                aria-hidden="true"
+              />
+              <div className="scan" aria-hidden="true" />
+              <div className="idle">
+                <p className="idle-freq" aria-hidden="true">
+                  <span id="idle-freq">{freqAt(v)}</span>
+                  <small>MHz</small>
+                </p>
+                <p className="idle-cta">Tune in.</p>
+                <p className="idle-list">
+                  {STATIONS.map((x) => (
+                    <span key={x.key}>
+                      {x.freq} {x.short}
+                    </span>
+                  ))}
+                </p>
+                <p className="idle-bio">
+                  Hi, I&apos;m Debjeet. Product leader at Rippling, in Bengaluru.
+                  Husband, dad to a four-year-old, owner of one golden retriever,
+                  and keeper of too many side projects.
+                </p>
+              </div>
+              <p className="between" id="between" aria-live="polite">
+                {betweenLine}
+              </p>
+              <div className="preview" id="preview" aria-live="polite">
+                {locked ? <StationPreview s={locked} /> : null}
               </div>
             </div>
+            <div className="side-col">
+              <div className="badge">
+                <h1 id="who">Debjeet Swain</h1>
+                <span>DS–1 · Bengaluru</span>
+              </div>
+              <div className="grille" aria-hidden="true" />
+            </div>
+          </div>
 
           <div
             className="band"
@@ -559,14 +554,113 @@ export default function PocketRadio() {
               Press <kbd>1</kbd>–<kbd>4</kbd> to tune · press again or{" "}
               <kbd>Enter</kbd> to go in
             </p>
+            <button
+              type="button"
+              className="silk credits-btn"
+              id="credits-btn"
+              aria-expanded={creditsOpen}
+              aria-controls="credits"
+              onClick={() => setCreditsOpen((o) => !o)}
+            >
+              Credits
+            </button>
           </div>
-          </section>
 
-          <p className="scene-blotter">
-            <Link to="/contact">Say hello</Link>
+          <div className="credits" id="credits" hidden={!creditsOpen}>
+            <p className="cr-k">Credits</p>
+            <dl>
+              <div>
+                <dt>Built by</dt>
+                <dd>
+                  Debjeet, with Claude Code. React, TypeScript and Vite — ported
+                  from the radio redesign.
+                </dd>
+              </div>
+              <div>
+                <dt>Type</dt>
+                <dd>
+                  Newsreader, Schibsted Grotesk and JetBrains Mono, from Google
+                  Fonts.
+                </dd>
+              </div>
+              <div>
+                <dt>Drawings</dt>
+                <dd>Hand-coded SVG. No stock images, no generated photos.</dd>
+              </div>
+              <div>
+                <dt>Sound</dt>
+                <dd>
+                  Generated in your browser when you turn it on. Nothing
+                  recorded, nothing licensed.
+                </dd>
+              </div>
+              <div>
+                <dt>Inspired by</dt>
+                <dd>
+                  <a
+                    className="textlink"
+                    href="https://deluxesalonmusic.in/"
+                    rel="noreferrer"
+                  >
+                    Deluxe Salon Music
+                  </a>
+                  , the valve radios in Indian living rooms,{" "}
+                  <a
+                    className="textlink"
+                    href="https://felixrieseberg.com/"
+                    rel="noreferrer"
+                  >
+                    Felix Rieseberg&apos;s site
+                  </a>
+                  , and Anshu Chimala&apos;s guest post in Lenny&apos;s
+                  Newsletter.
+                </dd>
+              </div>
+            </dl>
+            <button
+              type="button"
+              className="cr-close"
+              id="credits-close"
+              onClick={() => setCreditsOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <section className="home-contact" aria-labelledby="hello-h">
+        <div>
+          <h2 id="hello-h">Say hello.</h2>
+          <p style={{ color: "var(--ink-2)", marginTop: 12, maxWidth: "40ch" }}>
+            Fewer, better conversations. If you write with context, I&apos;ll
+            almost always have something useful to say back.
           </p>
         </div>
-      </div>
+        <ul>
+          <li>
+            <a href="mailto:debjeet.swain87@gmail.com">
+              <span>Email</span>
+              <span>debjeet.swain87@gmail.com</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://linkedin.com/in/debjeetswain"
+              rel="noreferrer"
+            >
+              <span>LinkedIn</span>
+              <span>The professional version</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/dswain8" rel="noreferrer">
+              <span>GitHub</span>
+              <span>Source for most things on this site</span>
+            </a>
+          </li>
+        </ul>
+      </section>
     </div>
   );
 }
