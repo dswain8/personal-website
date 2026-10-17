@@ -1707,6 +1707,201 @@ body[data-side="life"] {
   .life4 .family-frame { transition: none; }
 }
 
+/* —— Outside the house: food, sports, travel —— */
+.life4 .life-aspect {
+  margin-top: clamp(48px, 7vw, 80px);
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1.5px solid rgba(90, 66, 52, 0.22);
+}
+.life4 .life-aspect-head { max-width: 52ch; margin-bottom: clamp(22px, 3vw, 32px); }
+.life4 .life-aspect-kicker {
+  margin: 0 0 10px;
+  font: 600 12px/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a8391f;
+}
+.life4 .life-aspect-head h2 {
+  font-size: clamp(32px, 4vw, 46px);
+  letter-spacing: -0.02em;
+}
+.life4 .life-aspect-head p {
+  margin: 10px 0 0;
+  color: var(--ink-2);
+}
+
+.life4 .food-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(22px, 3vw, 32px) clamp(20px, 3vw, 36px);
+}
+.life4 .food-group h3 {
+  font: 400 24px/1.15 var(--serif);
+  letter-spacing: -0.02em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #2b1d16;
+}
+.life4 .food-group-blurb {
+  margin: 8px 0 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  max-width: 34ch;
+}
+.life4 .food-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.life4 .food-list li {
+  border-bottom: 1px solid rgba(90, 66, 52, 0.18);
+  padding: 10px 0 12px;
+}
+.life4 .food-name {
+  display: block;
+  font: 600 16px/1.3 var(--sans);
+  color: #2b1d16;
+}
+.life4 .food-note {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a3428;
+}
+
+.life4 .sports-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.life4 .sport-card {
+  padding: 18px 18px 20px;
+  border-radius: 4px;
+  background: #faf1e4;
+  box-shadow: inset 0 0 0 1px rgba(90, 66, 52, 0.14);
+}
+.life4 .sport-card h3 {
+  font: 400 26px/1.1 var(--serif);
+  letter-spacing: -0.02em;
+}
+.life4 .sport-loves {
+  margin: 8px 0 10px;
+  font: 600 13px/1.3 var(--sans);
+  color: #a8391f;
+}
+.life4 .sport-card > p:last-child {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #4a3428;
+}
+.life4 .sport-cricket { background: linear-gradient(160deg, #fff6e8, #f3e0c4); }
+.life4 .sport-ufc { background: linear-gradient(160deg, #f7ece4, #ecd5c4); }
+.life4 .sport-f1 { background: linear-gradient(160deg, #f4ebe4, #e5d4c6); }
+.life4 .sport-tennis { background: linear-gradient(160deg, #eef6e8, #dcecce); }
+.life4 .sport-football { background: linear-gradient(160deg, #efe8e4, #e5d2c8); }
+
+.life4 .travel-maps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 36px);
+}
+.life4 .pin-map-head h3 {
+  font: 400 26px/1.15 var(--serif);
+  letter-spacing: -0.02em;
+}
+.life4 .pin-map-head p {
+  margin: 6px 0 14px;
+  font-size: 14px;
+  color: var(--ink-2);
+  max-width: 42ch;
+}
+.life4 .pin-stage {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.35), transparent 50%),
+    linear-gradient(180deg, #d8e8f0 0%, #b7d0de 55%, #9bb8c9 100%);
+  box-shadow: inset 0 0 0 1px rgba(90, 66, 52, 0.18);
+}
+.life4 .pin-map--india .pin-land {
+  position: absolute;
+  inset: 8% 18% 6% 16%;
+  background:
+    radial-gradient(ellipse at 50% 45%, #e8c49a 0%, #d4a574 62%, #c49060 100%);
+  clip-path: polygon(
+    42% 2%, 48% 8%, 52% 6%, 58% 12%, 72% 18%, 88% 22%, 96% 30%, 92% 38%,
+    98% 44%, 90% 48%, 84% 52%, 78% 48%, 74% 56%, 68% 62%, 62% 58%, 58% 68%,
+    52% 78%, 48% 92%, 42% 96%, 38% 88%, 34% 78%, 28% 70%, 22% 62%, 18% 52%,
+    12% 48%, 8% 40%, 14% 34%, 22% 36%, 28% 28%, 32% 18%, 36% 10%
+  );
+  box-shadow: 0 8px 20px -12px rgba(60, 30, 10, 0.45);
+}
+.life4 .pin-map--world .pin-land {
+  position: absolute;
+  inset: 12% 6% 14% 6%;
+  background:
+    radial-gradient(circle at 18% 40%, #c5d6a8 0 9%, transparent 10%),
+    radial-gradient(circle at 48% 32%, #c5d6a8 0 14%, transparent 15%),
+    radial-gradient(circle at 58% 38%, #c5d6a8 0 7%, transparent 8%),
+    radial-gradient(circle at 72% 48%, #d4b896 0 8%, transparent 9%),
+    radial-gradient(circle at 82% 58%, #c5d6a8 0 6%, transparent 7%),
+    radial-gradient(circle at 86% 66%, #c5d6a8 0 4%, transparent 5%),
+    radial-gradient(circle at 58% 62%, #c5d6a8 0 5%, transparent 6%),
+    transparent;
+  opacity: 0.95;
+}
+.life4 .map-pin {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1;
+}
+.life4 .map-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: #a8391f;
+  box-shadow: 0 0 0 2px #fffaf2, 0 2px 6px rgba(60, 30, 10, 0.35);
+  transition: transform 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .life4 .map-pin:hover::after { transform: scale(1.35); background: #c2502c; }
+}
+.life4 .map-pin.is-on::after {
+  background: #f0c64a;
+  transform: scale(1.45);
+  box-shadow: 0 0 0 3px #2b1d16, 0 4px 10px rgba(60, 30, 10, 0.4);
+}
+.life4 .pin-readout {
+  min-height: 1.4em;
+  margin: 10px 0 0;
+  font: 500 15px/1.35 var(--serif);
+  color: #2b1d16;
+}
+
+@media (max-width: 860px) {
+  .life4 .travel-maps { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .life4 .map-pin,
+  .life4 .food-note { animation: none; transition: none; }
+}
+
 /* =================================================================
    TRY v4: the workbench
    ================================================================= */

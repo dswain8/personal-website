@@ -3,12 +3,20 @@ import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
 import {
   FAMILY_FRAMES,
+  FOOD_GROUPS,
   HOUSE_ROOMS,
+  INDIA_PINS,
+  INDIA_SKIPPED,
+  SPORTS_LOVES,
+  WORLD_PINS,
   shelfById,
   type FamilyFrame,
+  type FoodGroup,
   type HouseRoom,
   type LifeBrand,
   type LifeShelf,
+  type MapPin,
+  type SportLove,
 } from "../data/life-items";
 
 function FamilyPhoto({ frame }: { frame: FamilyFrame }) {
@@ -119,10 +127,7 @@ function BrandRoom({
   const shelf = room.shelfId ? shelfById(room.shelfId) : null;
 
   return (
-    <section
-      className={`room ${room.className}`}
-      aria-label={room.room}
-    >
+    <section className={`room ${room.className}`} aria-label={room.room}>
       <h2>{room.room}</h2>
       {shelf ? (
         <RoomShelf shelf={shelf} open={open} onToggle={onToggle} />
@@ -138,10 +143,167 @@ function BrandRoom({
   );
 }
 
+function FoodSection() {
+  return (
+    <section className="life-aspect" aria-labelledby="food-heading">
+      <header className="life-aspect-head">
+        <p className="life-aspect-kicker">Out eating</p>
+        <h2 id="food-heading">A foodie in Bangalore.</h2>
+        <p>
+          Native Karnataka plates, tindi joints, a few Italian and Asian
+          obsessions, coffee shops I trust, and Conservatory pop-ups whenever
+          they land.
+        </p>
+      </header>
+      <div className="food-groups">
+        {FOOD_GROUPS.map((group) => (
+          <FoodGroupBlock key={group.id} group={group} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FoodGroupBlock({ group }: { group: FoodGroup }) {
+  return (
+    <div className="food-group">
+      <h3>{group.title}</h3>
+      <p className="food-group-blurb">{group.blurb}</p>
+      <ul className="food-list">
+        {group.places.map((place) => (
+          <li key={place.name}>
+            <b className="food-name">{place.name}</b>
+            <p className="food-note">{place.note}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SportsSection() {
+  return (
+    <section className="life-aspect" aria-labelledby="sports-heading">
+      <header className="life-aspect-head">
+        <p className="life-aspect-kicker">On the sidelines</p>
+        <h2 id="sports-heading">Sports I follow hard.</h2>
+        <p>
+          Cricket first, then the other obsessions — cage, track, court, and
+          pitch.
+        </p>
+      </header>
+      <ul className="sports-grid">
+        {SPORTS_LOVES.map((s) => (
+          <SportCard key={s.id} sport={s} />
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function SportCard({ sport }: { sport: SportLove }) {
+  return (
+    <li className={`sport-card sport-${sport.id}`}>
+      <h3>{sport.sport}</h3>
+      <p className="sport-loves">{sport.loves.join(" · ")}</p>
+      <p>{sport.note}</p>
+    </li>
+  );
+}
+
+function TravelSection({
+  activePin,
+  setActivePin,
+}: {
+  activePin: string | null;
+  setActivePin: (id: string | null) => void;
+}) {
+  return (
+    <section className="life-aspect" aria-labelledby="travel-heading">
+      <header className="life-aspect-head">
+        <p className="life-aspect-kicker">On the road</p>
+        <h2 id="travel-heading">Where I&apos;ve been.</h2>
+        <p>
+          Most of India — still missing Arunachal, Mizoram, and Nagaland — plus
+          a growing set of stamps abroad. Tap a pin.
+        </p>
+      </header>
+
+      <div className="travel-maps">
+        <PinMap
+          title="India"
+          subtitle={`Skipped for now: ${INDIA_SKIPPED.join(", ")}.`}
+          variant="india"
+          pins={INDIA_PINS}
+          activePin={activePin}
+          setActivePin={setActivePin}
+        />
+        <PinMap
+          title="The world"
+          subtitle="Sri Lanka, Bhutan, Nepal, Thailand, Malaysia, Indonesia (Bali), Turkey, Dubai, Kenya, the US, Germany, Austria, Hungary."
+          variant="world"
+          pins={WORLD_PINS}
+          activePin={activePin}
+          setActivePin={setActivePin}
+        />
+      </div>
+    </section>
+  );
+}
+
+function PinMap({
+  title,
+  subtitle,
+  variant,
+  pins,
+  activePin,
+  setActivePin,
+}: {
+  title: string;
+  subtitle: string;
+  variant: "india" | "world";
+  pins: MapPin[];
+  activePin: string | null;
+  setActivePin: (id: string | null) => void;
+}) {
+  const active = pins.find((p) => `${variant}:${p.id}` === activePin);
+
+  return (
+    <div className={`pin-map pin-map--${variant}`}>
+      <div className="pin-map-head">
+        <h3>{title}</h3>
+        <p>{subtitle}</p>
+      </div>
+      <div className="pin-stage" role="group" aria-label={`${title} travel map`}>
+        <div className="pin-land" aria-hidden="true" />
+        {pins.map((pin) => {
+          const key = `${variant}:${pin.id}`;
+          const isOn = activePin === key;
+          return (
+            <button
+              key={pin.id}
+              type="button"
+              className={`map-pin${isOn ? " is-on" : ""}`}
+              style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+              aria-label={pin.label}
+              aria-pressed={isOn}
+              onClick={() => setActivePin(isOn ? null : key)}
+            />
+          );
+        })}
+      </div>
+      <p className="pin-readout" aria-live="polite">
+        {active ? active.label : "Tap a pin"}
+      </p>
+    </div>
+  );
+}
+
 export default function LifeRoom() {
   const [openBrand, setOpenBrand] = useState<string | null>(null);
+  const [activePin, setActivePin] = useState<string | null>(null);
 
-  const onToggle = (key: string) => {
+  const onToggleBrand = (key: string) => {
     setOpenBrand((cur) => (cur === key ? null : key));
   };
 
@@ -152,13 +314,13 @@ export default function LifeRoom() {
         <header className="l4-head">
           <h1 className="reveal">Off the clock.</h1>
           <p className="lede reveal">
-            Outside of work, I&apos;m a family man first. My daughter is four. We
-            have a golden retriever named Tokyo. Most of my best hours are spent
-            with them.
+            Outside of work, I&apos;m a family man first — and a foodie,
+            sports obsessive, and restless traveller close behind. My daughter
+            is four. We have a golden retriever named Tokyo.
           </p>
           <p className="l4-hint">
-            A Sunday at home. The big room is family. The rest is where everyday
-            things live — tap a brand for a short note.
+            Start at home. Then the city table, the matches I never miss, and
+            the maps of where I&apos;ve been.
           </p>
         </header>
 
@@ -189,7 +351,7 @@ export default function LifeRoom() {
               key={room.id}
               room={room}
               open={openBrand}
-              onToggle={onToggle}
+              onToggle={onToggleBrand}
             />
           ))}
 
@@ -200,6 +362,10 @@ export default function LifeRoom() {
           The things in the house are brands I use. Not exhaustive, and not
           affiliate links.
         </p>
+
+        <FoodSection />
+        <SportsSection />
+        <TravelSection activePin={activePin} setActivePin={setActivePin} />
 
         <NextSide
           prev={{ key: "try", name: "Try what I've made", label: "Back to" }}

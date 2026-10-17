@@ -217,3 +217,241 @@ export function shelfById(id: LifeShelfId): LifeShelf {
   if (!shelf) throw new Error(`Missing shelf: ${id}`);
   return shelf;
 }
+
+/* ---------- Outside the house: food, sports, travel ---------- */
+
+export type FoodPlace = {
+  name: string;
+  note: string;
+};
+
+export type FoodGroup = {
+  id: string;
+  title: string;
+  blurb: string;
+  places: FoodPlace[];
+};
+
+/** Bangalore foodie map — personal list, not a ranking. */
+export const FOOD_GROUPS: FoodGroup[] = [
+  {
+    id: "karnataka",
+    title: "Karnataka & tindi",
+    blurb: "Native cuisine and the breakfast joints that keep the city honest.",
+    places: [
+      {
+        name: "Malgudi Mylari Mane",
+        note: "Proper Karnataka food. Mylari dosa and the kind of curry that makes you quiet at the table.",
+      },
+      {
+        name: "Taaza Thindi",
+        note: "Fast, no-frills tindi. Idli, vada, filter coffee — done before you’ve checked your phone.",
+      },
+      {
+        name: "Bangalore Cafe",
+        note: "One of those reliable neighbourhood tindi stops that still feels like Bangalore.",
+      },
+      {
+        name: "CTR",
+        note: "Butter dosa pilgrimage. Worth the wait, every time.",
+      },
+      {
+        name: "MTR",
+        note: "The old guard. Rava idli and the sense that the recipe hasn’t flinched in decades.",
+      },
+    ],
+  },
+  {
+    id: "italian",
+    title: "Italian",
+    blurb: "Pizza and pasta when the craving is specific.",
+    places: [
+      {
+        name: "Eating Love",
+        note: "Neapolitan pizza the way I want it — brick oven, slow dough, no shortcuts.",
+      },
+      {
+        name: "Pizza 4P's",
+        note: "Japanese-Italian pizza and that house cheese. Book ahead or don’t bother.",
+      },
+      {
+        name: "Bologna",
+        note: "Pasta in Indiranagar. When I want Italian that isn’t performing for Instagram.",
+      },
+    ],
+  },
+  {
+    id: "asian",
+    title: "Asian & Japanese",
+    blurb: "Bowls, sushi, and the places I keep going back to.",
+    places: [
+      {
+        name: "Naru",
+        note: "Ramen that actually tastes like a ramen bar. Twenty seats — watch the reservation drop.",
+      },
+      {
+        name: "Yuki",
+        note: "Pan-Asian comfort. Reliable when the whole table wants something different.",
+      },
+      {
+        name: "Azuki",
+        note: "Japanese done with care. Tempura prawns that ruin other tempura for you.",
+      },
+      {
+        name: "Cha",
+        note: "Hong Kong eating house — leaner Asian, bright flavours, easy to return to.",
+      },
+    ],
+  },
+  {
+    id: "veg",
+    title: "Pure veg, South Indian soul",
+    blurb: "Vegetarian rooms that still feel like a proper meal.",
+    places: [
+      {
+        name: "Phurr",
+        note: "Elevated pure veg without the lecture. Still rooted in South Indian comfort.",
+      },
+      {
+        name: "Kalpaney",
+        note: "Modern vegetarian with a South Indian abode feeling. Quietly ambitious.",
+      },
+    ],
+  },
+  {
+    id: "meals",
+    title: "Andhra meals",
+    blurb: "Banana leaf, spice, and no half measures.",
+    places: [
+      {
+        name: "Nagarjuna",
+        note: "Andhra meals and biryani since forever. Bhojanam when I want the full ritual.",
+      },
+    ],
+  },
+  {
+    id: "coffee",
+    title: "Coffee",
+    blurb: "Everyday cups and the shops I point people to.",
+    places: [
+      {
+        name: "Blue Tokai",
+        note: "My default pour-over / filter stop across the city.",
+      },
+      {
+        name: "Subko",
+        note: "When I want the cup to be a little more considered — cortados and the good beans.",
+      },
+    ],
+  },
+  {
+    id: "popups",
+    title: "Pop-ups",
+    blurb: "Chef dinners that aren’t on a permanent menu.",
+    places: [
+      {
+        name: "The Conservatory",
+        note: "Been to multiple pop-ups here. Terrace kitchen energy — always worth clearing the calendar.",
+      },
+    ],
+  },
+];
+
+export type SportLove = {
+  id: string;
+  sport: string;
+  loves: string[];
+  note: string;
+};
+
+export const SPORTS_LOVES: SportLove[] = [
+  {
+    id: "cricket",
+    sport: "Cricket",
+    loves: ["India", "RCB"],
+    note: "Follow every India series. Bleed red and gold for RCB — hope is a recurring subscription.",
+  },
+  {
+    id: "ufc",
+    sport: "UFC",
+    loves: ["Justin Gaethje"],
+    note: "Favourite MMA fighter. Gaethje fights like the clock is personal.",
+  },
+  {
+    id: "f1",
+    sport: "Formula 1",
+    loves: ["Max Verstappen"],
+    note: "Passionate Verstappen fan. Race Sundays are non-negotiable calendar blocks.",
+  },
+  {
+    id: "tennis",
+    sport: "Tennis",
+    loves: ["Roger Federer", "Carlos Alcaraz"],
+    note: "Federer first — still the elegance standard. Alcaraz now for the future of the sport.",
+  },
+  {
+    id: "football",
+    sport: "Football",
+    loves: ["Manchester United"],
+    note: "Purely love the game. Passionately follow United through every season plot twist.",
+  },
+];
+
+export type MapPin = {
+  id: string;
+  label: string;
+  /** Percent positions on the map stage */
+  x: number;
+  y: number;
+};
+
+/** Visited Indian states — all except Arunachal, Mizoram, Nagaland. */
+export const INDIA_PINS: MapPin[] = [
+  { id: "JK", label: "Jammu & Kashmir", x: 38, y: 8 },
+  { id: "HP", label: "Himachal Pradesh", x: 42, y: 14 },
+  { id: "PB", label: "Punjab", x: 36, y: 18 },
+  { id: "UK", label: "Uttarakhand", x: 48, y: 20 },
+  { id: "HR", label: "Haryana", x: 40, y: 24 },
+  { id: "DL", label: "Delhi", x: 42, y: 26 },
+  { id: "RJ", label: "Rajasthan", x: 28, y: 32 },
+  { id: "UP", label: "Uttar Pradesh", x: 52, y: 30 },
+  { id: "BR", label: "Bihar", x: 68, y: 34 },
+  { id: "SK", label: "Sikkim", x: 78, y: 28 },
+  { id: "AS", label: "Assam", x: 88, y: 32 },
+  { id: "ML", label: "Meghalaya", x: 86, y: 38 },
+  { id: "TR", label: "Tripura", x: 90, y: 44 },
+  { id: "MN", label: "Manipur", x: 94, y: 40 },
+  { id: "WB", label: "West Bengal", x: 76, y: 42 },
+  { id: "JH", label: "Jharkhand", x: 68, y: 42 },
+  { id: "OR", label: "Odisha", x: 70, y: 52 },
+  { id: "CT", label: "Chhattisgarh", x: 58, y: 50 },
+  { id: "MP", label: "Madhya Pradesh", x: 46, y: 44 },
+  { id: "GJ", label: "Gujarat", x: 22, y: 42 },
+  { id: "MH", label: "Maharashtra", x: 36, y: 54 },
+  { id: "TS", label: "Telangana", x: 52, y: 58 },
+  { id: "AP", label: "Andhra Pradesh", x: 54, y: 66 },
+  { id: "KA", label: "Karnataka", x: 40, y: 70 },
+  { id: "GA", label: "Goa", x: 30, y: 68 },
+  { id: "KL", label: "Kerala", x: 38, y: 86 },
+  { id: "TN", label: "Tamil Nadu", x: 48, y: 82 },
+];
+
+export const INDIA_SKIPPED = ["Arunachal Pradesh", "Mizoram", "Nagaland"];
+
+export const WORLD_PINS: MapPin[] = [
+  { id: "US", label: "United States", x: 18, y: 38 },
+  { id: "DE", label: "Germany", x: 50, y: 28 },
+  { id: "AT", label: "Austria", x: 53, y: 30 },
+  { id: "HU", label: "Hungary", x: 55, y: 30 },
+  { id: "TR", label: "Turkey", x: 58, y: 36 },
+  { id: "AE", label: "Dubai (UAE)", x: 64, y: 44 },
+  { id: "KE", label: "Kenya", x: 58, y: 62 },
+  { id: "IN", label: "India", x: 72, y: 48 },
+  { id: "NP", label: "Nepal", x: 74, y: 44 },
+  { id: "BT", label: "Bhutan", x: 76, y: 44 },
+  { id: "LK", label: "Sri Lanka", x: 72, y: 58 },
+  { id: "TH", label: "Thailand", x: 80, y: 52 },
+  { id: "MY", label: "Malaysia", x: 82, y: 58 },
+  { id: "ID", label: "Indonesia / Bali", x: 86, y: 66 },
+];
+
