@@ -25,6 +25,12 @@ export type HouseRoom = {
   shelfId?: LifeShelfId;
   /** Living-room only: short personal note instead of brands */
   note?: string;
+  /** Closed-state tease */
+  tease: string;
+  /** Door / window / cabinet label */
+  portal: string;
+  /** portal kind for styling */
+  portalKind: "door" | "cabinet" | "wardrobe" | "window";
 };
 
 export type FamilyFrame = {
@@ -184,32 +190,53 @@ export const LIFE_SHELVES: LifeShelf[] = [
   },
 ];
 
-/** Four rooms under the family portrait room. Brands live on shelves inside. */
+/** Four rooms under the family portrait room. Open the portal to see inside. */
 export const HOUSE_ROOMS: HouseRoom[] = [
   {
     id: "kitchen",
     room: "Kitchen",
     className: "kitchen",
     shelfId: "fuel",
+    tease: "What I put in — food, drink, supplements.",
+    portal: "Open the pantry",
+    portalKind: "door",
   },
   {
     id: "bath",
     room: "Bathroom",
     className: "bath",
     shelfId: "care",
+    tease: "What I put on — skin, hair, body care.",
+    portal: "Open the cabinet",
+    portalKind: "cabinet",
   },
   {
     id: "bedroom",
     room: "Bedroom",
     className: "bedroom",
     shelfId: "wear",
+    tease: "What I wear — fibres, everyday pieces, craft.",
+    portal: "Open the wardrobe",
+    portalKind: "wardrobe",
   },
   {
     id: "living",
     room: "Living room",
     className: "living",
     note: "Where the rest of the Sunday goes — board games, a slow cup of something, Tokyo claiming the sofa. No brands here on purpose.",
+    tease: "Sunday light, no shopping list.",
+    portal: "Look out the window",
+    portalKind: "window",
   },
+];
+
+export type SlamPageId = "cover" | "food" | "sports" | "travel";
+
+export const SLAM_PAGES: { id: SlamPageId; tab: string; title: string }[] = [
+  { id: "cover", tab: "Cover", title: "Things I love" },
+  { id: "food", tab: "Food", title: "A foodie in Bangalore" },
+  { id: "sports", tab: "Sports", title: "Sports I follow hard" },
+  { id: "travel", tab: "Travel", title: "Where I've been" },
 ];
 
 export function shelfById(id: LifeShelfId): LifeShelf {

@@ -1543,13 +1543,140 @@ body[data-side="life"] {
   color: #7a5a42;
 }
 
-/* Four rooms below */
+/* Four rooms below — shut until you open a portal */
 .life4 .kitchen { background: #f6e3c8; }
 .life4 .bath { background: #dfe9e4; }
 .life4 .bedroom { background: #ecd9d2; }
 .life4 .living { background: #f1e6cc; }
+.life4 .room-tease {
+  margin: 0;
+  font-size: 15px;
+  color: #63493b;
+  max-width: 28ch;
+}
+.life4 .room.is-shut { min-height: 280px; }
+.life4 .room.is-open { min-height: 320px; }
 
-.life4 .room-shelf { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.life4 .room-portal {
+  position: relative;
+  margin-top: auto;
+  align-self: stretch;
+  min-height: 160px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #fbf1e4;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-align: left;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+  transition: transform 0.35s var(--ease), filter 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .life4 .room-portal:hover { transform: translateY(-4px); filter: brightness(1.05); }
+}
+.life4 .room-portal:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.life4 .portal-face {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.life4 .portal-label {
+  position: relative;
+  z-index: 1;
+  margin: 0 14px 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(43, 29, 22, 0.72);
+  font: 600 14px/1.2 var(--sans);
+  width: fit-content;
+}
+
+/* Door / cabinet / wardrobe / window faces */
+.life4 .portal-door .portal-face {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.18), transparent 18%, transparent 82%, rgba(0,0,0,.18)),
+    repeating-linear-gradient(90deg, #8a5a32 0 14px, #7a4e2c 14px 16px);
+  box-shadow: inset 0 0 0 8px #6e4524, inset 0 0 0 10px #4a2e16;
+}
+.life4 .portal-door .portal-face::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #f0c64a;
+  box-shadow: 0 0 0 2px #6b4f17;
+}
+.life4 .portal-cabinet .portal-face {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.35), transparent 40%),
+    linear-gradient(135deg, #e9f2ee, #cfe0d8 60%, #f4f9f7);
+  box-shadow: inset 0 0 0 3px #9fb3aa, inset 0 0 0 14px rgba(255,255,255,.35);
+}
+.life4 .portal-cabinet { color: #2b1d16; }
+.life4 .portal-cabinet .portal-label { background: rgba(255, 250, 242, 0.88); color: #2b1d16; }
+.life4 .portal-wardrobe .portal-face {
+  background:
+    linear-gradient(90deg, #6e4a2c 0 48%, #4a3122 48% 52%, #6e4a2c 52% 100%);
+  box-shadow: inset 0 0 0 6px #8a5f3c;
+}
+.life4 .portal-wardrobe .portal-face::before,
+.life4 .portal-wardrobe .portal-face::after {
+  content: "";
+  position: absolute;
+  top: 46%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f0c64a;
+}
+.life4 .portal-wardrobe .portal-face::before { left: 38%; }
+.life4 .portal-wardrobe .portal-face::after { right: 38%; }
+.life4 .portal-window .portal-face {
+  background:
+    linear-gradient(#bfd8e8, #e3eef4);
+  box-shadow: inset 0 0 0 8px #fffaf2, inset 0 0 0 10px #8a5f3c;
+}
+.life4 .portal-window .portal-face::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  background:
+    linear-gradient(#8a5f3c, #8a5f3c) center/2px 100% no-repeat,
+    linear-gradient(#8a5f3c, #8a5f3c) center/100% 2px no-repeat;
+  opacity: 0.55;
+}
+.life4 .portal-window { color: #23313a; }
+.life4 .portal-window .portal-label { background: rgba(255, 250, 242, 0.9); color: #23313a; }
+
+.life4 .room-reveal {
+  position: relative;
+  margin-top: 4px;
+  flex: 1;
+  animation: life-note-in 0.4s var(--ease) both;
+}
+.life4 .room-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: rgba(43, 29, 22, 0.85);
+  color: #fbf1e4;
+  font: 600 12px/1 var(--sans);
+  cursor: pointer;
+}
+.life4 .room-close:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.life4 .room-shelf { display: flex; flex-direction: column; gap: 12px; flex: 1; padding-top: 28px; }
 .life4 .room-shelf-label h3 {
   font: 400 clamp(26px, 2.8vw, 34px)/1.1 var(--serif);
   letter-spacing: -0.02em;
@@ -1707,13 +1834,7 @@ body[data-side="life"] {
   .life4 .family-frame { transition: none; }
 }
 
-/* —— Outside the house: food, sports, travel —— */
-.life4 .life-aspect {
-  margin-top: clamp(48px, 7vw, 80px);
-  padding-top: clamp(28px, 4vw, 40px);
-  border-top: 1.5px solid rgba(90, 66, 52, 0.22);
-}
-.life4 .life-aspect-head { max-width: 52ch; margin-bottom: clamp(22px, 3vw, 32px); }
+/* —— Slam book: food / sports / travel, page by page —— */
 .life4 .life-aspect-kicker {
   margin: 0 0 10px;
   font: 600 12px/1 var(--sans);
@@ -1721,13 +1842,171 @@ body[data-side="life"] {
   text-transform: uppercase;
   color: #a8391f;
 }
-.life4 .life-aspect-head h2 {
+.life4 .slam {
+  margin-top: clamp(48px, 7vw, 80px);
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1.5px solid rgba(90, 66, 52, 0.22);
+}
+.life4 .slam-head { max-width: 52ch; margin-bottom: clamp(22px, 3vw, 32px); }
+.life4 .slam-head h2 {
   font-size: clamp(32px, 4vw, 46px);
   letter-spacing: -0.02em;
 }
-.life4 .life-aspect-head p {
+.life4 .slam-head p {
   margin: 10px 0 0;
   color: var(--ink-2);
+}
+.life4 .slam-book {
+  position: relative;
+  border-radius: 4px 14px 14px 4px;
+  background:
+    linear-gradient(90deg, #5a3a22 0 10px, #7a5230 10px 14px, transparent 14px),
+    #f7efe2;
+  box-shadow:
+    0 0 0 1px rgba(90, 66, 52, 0.22),
+    12px 18px 40px -24px rgba(60, 30, 10, 0.55);
+  padding: 0 0 18px;
+  overflow: hidden;
+}
+.life4 .slam-spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,.08) 0 3px, transparent 3px 8px),
+    linear-gradient(90deg, #3e2414, #6e4524);
+}
+.life4 .slam-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 16px 18px 0 28px;
+}
+.life4 .slam-tab {
+  border: 1px solid rgba(90, 66, 52, 0.25);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: #ead9c0;
+  color: #5a4234;
+  padding: 8px 14px;
+  font: 600 13px/1 var(--sans);
+  cursor: pointer;
+}
+.life4 .slam-tab.is-current {
+  background: #fffaf2;
+  color: #2b1d16;
+  box-shadow: 0 -2px 0 #a8391f inset;
+}
+.life4 .slam-tab:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.life4 .slam-spread {
+  margin: 0 14px 0 22px;
+  animation: slam-turn 0.45s var(--ease) both;
+}
+@keyframes slam-turn {
+  from { opacity: 0; transform: rotateY(-8deg) translateX(12px); transform-origin: left center; }
+  to { opacity: 1; transform: none; }
+}
+.life4 .slam-paper {
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(232, 168, 120, 0.12), transparent 40%),
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(168, 120, 80, 0.08) 27px 28px),
+    #fffaf2;
+  border: 1px solid rgba(90, 66, 52, 0.16);
+  border-radius: 2px 10px 10px 2px;
+  padding: clamp(18px, 3vw, 28px);
+  min-height: 420px;
+  box-shadow: inset 8px 0 16px -14px rgba(60, 30, 10, 0.35);
+}
+.life4 .slam-page-title {
+  font: 400 clamp(28px, 3.4vw, 38px)/1.1 var(--serif);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: #2b1d16;
+}
+.life4 .slam-lede {
+  margin: 0 0 22px;
+  max-width: 52ch;
+  color: var(--ink-2);
+}
+.life4 .slam-cover {
+  max-width: 48ch;
+  padding: clamp(12px, 2vw, 24px) 0;
+}
+.life4 .slam-cover-from {
+  margin: 0 0 10px;
+  font: 600 12px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a8391f;
+}
+.life4 .slam-cover h3 {
+  font: 400 clamp(34px, 4.4vw, 48px)/1.05 var(--serif);
+  letter-spacing: -0.03em;
+}
+.life4 .slam-cover > p {
+  margin: 14px 0 0;
+  color: var(--ink-2);
+}
+.life4 .slam-toc {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.life4 .slam-toc button {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px dashed rgba(90, 66, 52, 0.28);
+  background: transparent;
+  padding: 10px 0;
+  text-align: left;
+  font: 500 18px/1.3 var(--serif);
+  color: #2b1d16;
+  cursor: pointer;
+}
+.life4 .slam-toc button span {
+  font: 600 12px/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: #a8391f;
+}
+@media (hover: hover) {
+  .life4 .slam-toc button:hover { color: #a8391f; }
+}
+.life4 .slam-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 22px 0 28px;
+}
+.life4 .slam-turn {
+  border: 1px solid rgba(90, 66, 52, 0.28);
+  border-radius: 999px;
+  background: #fffaf2;
+  color: #2b1d16;
+  min-height: 40px;
+  padding: 0 16px;
+  font: 600 13px/1 var(--sans);
+  cursor: pointer;
+}
+.life4 .slam-turn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.life4 .slam-turn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.life4 .slam-folio {
+  font: 500 13px/1 var(--mono);
+  color: #7a5a42;
+}
+@media (prefers-reduced-motion: reduce) {
+  .life4 .slam-spread { animation: none; }
 }
 
 .life4 .food-groups {

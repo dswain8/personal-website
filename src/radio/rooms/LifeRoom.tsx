@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
 import {
@@ -7,6 +7,7 @@ import {
   HOUSE_ROOMS,
   INDIA_PINS,
   INDIA_SKIPPED,
+  SLAM_PAGES,
   SPORTS_LOVES,
   WORLD_PINS,
   shelfById,
@@ -16,6 +17,7 @@ import {
   type LifeBrand,
   type LifeShelf,
   type MapPin,
+  type SlamPageId,
   type SportLove,
 } from "../data/life-items";
 
@@ -117,50 +119,80 @@ function RoomShelf({
 
 function BrandRoom({
   room,
-  open,
-  onToggle,
+  revealed,
+  onReveal,
+  brandOpen,
+  onToggleBrand,
 }: {
   room: HouseRoom;
-  open: string | null;
-  onToggle: (key: string) => void;
+  revealed: boolean;
+  onReveal: () => void;
+  brandOpen: string | null;
+  onToggleBrand: (key: string) => void;
 }) {
   const shelf = room.shelfId ? shelfById(room.shelfId) : null;
 
   return (
-    <section className={`room ${room.className}`} aria-label={room.room}>
+    <section
+      className={`room ${room.className}${revealed ? " is-open" : " is-shut"}`}
+      aria-label={room.room}
+    >
       <h2>{room.room}</h2>
-      {shelf ? (
-        <RoomShelf shelf={shelf} open={open} onToggle={onToggle} />
+      <p className="room-tease">{room.tease}</p>
+
+      {!revealed ? (
+        <button
+          type="button"
+          className={`room-portal portal-${room.portalKind}`}
+          onClick={onReveal}
+          aria-expanded={false}
+        >
+          <span className="portal-face" aria-hidden="true" />
+          <span className="portal-label">{room.portal}</span>
+        </button>
       ) : (
-        <div className="living-note">
-          <p>{room.note}</p>
-          <div className="living-window" aria-hidden="true">
-            <span>Sunday light</span>
-          </div>
+        <div className="room-reveal">
+          <button
+            type="button"
+            className="room-close"
+            onClick={onReveal}
+            aria-label={`Close ${room.room}`}
+          >
+            Close
+          </button>
+          {shelf ? (
+            <RoomShelf
+              shelf={shelf}
+              open={brandOpen}
+              onToggle={onToggleBrand}
+            />
+          ) : (
+            <div className="living-note">
+              <p>{room.note}</p>
+              <div className="living-window" aria-hidden="true">
+                <span>Sunday light</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </section>
   );
 }
 
-function FoodSection() {
+function FoodPage() {
   return (
-    <section className="life-aspect" aria-labelledby="food-heading">
-      <header className="life-aspect-head">
-        <p className="life-aspect-kicker">Out eating</p>
-        <h2 id="food-heading">A foodie in Bangalore.</h2>
-        <p>
-          Native Karnataka plates, tindi joints, a few Italian and Asian
-          obsessions, coffee shops I trust, and Conservatory pop-ups whenever
-          they land.
-        </p>
-      </header>
+    <div className="slam-page-body">
+      <p className="slam-lede">
+        Native Karnataka plates, tindi joints, Italian and Asian obsessions,
+        coffee I trust, and Conservatory pop-ups whenever they land.
+      </p>
       <div className="food-groups">
         {FOOD_GROUPS.map((group) => (
           <FoodGroupBlock key={group.id} group={group} />
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -181,23 +213,19 @@ function FoodGroupBlock({ group }: { group: FoodGroup }) {
   );
 }
 
-function SportsSection() {
+function SportsPage() {
   return (
-    <section className="life-aspect" aria-labelledby="sports-heading">
-      <header className="life-aspect-head">
-        <p className="life-aspect-kicker">On the sidelines</p>
-        <h2 id="sports-heading">Sports I follow hard.</h2>
-        <p>
-          Cricket first, then the other obsessions — cage, track, court, and
-          pitch.
-        </p>
-      </header>
+    <div className="slam-page-body">
+      <p className="slam-lede">
+        Cricket first, then the other obsessions — cage, track, court, and
+        pitch.
+      </p>
       <ul className="sports-grid">
         {SPORTS_LOVES.map((s) => (
           <SportCard key={s.id} sport={s} />
         ))}
       </ul>
-    </section>
+    </div>
   );
 }
 
@@ -211,7 +239,7 @@ function SportCard({ sport }: { sport: SportLove }) {
   );
 }
 
-function TravelSection({
+function TravelPage({
   activePin,
   setActivePin,
 }: {
@@ -219,16 +247,11 @@ function TravelSection({
   setActivePin: (id: string | null) => void;
 }) {
   return (
-    <section className="life-aspect" aria-labelledby="travel-heading">
-      <header className="life-aspect-head">
-        <p className="life-aspect-kicker">On the road</p>
-        <h2 id="travel-heading">Where I&apos;ve been.</h2>
-        <p>
-          Most of India — still missing Arunachal, Mizoram, and Nagaland — plus
-          a growing set of stamps abroad. Tap a pin.
-        </p>
-      </header>
-
+    <div className="slam-page-body">
+      <p className="slam-lede">
+        Most of India — still missing Arunachal, Mizoram, and Nagaland — plus a
+        growing set of stamps abroad. Tap a pin.
+      </p>
       <div className="travel-maps">
         <PinMap
           title="India"
@@ -247,7 +270,7 @@ function TravelSection({
           setActivePin={setActivePin}
         />
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -299,9 +322,134 @@ function PinMap({
   );
 }
 
+function SlamBook({
+  page,
+  setPage,
+  activePin,
+  setActivePin,
+}: {
+  page: SlamPageId;
+  setPage: (p: SlamPageId) => void;
+  activePin: string | null;
+  setActivePin: (id: string | null) => void;
+}) {
+  const index = SLAM_PAGES.findIndex((p) => p.id === page);
+  const meta = SLAM_PAGES[index];
+  const prev = index > 0 ? SLAM_PAGES[index - 1] : null;
+  const next = index < SLAM_PAGES.length - 1 ? SLAM_PAGES[index + 1] : null;
+
+  useEffect(() => {
+    // reset travel pin when leaving travel page
+    if (page !== "travel") setActivePin(null);
+  }, [page, setActivePin]);
+
+  return (
+    <section className="slam" aria-labelledby="slam-heading">
+      <header className="slam-head">
+        <p className="life-aspect-kicker">Slam book</p>
+        <h2 id="slam-heading">Things I love.</h2>
+        <p>
+          Flip through — food joints, sports I follow, and the maps of where
+          I&apos;ve been. One page at a time.
+        </p>
+      </header>
+
+      <div className="slam-book" data-page={page}>
+        <div className="slam-spine" aria-hidden="true" />
+        <nav className="slam-tabs" aria-label="Slam book pages">
+          {SLAM_PAGES.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              className={`slam-tab${page === p.id ? " is-current" : ""}`}
+              aria-current={page === p.id ? "page" : undefined}
+              onClick={() => setPage(p.id)}
+            >
+              {p.tab}
+            </button>
+          ))}
+        </nav>
+
+        <article className="slam-spread" key={page}>
+          <div className="slam-paper">
+            {page === "cover" ? (
+              <div className="slam-cover">
+                <p className="slam-cover-from">From Debjeet</p>
+                <h3>Off the clock, continued.</h3>
+                <p>
+                  A little book of the things that pull me out of work — tables
+                  in Bangalore, matches I never miss, and the stamps I&apos;ve
+                  collected so far.
+                </p>
+                <ol className="slam-toc">
+                  {SLAM_PAGES.filter((p) => p.id !== "cover").map((p, i) => (
+                    <li key={p.id}>
+                      <button type="button" onClick={() => setPage(p.id)}>
+                        <span>{String(i + 1).padStart(2, "0")}</span>
+                        {p.title}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : (
+              <>
+                <h3 className="slam-page-title">{meta.title}</h3>
+                {page === "food" ? <FoodPage /> : null}
+                {page === "sports" ? <SportsPage /> : null}
+                {page === "travel" ? (
+                  <TravelPage
+                    activePin={activePin}
+                    setActivePin={setActivePin}
+                  />
+                ) : null}
+              </>
+            )}
+          </div>
+        </article>
+
+        <div className="slam-nav">
+          <button
+            type="button"
+            className="slam-turn slam-turn-prev"
+            disabled={!prev}
+            onClick={() => prev && setPage(prev.id)}
+          >
+            {prev ? `← ${prev.tab}` : "·"}
+          </button>
+          <span className="slam-folio">
+            {index + 1} / {SLAM_PAGES.length}
+          </span>
+          <button
+            type="button"
+            className="slam-turn slam-turn-next"
+            disabled={!next}
+            onClick={() => next && setPage(next.id)}
+          >
+            {next ? `${next.tab} →` : "·"}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function LifeRoom() {
+  const [openRoom, setOpenRoom] = useState<string | null>(null);
   const [openBrand, setOpenBrand] = useState<string | null>(null);
+  const [slamPage, setSlamPage] = useState<SlamPageId>("cover");
   const [activePin, setActivePin] = useState<string | null>(null);
+
+  const onRevealRoom = (id: string) => {
+    setOpenRoom((cur) => {
+      if (cur === id) {
+        setOpenBrand(null);
+        return null;
+      }
+      setOpenBrand(null);
+      return id;
+    });
+  };
 
   const onToggleBrand = (key: string) => {
     setOpenBrand((cur) => (cur === key ? null : key));
@@ -319,8 +467,8 @@ export default function LifeRoom() {
             is four. We have a golden retriever named Tokyo.
           </p>
           <p className="l4-hint">
-            Start at home. Then the city table, the matches I never miss, and
-            the maps of where I&apos;ve been.
+            Open a door or window in the house for what I use. Then flip the
+            slam book for what I love.
           </p>
         </header>
 
@@ -350,8 +498,10 @@ export default function LifeRoom() {
             <BrandRoom
               key={room.id}
               room={room}
-              open={openBrand}
-              onToggle={onToggleBrand}
+              revealed={openRoom === room.id}
+              onReveal={() => onRevealRoom(room.id)}
+              brandOpen={openBrand}
+              onToggleBrand={onToggleBrand}
             />
           ))}
 
@@ -359,13 +509,16 @@ export default function LifeRoom() {
         </div>
 
         <p className="l4-small">
-          The things in the house are brands I use. Not exhaustive, and not
+          The shelves behind the doors are brands I use. Not exhaustive, and not
           affiliate links.
         </p>
 
-        <FoodSection />
-        <SportsSection />
-        <TravelSection activePin={activePin} setActivePin={setActivePin} />
+        <SlamBook
+          page={slamPage}
+          setPage={setSlamPage}
+          activePin={activePin}
+          setActivePin={setActivePin}
+        />
 
         <NextSide
           prev={{ key: "try", name: "Try what I've made", label: "Back to" }}
