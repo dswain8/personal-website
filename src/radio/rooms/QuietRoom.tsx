@@ -254,20 +254,17 @@ export default function QuietRoom() {
           style={{ paddingBottom: 40 }}
         >
           <p className="kicker" id="sound-h">
-            What&apos;s playing
+            A little music
           </p>
           <p>
-            Silence by default. Or a soft calm tone — steady, quiet, made to sit
-            in the background while you watch.
+            Turn it on for a minute or two — solitude, silence, nothing else.
           </p>
           <div className="sound">
             <button
               type="button"
               id="calm-tone"
               aria-pressed={droneOn}
-              aria-label={
-                droneOn ? "Stop calm tone" : "Play soft calm tone"
-              }
+              aria-label={droneOn ? "Stop the music" : "Turn on the music"}
               onClick={() => {
                 if (isDroneOn()) {
                   stopDrone();
@@ -278,7 +275,7 @@ export default function QuietRoom() {
                 }
               }}
             >
-              {droneOn ? "Calm tone on · stop" : "Play calm tone"}
+              {droneOn ? "Music on · stop" : "Turn on the music"}
             </button>
             {droneOn ? (
               <label htmlFor="vol">
@@ -297,10 +294,6 @@ export default function QuietRoom() {
                 />
               </label>
             ) : null}
-            <p>
-              A soft 432&nbsp;Hz tone your browser generates — no track, no
-              copyright. Stops when you leave this page.
-            </p>
           </div>
         </section>
         <NextSide
