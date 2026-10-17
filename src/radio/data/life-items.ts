@@ -427,58 +427,60 @@ export const SPORTS_LOVES: SportLove[] = [
 export type MapPin = {
   id: string;
   label: string;
-  /** Percent positions on the map stage */
-  x: number;
-  y: number;
+  /** SVG path id(s) that light up for this place */
+  regions: string[];
+  note?: string;
 };
 
 /** Visited Indian states — all except Arunachal, Mizoram, Nagaland. */
 export const INDIA_PINS: MapPin[] = [
-  { id: "JK", label: "Jammu & Kashmir", x: 38, y: 8 },
-  { id: "HP", label: "Himachal Pradesh", x: 42, y: 14 },
-  { id: "PB", label: "Punjab", x: 36, y: 18 },
-  { id: "UK", label: "Uttarakhand", x: 48, y: 20 },
-  { id: "HR", label: "Haryana", x: 40, y: 24 },
-  { id: "DL", label: "Delhi", x: 42, y: 26 },
-  { id: "RJ", label: "Rajasthan", x: 28, y: 32 },
-  { id: "UP", label: "Uttar Pradesh", x: 52, y: 30 },
-  { id: "BR", label: "Bihar", x: 68, y: 34 },
-  { id: "SK", label: "Sikkim", x: 78, y: 28 },
-  { id: "AS", label: "Assam", x: 88, y: 32 },
-  { id: "ML", label: "Meghalaya", x: 86, y: 38 },
-  { id: "TR", label: "Tripura", x: 90, y: 44 },
-  { id: "MN", label: "Manipur", x: 94, y: 40 },
-  { id: "WB", label: "West Bengal", x: 76, y: 42 },
-  { id: "JH", label: "Jharkhand", x: 68, y: 42 },
-  { id: "OR", label: "Odisha", x: 70, y: 52 },
-  { id: "CT", label: "Chhattisgarh", x: 58, y: 50 },
-  { id: "MP", label: "Madhya Pradesh", x: 46, y: 44 },
-  { id: "GJ", label: "Gujarat", x: 22, y: 42 },
-  { id: "MH", label: "Maharashtra", x: 36, y: 54 },
-  { id: "TS", label: "Telangana", x: 52, y: 58 },
-  { id: "AP", label: "Andhra Pradesh", x: 54, y: 66 },
-  { id: "KA", label: "Karnataka", x: 40, y: 70 },
-  { id: "GA", label: "Goa", x: 30, y: 68 },
-  { id: "KL", label: "Kerala", x: 38, y: 86 },
-  { id: "TN", label: "Tamil Nadu", x: 48, y: 82 },
+  { id: "JK", label: "Jammu & Kashmir", regions: ["JK"], note: "Mountains first — Srinagar light and the long road up." },
+  { id: "HP", label: "Himachal Pradesh", regions: ["HP"], note: "Hills, pine, and cold mornings that reset the week." },
+  { id: "PB", label: "Punjab", regions: ["PB"], note: "Warm kitchens and louder laughter than the train ride in." },
+  { id: "UK", label: "Uttarakhand", regions: ["UK"], note: "Temple towns and river air — Dehradun stays with me." },
+  { id: "HR", label: "Haryana", regions: ["HR"], note: "The highway state — always on the way to somewhere else." },
+  { id: "DL", label: "Delhi", regions: ["DL"], note: "Chaos with a spine. Food, monuments, and too many opinions." },
+  { id: "RJ", label: "Rajasthan", regions: ["RJ"], note: "Forts, desert heat, and evenings that go gold." },
+  { id: "UP", label: "Uttar Pradesh", regions: ["UP"], note: "History layered thick — Varanasi still echoes." },
+  { id: "BR", label: "Bihar", regions: ["BR"], note: "Quiet strength. Bodh Gaya slows everything down." },
+  { id: "SK", label: "Sikkim", regions: ["SK"], note: "Small state, huge views. Kanchenjunga weather." },
+  { id: "AS", label: "Assam", regions: ["AS"], note: "Tea gardens and Brahmaputra light." },
+  { id: "ML", label: "Meghalaya", regions: ["ML"], note: "Clouds you can walk through. Shillong rhythm." },
+  { id: "TR", label: "Tripura", regions: ["TR"], note: "A quieter Northeast chapter — worth the detour." },
+  { id: "MN", label: "Manipur", regions: ["MN"], note: "Imphal valley — green, proud, unforgettable." },
+  { id: "WB", label: "West Bengal", regions: ["WB"], note: "Kolkata conversations and mishti after every argument." },
+  { id: "JH", label: "Jharkhand", regions: ["JH"], note: "Forest roads and waterfalls between the cities." },
+  { id: "OR", label: "Odisha", regions: ["OR"], note: "Puri waves, temple stone, and Richu's Odissi roots." },
+  { id: "CT", label: "Chhattisgarh", regions: ["CT"], note: "Underrated — forests and frank hospitality." },
+  { id: "MP", label: "Madhya Pradesh", regions: ["MP"], note: "The heart of India — Khajuraho, Mandu, long drives." },
+  { id: "GJ", label: "Gujarat", regions: ["GJ"], note: "White desert nights and Gujarati thali discipline." },
+  { id: "MH", label: "Maharashtra", regions: ["MH"], note: "Mumbai energy, Western Ghats weekends." },
+  { id: "TS", label: "Telangana", regions: ["TS"], note: "Hyderabad biryani — argument settled." },
+  { id: "AP", label: "Andhra Pradesh", regions: ["AP"], note: "Spice with conviction. Coast and red chili." },
+  { id: "KA", label: "Karnataka", regions: ["KA"], note: "Home base. Bangalore is the kitchen I return to." },
+  { id: "GA", label: "Goa", regions: ["GA"], note: "Salt air, slow mornings, no agenda." },
+  { id: "KL", label: "Kerala", regions: ["KL"], note: "Backwaters, filter coffee, green that doesn't quit." },
+  { id: "TN", label: "Tamil Nadu", regions: ["TN"], note: "Temple cities and filter-coffee mornings done right." },
 ];
 
 export const INDIA_SKIPPED = ["Arunachal Pradesh", "Mizoram", "Nagaland"];
+export const INDIA_SKIPPED_IDS = ["AR", "MZ", "NL"] as const;
+export const WORLD_SKIPPED_IDS = [] as const;
 
 export const WORLD_PINS: MapPin[] = [
-  { id: "US", label: "United States", x: 18, y: 38 },
-  { id: "DE", label: "Germany", x: 50, y: 28 },
-  { id: "AT", label: "Austria", x: 53, y: 30 },
-  { id: "HU", label: "Hungary", x: 55, y: 30 },
-  { id: "TR", label: "Turkey", x: 58, y: 36 },
-  { id: "AE", label: "Dubai (UAE)", x: 64, y: 44 },
-  { id: "KE", label: "Kenya", x: 58, y: 62 },
-  { id: "IN", label: "India", x: 72, y: 48 },
-  { id: "NP", label: "Nepal", x: 74, y: 44 },
-  { id: "BT", label: "Bhutan", x: 76, y: 44 },
-  { id: "LK", label: "Sri Lanka", x: 72, y: 58 },
-  { id: "TH", label: "Thailand", x: 80, y: 52 },
-  { id: "MY", label: "Malaysia", x: 82, y: 58 },
-  { id: "ID", label: "Indonesia / Bali", x: 86, y: 66 },
+  { id: "US", label: "United States", regions: ["usa"], note: "Work trips that turned into city walks and late dinners." },
+  { id: "DE", label: "Germany", regions: ["germany"], note: "Trains on time, bread that means it, museum hours." },
+  { id: "AT", label: "Austria", regions: ["austria"], note: "Alpine air and cafés that still feel like cafés." },
+  { id: "HU", label: "Hungary", regions: ["hungary"], note: "Budapest baths and ruin-bar nights." },
+  { id: "TR", label: "Turkey", regions: ["turkey"], note: "Istanbul layers — bazaars, Bosphorus, breakfast spreads." },
+  { id: "AE", label: "Dubai (UAE)", regions: ["emirates"], note: "Layover city that became a desert-and-skyline stamp." },
+  { id: "KE", label: "Kenya", regions: ["kenya"], note: "Savanna light — the trip that recalibrated scale." },
+  { id: "IN", label: "India", regions: ["india"], note: "Home — most of the map, still collecting the Northeast." },
+  { id: "NP", label: "Nepal", regions: ["nepal"], note: "Kathmandu dust and Himalaya silhouette." },
+  { id: "BT", label: "Bhutan", regions: ["bhutan"], note: "Quiet roads, dzongs, and happiness measured differently." },
+  { id: "LK", label: "Sri Lanka", regions: ["sri-lanka"], note: "Tea hills, coast trains, and short-eats between cities." },
+  { id: "TH", label: "Thailand", regions: ["thailand"], note: "Street food graduate school." },
+  { id: "MY", label: "Malaysia", regions: ["malaysia", "east-malaysia"], note: "KL towers and Borneo green — both count." },
+  { id: "ID", label: "Indonesia / Bali", regions: ["bali", "java", "sumatra", "kalimantan"], note: "Bali first — temples, rice terraces, ocean evenings." },
 ];
 

@@ -1,4 +1,13 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
 import {
@@ -7,9 +16,11 @@ import {
   HOUSE_ROOMS,
   INDIA_PINS,
   INDIA_SKIPPED,
+  INDIA_SKIPPED_IDS,
   SLAM_PAGES,
   SPORTS_LOVES,
   WORLD_PINS,
+  WORLD_SKIPPED_IDS,
   shelfById,
   type FamilyFrame,
   type FoodGroup,
@@ -249,23 +260,29 @@ function TravelPage({
   return (
     <div className="slam-page-body">
       <p className="slam-lede">
-        Most of India — still missing Arunachal, Mizoram, and Nagaland — plus a
-        growing set of stamps abroad. Tap a pin.
+        Tap any state or country. Visited places glow warm — still missing{" "}
+        {INDIA_SKIPPED.join(", ")} at home, collecting stamps abroad.
       </p>
       <div className="travel-maps">
-        <PinMap
+        <RegionMap
+          key="india-map"
           title="India"
-          subtitle={`Skipped for now: ${INDIA_SKIPPED.join(", ")}.`}
+          subtitle="Every state I've stood in — except three in the Northeast. Hover, tap, read."
           variant="india"
+          src="/life/maps/india.svg"
           pins={INDIA_PINS}
+          skippedIds={INDIA_SKIPPED_IDS}
           activePin={activePin}
           setActivePin={setActivePin}
         />
-        <PinMap
+        <RegionMap
+          key="world-map"
           title="The world"
-          subtitle="Sri Lanka, Bhutan, Nepal, Thailand, Malaysia, Indonesia (Bali), Turkey, Dubai, Kenya, the US, Germany, Austria, Hungary."
+          subtitle="Countries with clear borders. Visited ones light up — tap any nation to name it."
           variant="world"
+          src="/life/maps/world.svg"
           pins={WORLD_PINS}
+          skippedIds={WORLD_SKIPPED_IDS}
           activePin={activePin}
           setActivePin={setActivePin}
         />
@@ -274,50 +291,212 @@ function TravelPage({
   );
 }
 
-function PinMap({
+function RegionMap({
   title,
   subtitle,
   variant,
+  src,
   pins,
+  skippedIds,
   activePin,
   setActivePin,
 }: {
   title: string;
   subtitle: string;
   variant: "india" | "world";
+  src: string;
   pins: MapPin[];
+  skippedIds: readonly string[];
   activePin: string | null;
   setActivePin: (id: string | null) => void;
 }) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [hoverName, setHoverName] = useState<string | null>(null);
+  const [ghostLabel, setGhostLabel] = useState<string | null>(null);
+
+  const pinByRegion = useMemo(() => {
+    const map = new Map<string, MapPin>();
+    for (const pin of pins) {
+      for (const r of pin.regions) map.set(r, pin);
+    }
+    return map;
+  }, [pins]);
+  const skipped = useMemo(() => new Set(skippedIds), [skippedIds]);
   const active = pins.find((p) => `${variant}:${p.id}` === activePin);
 
+  useEffect(() => {
+    let cancelled = false;
+    const host = hostRef.current;
+
+    fetch(src)
+      .then((r) => {
+        if (!r.ok) throw new Error(`map ${r.status}`);
+        return r.text();
+      })
+      .then((svg) => {
+        if (cancelled || !hostRef.current) return;
+        hostRef.current.innerHTML = svg;
+        const root = hostRef.current.querySelector("svg");
+        if (!root) throw new Error("no svg");
+        root.setAttribute("focusable", "false");
+        hostRef.current
+          .querySelectorAll<SVGPathElement>("path.region")
+          .forEach((path) => {
+            const rid = path.id;
+            const pin = pinByRegion.get(rid);
+            const isSkipped = skipped.has(rid);
+            path.classList.toggle("is-visited", Boolean(pin));
+            path.classList.toggle("is-skipped", isSkipped);
+            path.setAttribute("tabindex", "0");
+            path.setAttribute("role", "button");
+            const label =
+              pin?.label ||
+              path.getAttribute("data-name") ||
+              rid.replace(/-/g, " ");
+            path.setAttribute("aria-label", label);
+          });
+        setReady(true);
+      })
+      .catch(() => {
+        if (!cancelled) setLoadError(true);
+      });
+
+    return () => {
+      cancelled = true;
+      if (host) host.innerHTML = "";
+    };
+    // pins/skipped are stable module constants — load once per map src
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src, variant]);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || !ready) return;
+    host.querySelectorAll<SVGPathElement>("path.region").forEach((path) => {
+      const rid = path.id;
+      const pin = pinByRegion.get(rid);
+      const key = pin ? `${variant}:${pin.id}` : null;
+      const ghostKey = `${variant}:ghost:${rid}`;
+      const isActive =
+        (key && activePin === key) ||
+        activePin === ghostKey ||
+        (!!active && active.regions.includes(rid));
+      path.classList.toggle("is-active", Boolean(isActive));
+      path.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }, [activePin, ready, variant, active, pinByRegion]);
+
+  const onMapClick = (e: MouseEvent | KeyboardEvent) => {
+    const target = e.target as Element | null;
+    const path = target?.closest?.("path.region") as SVGPathElement | null;
+    if (!path) return;
+    const rid = path.id;
+    const pin = pinByRegion.get(rid);
+    if (pin) {
+      const key = `${variant}:${pin.id}`;
+      setGhostLabel(null);
+      setActivePin(activePin === key ? null : key);
+      return;
+    }
+    const name = path.getAttribute("data-name") || rid;
+    const ghostKey = `${variant}:ghost:${rid}`;
+    if (activePin === ghostKey) {
+      setActivePin(null);
+      setGhostLabel(null);
+    } else {
+      setActivePin(ghostKey);
+      setGhostLabel(name);
+    }
+  };
+
+  const onMapKey = (e: KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onMapClick(e);
+    }
+  };
+
+  const ghostId = activePin?.startsWith(`${variant}:ghost:`)
+    ? activePin.slice(`${variant}:ghost:`.length)
+    : null;
+  const readoutTitle =
+    active?.label || ghostLabel || hoverName || "Tap a region";
+  const readoutNote =
+    active?.note ||
+    (ghostId
+      ? skipped.has(ghostId)
+        ? "Still on the list — not yet."
+        : "Not stamped yet — but every border is clickable."
+      : null);
+
   return (
-    <div className={`pin-map pin-map--${variant}`}>
+    <div className={`pin-map pin-map--${variant}${ready ? " is-ready" : ""}`}>
       <div className="pin-map-head">
         <h3>{title}</h3>
         <p>{subtitle}</p>
       </div>
-      <div className="pin-stage" role="group" aria-label={`${title} travel map`}>
-        <div className="pin-land" aria-hidden="true" />
-        {pins.map((pin) => {
-          const key = `${variant}:${pin.id}`;
-          const isOn = activePin === key;
-          return (
-            <button
-              key={pin.id}
-              type="button"
-              className={`map-pin${isOn ? " is-on" : ""}`}
-              style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
-              aria-label={pin.label}
-              aria-pressed={isOn}
-              onClick={() => setActivePin(isOn ? null : key)}
-            />
-          );
-        })}
+      <div
+        className="pin-stage"
+        role="group"
+        aria-label={`${title} travel map`}
+        onClick={onMapClick}
+        onKeyDown={onMapKey}
+        onMouseOver={(e) => {
+          const path = (e.target as Element).closest?.(
+            "path.region",
+          ) as SVGPathElement | null;
+          if (path) {
+            setHoverName(
+              pinByRegion.get(path.id)?.label ||
+                path.getAttribute("data-name") ||
+                path.id,
+            );
+          }
+        }}
+        onMouseOut={() => setHoverName(null)}
+      >
+        <div className="map-svg-host" ref={hostRef} aria-hidden={!ready} />
+        {!ready && !loadError ? (
+          <p className="map-loading">Unfolding the map…</p>
+        ) : null}
+        {loadError ? (
+          <p className="map-loading">Couldn’t load the map. Refresh once.</p>
+        ) : null}
+        <div className="map-legend" aria-hidden="true">
+          <span className="leg leg-visited">Visited</span>
+          {variant === "india" ? (
+            <span className="leg leg-skip">Not yet</span>
+          ) : (
+            <span className="leg leg-rest">Tap any country</span>
+          )}
+        </div>
       </div>
-      <p className="pin-readout" aria-live="polite">
-        {active ? active.label : "Tap a pin"}
-      </p>
+      <div className="pin-readout" aria-live="polite">
+        <b>{readoutTitle}</b>
+        {readoutNote ? <p>{readoutNote}</p> : null}
+      </div>
+      {variant === "india" || variant === "world" ? (
+        <ul className="map-chip-rail" aria-label={`${title} visited list`}>
+          {pins.map((pin) => {
+            const key = `${variant}:${pin.id}`;
+            const isOn = activePin === key;
+            return (
+              <li key={pin.id}>
+                <button
+                  type="button"
+                  className={`map-chip${isOn ? " is-on" : ""}`}
+                  aria-pressed={isOn}
+                  onClick={() => setActivePin(isOn ? null : key)}
+                >
+                  {pin.label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
     </div>
   );
 }
@@ -337,25 +516,39 @@ function SlamBook({
   const meta = SLAM_PAGES[index];
   const prev = index > 0 ? SLAM_PAGES[index - 1] : null;
   const next = index < SLAM_PAGES.length - 1 ? SLAM_PAGES[index + 1] : null;
+  const bookId = useId();
+  const [turnDir, setTurnDir] = useState<"next" | "prev">("next");
 
   useEffect(() => {
-    // reset travel pin when leaving travel page
     if (page !== "travel") setActivePin(null);
   }, [page, setActivePin]);
+
+  const go = (target: SlamPageId, dir: "next" | "prev") => {
+    setTurnDir(dir);
+    setPage(target);
+  };
+
+  const isCover = page === "cover";
 
   return (
     <section className="slam" aria-labelledby="slam-heading">
       <header className="slam-head">
         <p className="life-aspect-kicker">Slam book</p>
-        <h2 id="slam-heading">Things I love.</h2>
+        <h2 id="slam-heading">A book of my life.</h2>
         <p>
-          Flip through — food joints, sports I follow, and the maps of where
-          I&apos;ve been. One page at a time.
+          Open it like someone handed you the notebook — food-stained pages,
+          match-day scribbles, and maps with every stamp I&apos;ve collected.
         </p>
       </header>
 
-      <div className="slam-book" data-page={page}>
-        <div className="slam-spine" aria-hidden="true" />
+      <div
+        className={`slam-book${isCover ? " is-cover" : " is-open"}`}
+        data-page={page}
+        data-turn={turnDir}
+        style={{ "--slam-folio": `"${index + 1}"` } as CSSProperties}
+      >
+        <div className="slam-desk" aria-hidden="true" />
+
         <nav className="slam-tabs" aria-label="Slam book pages">
           {SLAM_PAGES.map((p) => (
             <button
@@ -363,28 +556,42 @@ function SlamBook({
               type="button"
               className={`slam-tab${page === p.id ? " is-current" : ""}`}
               aria-current={page === p.id ? "page" : undefined}
-              onClick={() => setPage(p.id)}
+              onClick={() =>
+                go(p.id, SLAM_PAGES.indexOf(p) < index ? "prev" : "next")
+              }
             >
               {p.tab}
             </button>
           ))}
         </nav>
 
-        <article className="slam-spread" key={page}>
-          <div className="slam-paper">
-            {page === "cover" ? (
-              <div className="slam-cover">
-                <p className="slam-cover-from">From Debjeet</p>
-                <h3>Off the clock, continued.</h3>
-                <p>
-                  A little book of the things that pull me out of work — tables
-                  in Bangalore, matches I never miss, and the stamps I&apos;ve
-                  collected so far.
+        <article
+          className="slam-spread"
+          key={page}
+          aria-labelledby={`${bookId}-title`}
+        >
+          {isCover ? (
+            <div className="slam-cover-board">
+              <div className="slam-cover-foil">
+                <p className="slam-cover-from">Property of Debjeet</p>
+                <h3 id={`${bookId}-title`}>Slam book</h3>
+                <p className="slam-cover-sub">Off the clock · a life in pages</p>
+                <p className="slam-cover-blurb">
+                  Tables in Bangalore, matches I never miss, and the stamps
+                  I&apos;ve collected so far. Flip the page — it&apos;s meant to
+                  be read.
                 </p>
+                <button
+                  type="button"
+                  className="slam-open-cta"
+                  onClick={() => go("food", "next")}
+                >
+                  Open the book
+                </button>
                 <ol className="slam-toc">
                   {SLAM_PAGES.filter((p) => p.id !== "cover").map((p, i) => (
                     <li key={p.id}>
-                      <button type="button" onClick={() => setPage(p.id)}>
+                      <button type="button" onClick={() => go(p.id, "next")}>
                         <span>{String(i + 1).padStart(2, "0")}</span>
                         {p.title}
                       </button>
@@ -392,20 +599,43 @@ function SlamBook({
                   ))}
                 </ol>
               </div>
-            ) : (
-              <>
-                <h3 className="slam-page-title">{meta.title}</h3>
-                {page === "food" ? <FoodPage /> : null}
-                {page === "sports" ? <SportsPage /> : null}
-                {page === "travel" ? (
-                  <TravelPage
-                    activePin={activePin}
-                    setActivePin={setActivePin}
-                  />
-                ) : null}
-              </>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div
+              className={`slam-open-leaves${page === "travel" ? " is-wide" : ""}`}
+            >
+              <div className="slam-leaf slam-leaf-left" aria-hidden="true">
+                <div className="slam-leaf-inner">
+                  <p className="slam-leaf-kicker">Chapter</p>
+                  <p className="slam-leaf-chapter">{meta.tab}</p>
+                  <p className="slam-leaf-whisper">
+                    {page === "food" &&
+                      "Where I eat when the week finally exhales."}
+                    {page === "sports" &&
+                      "Who I cheer for when the room goes quiet."}
+                    {page === "travel" &&
+                      "Every border I've crossed — and three I haven't yet."}
+                  </p>
+                  <div className="slam-leaf-ornament" />
+                </div>
+              </div>
+              <div className="slam-leaf slam-leaf-right">
+                <div className="slam-leaf-inner">
+                  <h3 className="slam-page-title" id={`${bookId}-title`}>
+                    {meta.title}
+                  </h3>
+                  {page === "food" ? <FoodPage /> : null}
+                  {page === "sports" ? <SportsPage /> : null}
+                  {page === "travel" ? (
+                    <TravelPage
+                      activePin={activePin}
+                      setActivePin={setActivePin}
+                    />
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          )}
         </article>
 
         <div className="slam-nav">
@@ -413,18 +643,18 @@ function SlamBook({
             type="button"
             className="slam-turn slam-turn-prev"
             disabled={!prev}
-            onClick={() => prev && setPage(prev.id)}
+            onClick={() => prev && go(prev.id, "prev")}
           >
             {prev ? `← ${prev.tab}` : "·"}
           </button>
           <span className="slam-folio">
-            {index + 1} / {SLAM_PAGES.length}
+            Page {index + 1} of {SLAM_PAGES.length}
           </span>
           <button
             type="button"
             className="slam-turn slam-turn-next"
             disabled={!next}
-            onClick={() => next && setPage(next.id)}
+            onClick={() => next && go(next.id, "next")}
           >
             {next ? `${next.tab} →` : "·"}
           </button>
