@@ -23,8 +23,8 @@
 }
 
 body[data-side="build"] {
-  --bg: #d8b892; --surface: #e8d0ae; --ink: #22180f; --ink-2: #5a4330;
-  --rule: #c29f78; --accent: #c23b16; --focus: #1f5fbf;
+  --bg: #f0e4d4; --surface: #faf3e8; --ink: #241912; --ink-2: #5c4636;
+  --rule: #e0c9ae; --accent: #c23b16; --focus: #1f5fbf;
 }
 body[data-side="quiet"] {
   --bg: #101218; --surface: #171a22; --ink: #e4dfd3; --ink-2: #a9a497;
@@ -1478,12 +1478,12 @@ body[data-side="build"] .book.cover[aria-pressed="true"] {
   transform: translateY(-6px) rotate(-1.5deg);
 }
 body[data-side="build"] .reader {
-  margin-top: 0; background: #f0dfc4;
-  box-shadow: 0 0 0 1px var(--rule), 0 14px 28px -22px rgba(70, 40, 15, .45);
+  margin-top: 0; background: #fffaf2;
+  box-shadow: 0 0 0 1px var(--rule), 0 14px 28px -22px rgba(70, 40, 15, .35);
 }
 body[data-side="build"] .rd-body { color: #3a2c22; }
-body[data-side="build"] .rd-body code { background: #e6d0ae; }
-body[data-side="build"] .rd-body pre { background: #ead6b4; border-color: #c9a882; }
+body[data-side="build"] .rd-body code { background: #f3e8d8; }
+body[data-side="build"] .rd-body pre { background: #f7eee2; border-color: #e4d2ba; }
 @media (max-width: 860px) {
   body[data-side="build"] .lib-body { grid-template-columns: 1fr; }
   body[data-side="build"] .bookcase { padding: 12px 10px 0; }
