@@ -1311,7 +1311,7 @@ body:not([data-side="radio"]):not([data-side="home"]) .bar { display: none; }
 .bench-lamp { position: absolute; right: 7%; top: 0; width: 120px; height: 50px; background: #f0c64a; clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); box-shadow: 0 0 80px 40px rgba(240,198,74,.25); }
 .bench { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; padding: 18px 18px 30px;
   background: linear-gradient(#b07a4a, #9a6a3e); box-shadow: inset 0 6px 0 #c48d5a, inset 0 -10px 0 #7a522f; }
-.bench-page .bench { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.bench-page .bench { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .gadget { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; padding: 10px 6px; border: 0; border-radius: 12px; background: transparent; color: #fbf1e4; cursor: pointer; transition: transform .2s var(--ease), background-color .2s var(--ease); }
 .gadget svg { width: 100%; max-width: 110px; height: auto; filter: drop-shadow(0 6px 4px rgba(0,0,0,.3)); }
 .gadget span { font: 600 13px/1.2 var(--sans); text-align: center; text-shadow: 0 1px 0 rgba(0,0,0,.35); }
