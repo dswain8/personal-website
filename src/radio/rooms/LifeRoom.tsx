@@ -29,12 +29,11 @@ function FamilyPhoto({ frame }: { frame: FamilyFrame }) {
         />
       ) : (
         <span className="family-ph" aria-hidden="true">
-          {frame.hint}
+          {frame.title}
         </span>
       )}
       <figcaption>
         <b>{frame.title}</b>
-        <span>{frame.hint}</span>
       </figcaption>
     </figure>
   );
@@ -49,6 +48,7 @@ function BrandTile({
   open: boolean;
   onToggle: () => void;
 }) {
+  const [logoMissing, setLogoMissing] = useState(false);
   const noteId = `note-${brand.name.replace(/\s+/g, "-").toLowerCase()}`;
   return (
     <div className={`brand-tile${open ? " is-open" : ""}`}>
@@ -60,7 +60,16 @@ function BrandTile({
         onClick={onToggle}
       >
         <span className="brand-logo">
-          <img src={`/life/logos/${brand.logo}`} alt="" loading="lazy" />
+          {!logoMissing ? (
+            <img
+              src={`/life/logos/${brand.logo}`}
+              alt=""
+              loading="lazy"
+              onError={() => setLogoMissing(true)}
+            />
+          ) : (
+            <span className="brand-logo-fallback">{brand.name}</span>
+          )}
         </span>
         <span className="brand-name">{brand.name}</span>
       </button>
@@ -87,7 +96,6 @@ function RoomShelf({
     <div className="room-shelf">
       <div className="room-shelf-label">
         <h3>{shelf.title}</h3>
-        <p>{shelf.blurb}</p>
       </div>
       <ul className="logo-rail">
         {shelf.brands.map((brand) => {
@@ -116,24 +124,12 @@ function BrandRoom({
   open: string | null;
   onToggle: (key: string) => void;
 }) {
-  const shelf = room.shelfId ? shelfById(room.shelfId) : null;
+  const shelf = shelfById(room.shelfId);
 
   return (
-    <section
-      className={`room ${room.className}`}
-      aria-label={room.room}
-    >
+    <section className={`room ${room.className}`} aria-label={room.room}>
       <h2>{room.room}</h2>
-      {shelf ? (
-        <RoomShelf shelf={shelf} open={open} onToggle={onToggle} />
-      ) : (
-        <div className="living-note">
-          <p>{room.note}</p>
-          <div className="living-window" aria-hidden="true">
-            <span>Sunday light</span>
-          </div>
-        </div>
-      )}
+      <RoomShelf shelf={shelf} open={open} onToggle={onToggle} />
     </section>
   );
 }
@@ -151,15 +147,6 @@ export default function LifeRoom() {
       <div className="wrap life4">
         <header className="l4-head">
           <h1 className="reveal">Off the clock.</h1>
-          <p className="lede reveal">
-            Outside of work, I&apos;m a family man first. My daughter is four. We
-            have a golden retriever named Tokyo. Most of my best hours are spent
-            with them.
-          </p>
-          <p className="l4-hint">
-            A Sunday at home. The big room is family. The rest is where everyday
-            things live — tap a brand for a short note.
-          </p>
         </header>
 
         <div className="house" id="house">
@@ -170,11 +157,6 @@ export default function LifeRoom() {
             aria-labelledby="family-heading"
           >
             <h2 id="family-heading">Family portrait</h2>
-            <p className="family-room-lede">
-              My family — Barnali, Richu, Tokyo, and me. Ghibli-flavoured
-              portraits, a birthday morning, Richu&apos;s Odissi certificate day,
-              and the little jharokha that hangs at home.
-            </p>
             <div className="family-wall" role="list">
               {FAMILY_FRAMES.map((frame) => (
                 <div key={frame.id} role="listitem">
@@ -195,11 +177,6 @@ export default function LifeRoom() {
 
           <div className="floor-slab" aria-hidden="true" />
         </div>
-
-        <p className="l4-small">
-          The things in the house are brands I use. Not exhaustive, and not
-          affiliate links.
-        </p>
 
         <NextSide
           prev={{ key: "try", name: "Try what I've made", label: "Back to" }}
