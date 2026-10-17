@@ -11,7 +11,7 @@ export const TOOLKIT: ToolkitGroup[] = [
       [
         "CLAUDE.md template",
         "Loaded every session",
-        "Tells Claude who you are, how you write, what to prefer.",
+        "Tells the agent who you are, how you write, what to prefer.",
         "claude-md-template.md",
       ],
       [
@@ -213,7 +213,7 @@ export const TOOLKIT: ToolkitGroup[] = [
       [
         "Install the full Dojo",
         "~15 minutes",
-        "Wires the wiki, commands and coaching protocol into Claude Code.",
+        "Wires the wiki, commands and coaching protocol into your coding agent.",
         "install-dojo.md",
       ],
       [
