@@ -1,3 +1,9 @@
+/**
+ * Quiet page data.
+ * Calm tone: synthesized in `audio.ts` as a soft 432 Hz pad (Web Audio API) —
+ * no audio file, no license. UI label is "calm tone", not "drone".
+ */
+
 /** Thought chains for the Quiet field — each opens with the floating label. */
 export const THOUGHTS: string[][] = [
   ["did I reply to that thread?", "I should just check Slack", "one quick look", "…twenty minutes later"],

@@ -50,6 +50,11 @@ export function makeStaticSound(): StaticSound {
   };
 }
 
+/**
+ * Soft calm pad for Quiet — synthesized in-browser (no audio file, no license).
+ * Stacked around 432 Hz with a slow breath-like swell (~0.12 Hz).
+ * API name kept as "drone" so RadioShell can still stop it on leave.
+ */
 export function startDrone(v: number) {
   stopDrone();
   const AudioCtx =
@@ -60,41 +65,60 @@ export function startDrone(v: number) {
   const master = ctx.createGain();
   master.gain.value = 0;
   master.connect(ctx.destination);
+
+  // Warm low-pass so the tone stays soft, not piercing.
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 700;
+  lp.frequency.value = 900;
+  lp.Q.value = 0.5;
   lp.connect(master);
+
+  // Breath envelope on the whole pad (~8s cycle, resting inhale/exhale pace).
+  const breath = ctx.createGain();
+  breath.gain.value = 0.72;
+  breath.connect(lp);
+  const breathLfo = ctx.createOscillator();
+  const breathDepth = ctx.createGain();
+  breathLfo.frequency.value = 0.12;
+  breathDepth.gain.value = 0.22;
+  breathLfo.connect(breathDepth).connect(breath.gain);
+  breathLfo.start();
+
+  // Calm stack: 216 / 432 / 648 Hz (octave + fifth around 432).
   (
     [
-      [110, 0.5],
-      [164.8, 0.3],
-      [220, 0.12],
+      [216, 0.38, "sine"],
+      [432, 0.28, "sine"],
+      [648, 0.08, "sine"],
+      [108, 0.22, "triangle"],
     ] as const
-  ).forEach(([f, g]) => {
+  ).forEach(([f, g, type]) => {
     const o = ctx.createOscillator();
     const gn = ctx.createGain();
-    o.type = "triangle";
+    o.type = type;
     o.frequency.value = f;
     gn.gain.value = g;
-    const lfo = ctx.createOscillator();
-    const lg = ctx.createGain();
-    lfo.frequency.value = 0.05 + f / 4000;
-    lg.gain.value = g * 0.4;
-    lfo.connect(lg).connect(gn.gain);
-    o.connect(gn).connect(lp);
+    // Tiny slow vibrato — organic, not a ringtone.
+    const vib = ctx.createOscillator();
+    const vibGain = ctx.createGain();
+    vib.frequency.value = 0.04 + f / 12000;
+    vibGain.gain.value = f * 0.0012;
+    vib.connect(vibGain).connect(o.frequency);
+    o.connect(gn).connect(breath);
     o.start();
-    lfo.start();
+    vib.start();
   });
-  master.gain.setTargetAtTime(v * 0.18, ctx.currentTime, 1.2);
+
+  master.gain.setTargetAtTime(v * 0.16, ctx.currentTime, 1.8);
   drone = { ctx, master };
 }
 
 export function setDroneVolume(v: number) {
   if (!drone) return;
   drone.master.gain.setTargetAtTime(
-    v * 0.18,
+    v * 0.16,
     drone.ctx.currentTime,
-    0.2,
+    0.25,
   );
 }
 
