@@ -54,6 +54,13 @@ export const FAMILY_FRAMES: FamilyFrame[] = [
     tilt: 1.8,
   },
   {
+    id: "dance",
+    title: "Richu",
+    hint: "Certificate day, Odissi dress",
+    src: "/life/family/dance.jpg",
+    tilt: -1.4,
+  },
+  {
     id: "tokyo",
     title: "Tokyo",
     hint: "In a pink bow, somehow",

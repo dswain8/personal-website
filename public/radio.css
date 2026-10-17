@@ -1379,8 +1379,9 @@ body[data-side="life"] {
 }
 .life4 .family-wall > :nth-child(1) { grid-column: span 7; } /* landscape us */
 .life4 .family-wall > :nth-child(2) { grid-column: span 5; }
-.life4 .family-wall > :nth-child(3) { grid-column: span 5; }
-.life4 .family-wall > :nth-child(4) { grid-column: span 5; }
+.life4 .family-wall > :nth-child(3) { grid-column: span 4; }
+.life4 .family-wall > :nth-child(4) { grid-column: span 4; }
+.life4 .family-wall > :nth-child(5) { grid-column: span 4; }
 
 .life4 .family-frame {
   --tilt: 0deg;
@@ -1399,6 +1400,7 @@ body[data-side="life"] {
 .life4 .family-wall > :nth-child(2) .family-frame { animation-delay: 0.14s; }
 .life4 .family-wall > :nth-child(3) .family-frame { animation-delay: 0.22s; }
 .life4 .family-wall > :nth-child(4) .family-frame { animation-delay: 0.3s; }
+.life4 .family-wall > :nth-child(5) .family-frame { animation-delay: 0.38s; }
 @keyframes life-frame-in {
   from { opacity: 0; transform: translateY(18px) rotate(var(--tilt)); }
   to { opacity: 1; transform: translateY(0) rotate(var(--tilt)); }
@@ -1420,6 +1422,7 @@ body[data-side="life"] {
 }
 .life4 .family-frame--us img { aspect-ratio: 4 / 3; }
 .life4 .family-frame--daughter img,
+.life4 .family-frame--dance img,
 .life4 .family-frame--tokyo img,
 .life4 .family-frame--craft img { aspect-ratio: 3 / 4; }
 .life4 .family-ph {
@@ -1440,6 +1443,7 @@ body[data-side="life"] {
   padding: 12px;
 }
 .life4 .family-frame--daughter .family-ph,
+.life4 .family-frame--dance .family-ph,
 .life4 .family-frame--tokyo .family-ph,
 .life4 .family-frame--craft .family-ph { aspect-ratio: 3 / 4; }
 .life4 .family-frame--us .family-ph { aspect-ratio: 4 / 3; }
@@ -1605,8 +1609,9 @@ body[data-side="life"] {
   .life4 .family-wall { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .life4 .family-wall > :nth-child(1) { grid-column: span 6; }
   .life4 .family-wall > :nth-child(2),
-  .life4 .family-wall > :nth-child(3),
-  .life4 .family-wall > :nth-child(4) { grid-column: span 3; }
+  .life4 .family-wall > :nth-child(3) { grid-column: span 3; }
+  .life4 .family-wall > :nth-child(4),
+  .life4 .family-wall > :nth-child(5) { grid-column: span 3; }
   .life4 .logo-rail > li { flex-basis: calc(50% - 8px); max-width: none; }
   .life4 .living-note { grid-template-columns: 1fr; }
 }
