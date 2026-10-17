@@ -232,7 +232,6 @@ export function createRadioSound(): RadioSound {
   };
 }
 
-<<<<<<< HEAD
 /** @deprecated Prefer createRadioSound */
 export function makeStaticSound(): StaticSound {
   const radio = createRadioSound();
@@ -245,13 +244,11 @@ export function makeStaticSound(): StaticSound {
   };
 }
 
-=======
 /**
  * Soft calm pad for Quiet — synthesized in-browser (no audio file, no license).
  * Stacked around 432 Hz with a slow breath-like swell (~0.12 Hz).
  * API name kept as "drone" so RadioShell can still stop it on leave.
  */
->>>>>>> origin/cursor/quiet-cosmos-382c
 export function startDrone(v: number) {
   stopDrone();
   const ctx = audioContext();
