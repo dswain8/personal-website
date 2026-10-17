@@ -1457,8 +1457,8 @@ body[data-side="life"] {
   align-items: end;
   margin-top: 6px;
 }
-.life4 .family-wall > :nth-child(1) { grid-column: span 7; } /* landscape us */
-.life4 .family-wall > :nth-child(2) { grid-column: span 5; }
+.life4 .family-wall > :nth-child(1) { grid-column: span 5; } /* Our story (portrait) */
+.life4 .family-wall > :nth-child(2) { grid-column: span 7; } /* Us (landscape) */
 .life4 .family-wall > :nth-child(3) { grid-column: span 4; }
 .life4 .family-wall > :nth-child(4) { grid-column: span 4; }
 .life4 .family-wall > :nth-child(5) { grid-column: span 4; }
@@ -1621,6 +1621,11 @@ body[data-side="life"] {
   width: auto;
   height: auto;
   object-fit: contain;
+}
+.life4 .brand-logo-fallback {
+  font: 600 13px/1.2 var(--sans);
+  color: #4a3428;
+  text-align: center;
 }
 .life4 .brand-name {
   font: 500 13px/1.2 var(--sans);

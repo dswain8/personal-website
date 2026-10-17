@@ -6,13 +6,12 @@ export type LifeBrand = {
   logo: string;
 };
 
-export type LifeShelfId = "fuel" | "care" | "wear";
+export type LifeShelfId = "fuel" | "care" | "wear" | "play";
 
 export type LifeShelf = {
   id: LifeShelfId;
   /** Locked shelf title shown inside the room */
   title: string;
-  blurb: string;
   brands: LifeBrand[];
 };
 
@@ -21,16 +20,13 @@ export type HouseRoom = {
   /** Room name on the floorplan */
   room: string;
   className: string;
-  /** Brand shelf hosted in this room, if any */
-  shelfId?: LifeShelfId;
-  /** Living-room only: short personal note instead of brands */
-  note?: string;
+  /** Brand shelf hosted in this room */
+  shelfId: LifeShelfId;
 };
 
 export type FamilyFrame = {
   id: string;
   title: string;
-  hint: string;
   /** Expected drop path under /public/life/family/ */
   src: string;
   /** Slight tilt for the wall collage */
@@ -40,39 +36,34 @@ export type FamilyFrame = {
 /** Wall frames for the family portrait room. Files live in /public/life/family/. */
 export const FAMILY_FRAMES: FamilyFrame[] = [
   {
+    id: "craft",
+    title: "Our story",
+    src: "/life/family/craft.jpg",
+    tilt: 2.2,
+  },
+  {
     id: "us",
     title: "Us",
-    hint: "By the water, with Tokyo",
     src: "/life/family/us.jpg",
     tilt: -2.4,
   },
   {
     id: "daughter",
     title: "Birthday morning",
-    hint: "Her day, our room",
     src: "/life/family/daughter.jpg",
     tilt: 1.8,
   },
   {
     id: "dance",
     title: "Richu",
-    hint: "Certificate day, Odissi dress",
     src: "/life/family/dance.jpg",
     tilt: -1.4,
   },
   {
     id: "tokyo",
     title: "Tokyo",
-    hint: "In a pink bow, somehow",
     src: "/life/family/tokyo.jpg",
     tilt: -0.8,
-  },
-  {
-    id: "craft",
-    title: "Our story",
-    hint: "Debjeet · Barnali · Richu · Tokyo",
-    src: "/life/family/craft.jpg",
-    tilt: 2.2,
   },
 ];
 
@@ -80,24 +71,23 @@ export const LIFE_SHELVES: LifeShelf[] = [
   {
     id: "fuel",
     title: "Fuel",
-    blurb: "What I put in — food, drink, supplements.",
     brands: [
       {
         name: "Isha Life",
         url: "https://www.ishalife.com",
-        note: "Copper bottles and utensils from Sadhguru's store. The way water should be stored.",
+        note: "Copper bottles and utensils.",
         logo: "ishalife.svg",
       },
       {
         name: "Plix",
         url: "https://www.plix.life",
-        note: "ACV drink and sparkling drinks with consistently clean ingredients.",
+        note: "ACV and sparkling drinks.",
         logo: "plix.svg",
       },
       {
         name: "Fast&Up",
         url: "https://www.fastandup.in",
-        note: "A straightforward multivitamin top-up.",
+        note: "Multivitamin top-up.",
         logo: "fastandup.png",
       },
     ],
@@ -105,42 +95,41 @@ export const LIFE_SHELVES: LifeShelf[] = [
   {
     id: "care",
     title: "Care",
-    blurb: "What I put on — skin, hair, body care.",
     brands: [
       {
-        name: "Idam",
-        url: "https://www.idam.in",
-        note: "Lip balm and deodorant from a brand that takes ingredient lists seriously.",
-        logo: "idam.svg",
+        name: "Idham",
+        url: "https://www.instagram.com/idhamnature/",
+        note: "Lip balm and deodorant.",
+        logo: "idham.svg",
       },
       {
         name: "Dot & Key",
         url: "https://www.dotandkey.com",
-        note: "A moisturiser line that works and stays ingredient-conscious.",
+        note: "Moisturiser.",
         logo: "dotandkey.svg",
       },
       {
         name: "Forest Essentials",
         url: "https://www.forestessentialsindia.com",
-        note: "Ayurvedic skincare that still feels grounded in ingredients.",
+        note: "Ayurvedic skincare.",
         logo: "forestessentials.svg",
       },
       {
         name: "Cetaphil",
         url: "https://www.cetaphil.in",
-        note: "Gentle face wash that does exactly what it says.",
+        note: "Gentle face wash.",
         logo: "cetaphil.png",
       },
       {
         name: "Arata",
         url: "https://www.arata.in",
-        note: "Hair wash without sulphates or parabens.",
-        logo: "arata.svg",
+        note: "Hair wash.",
+        logo: "arata.png",
       },
       {
         name: "Nat Habit",
         url: "https://www.nathabit.in",
-        note: "Fresh neem and almond oil, made close to shipping.",
+        note: "Neem and almond oil.",
         logo: "nathabit.svg",
       },
     ],
@@ -148,37 +137,66 @@ export const LIFE_SHELVES: LifeShelf[] = [
   {
     id: "wear",
     title: "Wear",
-    blurb: "What I wear — natural fibres, everyday pieces, craft where it counts.",
     brands: [
       {
         name: "Andamen",
         url: "https://www.andamen.com",
-        note: "Clean Indian menswear with well-made essentials.",
+        note: "Menswear essentials.",
         logo: "andamen.png",
       },
       {
         name: "Uniqlo",
         url: "https://www.uniqlo.com",
-        note: "Quiet basics that disappear into the week in a good way.",
+        note: "Everyday basics.",
         logo: "uniqlo.png",
       },
       {
         name: "Utkalamrita",
         url: "https://utkalamrita.com",
-        note: "Odisha handloom and craft — real fabric, no synthetic disguise.",
+        note: "Odisha handloom.",
         logo: "utkalamrita.svg",
       },
       {
         name: "Fabindia",
         url: "https://www.fabindia.com",
-        note: "Indian textiles and everyday wear rooted in craft.",
+        note: "Indian textiles.",
         logo: "fabindia.svg",
       },
       {
         name: "Wellbi",
         url: "https://wellbi.in",
-        note: "Bamboo cotton basics that stay breathable and soft.",
+        note: "Bamboo cotton basics.",
         logo: "wellbi.png",
+      },
+    ],
+  },
+  {
+    id: "play",
+    title: "Play",
+    brands: [
+      {
+        name: "Skillmatics",
+        url: "https://www.skillmatics.in",
+        note: "Games we play together.",
+        logo: "skillmatics.svg",
+      },
+      {
+        name: "LEGO",
+        url: "https://www.lego.com",
+        note: "Builds on the living-room floor.",
+        logo: "lego.svg",
+      },
+      {
+        name: "Smartivity",
+        url: "https://www.smartivity.in",
+        note: "STEM kits we build with her.",
+        logo: "smartivity.svg",
+      },
+      {
+        name: "Crayola",
+        url: "https://www.crayola.com",
+        note: "Colouring and crafts.",
+        logo: "crayola.svg",
       },
     ],
   },
@@ -208,7 +226,7 @@ export const HOUSE_ROOMS: HouseRoom[] = [
     id: "living",
     room: "Living room",
     className: "living",
-    note: "Where the rest of the Sunday goes — board games, a slow cup of something, Tokyo claiming the sofa. No brands here on purpose.",
+    shelfId: "play",
   },
 ];
 

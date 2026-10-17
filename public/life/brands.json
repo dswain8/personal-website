@@ -5,11 +5,11 @@
     { "name": "Fast&Up", "url": "https://www.fastandup.in", "logo": "fastandup.png" }
   ],
   "care": [
-    { "name": "Idam", "url": "https://www.idam.in", "logo": "idam.svg" },
+    { "name": "Idham", "url": "https://www.instagram.com/idhamnature/", "logo": "idham.svg" },
     { "name": "Dot & Key", "url": "https://www.dotandkey.com", "logo": "dotandkey.svg" },
     { "name": "Forest Essentials", "url": "https://www.forestessentialsindia.com", "logo": "forestessentials.svg" },
     { "name": "Cetaphil", "url": "https://www.cetaphil.in", "logo": "cetaphil.png" },
-    { "name": "Arata", "url": "https://www.arata.in", "logo": "arata.svg" },
+    { "name": "Arata", "url": "https://www.arata.in", "logo": "arata.png" },
     { "name": "Nat Habit", "url": "https://www.nathabit.in", "logo": "nathabit.svg" }
   ],
   "wear": [
@@ -19,7 +19,12 @@
     { "name": "Fabindia", "url": "https://www.fabindia.com", "logo": "fabindia.svg" },
     { "name": "Wellbi", "url": "https://wellbi.in", "logo": "wellbi.png" }
   ],
-  "sections": ["Fuel", "Care", "Wear"],
-  "hero": "My family — photos, daughter drawings/caricatures, Tokyo",
+  "play": [
+    { "name": "Skillmatics", "url": "https://www.skillmatics.in", "logo": "skillmatics.svg" },
+    { "name": "LEGO", "url": "https://www.lego.com", "logo": "lego.svg" },
+    { "name": "Smartivity", "url": "https://www.smartivity.in", "logo": "smartivity.svg" },
+    { "name": "Crayola", "url": "https://www.crayola.com", "logo": "crayola.svg" }
+  ],
+  "sections": ["Fuel", "Care", "Wear", "Play"],
   "family_drop": "/public/life/family/"
 }
