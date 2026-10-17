@@ -1377,11 +1377,10 @@ body[data-side="life"] {
   align-items: end;
   margin-top: 6px;
 }
-.life4 .family-wall > :nth-child(1) { grid-column: span 5; }
-.life4 .family-wall > :nth-child(2) { grid-column: span 3; }
-.life4 .family-wall > :nth-child(3) { grid-column: span 4; }
-.life4 .family-wall > :nth-child(4) { grid-column: span 4; }
-.life4 .family-wall > :nth-child(5) { grid-column: span 5; }
+.life4 .family-wall > :nth-child(1) { grid-column: span 7; } /* landscape us */
+.life4 .family-wall > :nth-child(2) { grid-column: span 5; }
+.life4 .family-wall > :nth-child(3) { grid-column: span 5; }
+.life4 .family-wall > :nth-child(4) { grid-column: span 5; }
 
 .life4 .family-frame {
   --tilt: 0deg;
@@ -1400,7 +1399,6 @@ body[data-side="life"] {
 .life4 .family-wall > :nth-child(2) .family-frame { animation-delay: 0.14s; }
 .life4 .family-wall > :nth-child(3) .family-frame { animation-delay: 0.22s; }
 .life4 .family-wall > :nth-child(4) .family-frame { animation-delay: 0.3s; }
-.life4 .family-wall > :nth-child(5) .family-frame { animation-delay: 0.38s; }
 @keyframes life-frame-in {
   from { opacity: 0; transform: translateY(18px) rotate(var(--tilt)); }
   to { opacity: 1; transform: translateY(0) rotate(var(--tilt)); }
@@ -1420,10 +1418,10 @@ body[data-side="life"] {
   object-fit: cover;
   background: #e8d5b8;
 }
+.life4 .family-frame--us img { aspect-ratio: 4 / 3; }
 .life4 .family-frame--daughter img,
-.life4 .family-frame--drawing img,
-.life4 .family-frame--caricature img { aspect-ratio: 4 / 5; }
-.life4 .family-frame--tokyo img { aspect-ratio: 5 / 3; }
+.life4 .family-frame--tokyo img,
+.life4 .family-frame--craft img { aspect-ratio: 3 / 4; }
 .life4 .family-ph {
   display: grid;
   place-items: center;
@@ -1442,22 +1440,9 @@ body[data-side="life"] {
   padding: 12px;
 }
 .life4 .family-frame--daughter .family-ph,
-.life4 .family-frame--drawing .family-ph,
-.life4 .family-frame--caricature .family-ph { aspect-ratio: 4 / 5; }
-.life4 .family-frame--tokyo .family-ph {
-  aspect-ratio: 5 / 3;
-  background:
-    radial-gradient(ellipse at 50% 70%, rgba(216, 155, 76, 0.35), transparent 55%),
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.55), transparent 45%),
-    #f0e0c8;
-}
-.life4 .family-frame--tokyo.is-empty {
-  animation: life-frame-in 0.9s var(--ease) both, life-tokyo-breathe 5.5s ease-in-out 1s infinite;
-}
-@keyframes life-tokyo-breathe {
-  0%, 100% { filter: saturate(1); }
-  50% { filter: saturate(1.08) brightness(1.02); }
-}
+.life4 .family-frame--tokyo .family-ph,
+.life4 .family-frame--craft .family-ph { aspect-ratio: 3 / 4; }
+.life4 .family-frame--us .family-ph { aspect-ratio: 4 / 3; }
 .life4 .family-frame figcaption {
   display: flex;
   flex-direction: column;
@@ -1620,9 +1605,8 @@ body[data-side="life"] {
   .life4 .family-wall { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .life4 .family-wall > :nth-child(1) { grid-column: span 6; }
   .life4 .family-wall > :nth-child(2),
-  .life4 .family-wall > :nth-child(3) { grid-column: span 3; }
-  .life4 .family-wall > :nth-child(4),
-  .life4 .family-wall > :nth-child(5) { grid-column: span 3; }
+  .life4 .family-wall > :nth-child(3),
+  .life4 .family-wall > :nth-child(4) { grid-column: span 3; }
   .life4 .logo-rail > li { flex-basis: calc(50% - 8px); max-width: none; }
   .life4 .living-note { grid-template-columns: 1fr; }
 }
@@ -1633,7 +1617,6 @@ body[data-side="life"] {
 }
 @media (prefers-reduced-motion: reduce) {
   .life4 .family-frame,
-  .life4 .family-frame--tokyo.is-empty,
   .life4 .brand-note { animation: none; }
   .life4 .brand-hit,
   .life4 .family-frame { transition: none; }

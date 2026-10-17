@@ -171,8 +171,9 @@ export default function LifeRoom() {
           >
             <h2 id="family-heading">Family portrait</h2>
             <p className="family-room-lede">
-              My family — photos, her drawings and caricatures, and Tokyo.
-              Frames wait for the real pictures (and a few Ghibli ones) to land.
+              My family — Barnali, Richu, Tokyo, and me. A few Ghibli-flavoured
+              portraits, a birthday morning, and the little jharokha that hangs
+              at home.
             </p>
             <div className="family-wall" role="list">
               {FAMILY_FRAMES.map((frame) => (

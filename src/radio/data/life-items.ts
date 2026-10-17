@@ -37,42 +37,35 @@ export type FamilyFrame = {
   tilt: number;
 };
 
-/** Wall frames for the family portrait room. Drop real files into /public/life/family/. */
+/** Wall frames for the family portrait room. Files live in /public/life/family/. */
 export const FAMILY_FRAMES: FamilyFrame[] = [
   {
     id: "us",
     title: "Us",
-    hint: "Family photo",
+    hint: "By the water, with Tokyo",
     src: "/life/family/us.jpg",
     tilt: -2.4,
   },
   {
     id: "daughter",
-    title: "Daughter",
-    hint: "Photos of her",
+    title: "Birthday morning",
+    hint: "Her day, our room",
     src: "/life/family/daughter.jpg",
     tilt: 1.8,
   },
   {
-    id: "drawing",
-    title: "Her drawing",
-    hint: "If she approves",
-    src: "/life/family/drawing.jpg",
-    tilt: -1.2,
-  },
-  {
-    id: "caricature",
-    title: "Caricature",
-    hint: "Of her, somewhere funny",
-    src: "/life/family/caricature.jpg",
-    tilt: 2.6,
-  },
-  {
     id: "tokyo",
     title: "Tokyo",
-    hint: "Golden retriever",
+    hint: "In a pink bow, somehow",
     src: "/life/family/tokyo.jpg",
     tilt: -0.8,
+  },
+  {
+    id: "craft",
+    title: "Our story",
+    hint: "Debjeet · Barnali · Richu · Tokyo",
+    src: "/life/family/craft.jpg",
+    tilt: 2.2,
   },
 ];
 
