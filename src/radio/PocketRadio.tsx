@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { makeStaticSound } from "./audio";
+import { createRadioSound, type RadioSound, type StationKey } from "./audio";
 import {
   BETWEEN,
   DIAL_MAX,
@@ -18,8 +18,6 @@ import {
 } from "./data/stations";
 import { SKILLS, groupColor, spineH, spineW } from "./data/toolkit";
 import { GADGET_SVG } from "./data/bench";
-
-type SoundApi = ReturnType<typeof makeStaticSound>;
 
 const WELCOME_FACTS = [
   "Wonder Journal started as something for my daughter.",
@@ -133,7 +131,7 @@ export default function PocketRadio() {
 
   const vRef = useRef(v);
   const lockedRef = useRef<Station | null>(null);
-  const soundRef = useRef<SoundApi | null>(null);
+  const soundRef = useRef<RadioSound | null>(null);
   const bandRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const factRef = useRef<HTMLParagraphElement>(null);
@@ -155,8 +153,9 @@ export default function PocketRadio() {
       lockedRef.current = locked;
     }
     document.body.dataset.tuned = locked ? locked.key : "";
-    soundRef.current?.level(
-      locked ? 0 : Math.min(1, Math.abs(nearest(v).at - v) / 30),
+    // Rain between stations; distinct bed when locked (SOUND must be on).
+    soundRef.current?.setBed(
+      locked ? (locked.key as StationKey) : null,
     );
   }, [v, locked]);
 
@@ -610,8 +609,12 @@ export default function PocketRadio() {
                         setSoundOn(false);
                         return;
                       }
-                      soundRef.current = makeStaticSound();
-                      soundRef.current.level(locked ? 0 : 0.6);
+                      // Gesture-gated: unlocks AudioContext in Chrome.
+                      const sound = createRadioSound();
+                      sound.setBed(
+                        locked ? (locked.key as StationKey) : null,
+                      );
+                      soundRef.current = sound;
                       setSoundOn(true);
                     }}
                   >
