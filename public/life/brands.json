@@ -2,7 +2,7 @@
   "fuel": [
     { "name": "Isha Life", "url": "https://www.ishalife.com", "logo": "ishalife.svg" },
     { "name": "Plix", "url": "https://www.plix.life", "logo": "plix.svg" },
-    { "name": "Fast&Up", "url": "https://www.fastandup.in", "logo": "fastandup.png" }
+    { "name": "Fast&Up", "url": "https://www.fastandup.in", "logo": "fastandup.svg" }
   ],
   "care": [
     { "name": "Idham", "url": "https://www.instagram.com/idhamnature/", "logo": "idham.svg" },
@@ -17,7 +17,7 @@
     { "name": "Uniqlo", "url": "https://www.uniqlo.com", "logo": "uniqlo.png" },
     { "name": "Utkalamrita", "url": "https://utkalamrita.com", "logo": "utkalamrita.svg" },
     { "name": "Fabindia", "url": "https://www.fabindia.com", "logo": "fabindia.svg" },
-    { "name": "Wellbi", "url": "https://wellbi.in", "logo": "wellbi.png" }
+    { "name": "Wellbi", "url": "https://wellbi.in", "logo": "wellbi.svg" }
   ],
   "play": [
     { "name": "Skillmatics", "url": "https://www.skillmatics.in", "logo": "skillmatics.svg" },
