@@ -6,7 +6,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { makeStaticSound } from "./audio";
 import {
   BETWEEN,
@@ -20,6 +20,19 @@ import { SKILLS, groupColor, spineH, spineW } from "./data/toolkit";
 import { GADGET_SVG } from "./data/bench";
 
 type SoundApi = ReturnType<typeof makeStaticSound>;
+
+const WELCOME_FACTS = [
+  "Wonder Journal started as something for my daughter.",
+  "There's a golden retriever in the family, too.",
+  "Fast on decisions. Slow on small details.",
+] as const;
+
+const RAIN_DROPS = Array.from({ length: 12 }, (_, i) => ({
+  x: 6 + ((i * 37) % 89),
+  wait: -(i * 2.7),
+  duration: 8 + (i % 5),
+  trail: 30 + (i % 4) * 13,
+}));
 
 function nearest(x: number) {
   return STATIONS.reduce((a, s) =>
@@ -109,23 +122,21 @@ function StationPreview({ s }: { s: Station }) {
 
 export default function PocketRadio() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const tuneParam = searchParams.get("tune");
-  const tuneTo = STATIONS.find((x) => x.key === tuneParam);
 
-  const [v, setV] = useState(() =>
-    tuneTo ? tuneTo.at : Number(sessionStorage.getItem("dial") ?? 80),
-  );
-  const [touched, setTouched] = useState(!!tuneTo);
+  // Every home visit starts between stations (approved handoff).
+  const [v, setV] = useState(80);
+  const [touched, setTouched] = useState(false);
   const [gliding, setGliding] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
+  const [factIndex, setFactIndex] = useState(-1);
 
   const vRef = useRef(v);
   const lockedRef = useRef<Station | null>(null);
   const soundRef = useRef<SoundApi | null>(null);
   const bandRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const factRef = useRef<HTMLParagraphElement>(null);
   const knobStart = useRef<{ x: number; y: number; v: number } | null>(null);
   const reduceMotion = useRef(
     window.matchMedia("(prefers-reduced-motion: reduce)"),
@@ -144,7 +155,6 @@ export default function PocketRadio() {
       lockedRef.current = locked;
     }
     document.body.dataset.tuned = locked ? locked.key : "";
-    sessionStorage.setItem("dial", String(v));
     soundRef.current?.level(
       locked ? 0 : Math.min(1, Math.abs(nearest(v).at - v) / 30),
     );
@@ -185,22 +195,6 @@ export default function PocketRadio() {
     };
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
-
-  // first-visit needle sweep
-  useEffect(() => {
-    if (tuneTo || sessionStorage.getItem("swept") || reduceMotion.current.matches)
-      return;
-    sessionStorage.setItem("swept", "1");
-    const start = vRef.current;
-    setGliding(true);
-    apply(start - 16);
-    const t = setTimeout(() => {
-      apply(start);
-      setGliding(false);
-    }, 650);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // keyboard 1-4
@@ -272,295 +266,369 @@ export default function PocketRadio() {
     />
   ));
 
+  const cycleFact = () => {
+    const next = (factIndex + 1) % WELCOME_FACTS.length;
+    setFactIndex(next);
+    const el = factRef.current;
+    if (el && !reduceMotion.current.matches) {
+      el.animate(
+        [
+          { opacity: 0.25, transform: "translateY(3px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
+        { duration: 180, easing: "ease-out" },
+      );
+    }
+  };
+
   return (
     <div className="wrap home">
-      <header className="home-brand">
-        <p className="home-brand__mark" aria-hidden="true">
-          DS
-        </p>
-        <h1 className="home-brand__name" id="who">
-          Debjeet Swain
-        </h1>
-      </header>
-      <div className="radio-stage">
-        <section
-          className={`radio${gliding ? " gliding" : ""}${dragging ? " dragging" : ""}`}
-          aria-labelledby="who"
-          id="radio"
-          data-locked={locked?.key ?? ""}
-          data-idle={String(!locked && !touched)}
-        >
-          <div className="r-top">
-            <div className="screen">
-              <div className="readout">
-                <span className="led" aria-hidden="true" />
-                <b id="freq">{freqAt(v)}</b>
-                <span>MHz</span>
-                <span className="fm" aria-hidden="true">
-                  <i>MW</i>
-                  <i>SW</i>
-                  <em>FM</em>
-                </span>
-              </div>
-              <canvas
-                className="static"
-                id="static"
-                ref={canvasRef}
-                width={160}
-                height={100}
-                aria-hidden="true"
-              />
-              <div className="scan" aria-hidden="true" />
-              <div className="idle">
-                <p className="idle-freq" aria-hidden="true">
-                  <span id="idle-freq">{freqAt(v)}</span>
-                  <small>MHz</small>
-                </p>
-                <p className="idle-cta">Tune in.</p>
-                <p className="idle-list">
-                  {STATIONS.map((x) => (
-                    <span key={x.key}>
-                      {x.freq} {x.short}
-                    </span>
-                  ))}
-                </p>
-                <p className="idle-bio">
-                  Hi, I&apos;m Debjeet. Product leader at Rippling, in Bengaluru.
-                  Husband, dad to a four-year-old, owner of one golden retriever,
-                  and keeper of too many side projects.
-                </p>
-              </div>
-              <p className="between" id="between" aria-live="polite">
-                {betweenLine}
-              </p>
-              <div className="preview" id="preview" aria-live="polite">
-                {locked ? <StationPreview s={locked} /> : null}
-              </div>
-            </div>
-            <div className="side-col">
-              <div className="badge" aria-hidden="true">
-                <p className="badge-name">DS–1</p>
-                <span>Bengaluru</span>
-              </div>
-              <div className="grille" aria-hidden="true" />
-            </div>
-          </div>
-
-          <div
-            className="band"
-            id="band"
-            ref={bandRef}
-            role="slider"
-            tabIndex={0}
-            aria-label="Tuning dial. Arrow keys move, Page Up and Down jump between stations, Enter goes in."
-            aria-valuemin={0}
-            aria-valuemax={DIAL_MAX}
-            aria-valuenow={Math.round(v)}
-            aria-valuetext={
-              locked
-                ? `${locked.name}, ${locked.freq}`
-                : `Between stations, ${freqAt(v)}`
-            }
-            onPointerDown={(e) => {
-              setDragging(true);
-              setTouched(true);
-              (e.target as HTMLElement).setPointerCapture(e.pointerId);
-              apply(fromPointer(e));
-            }}
-            onPointerMove={(e) => {
-              if (dragging) apply(fromPointer(e));
-            }}
-            onPointerUp={() => {
-              if (!dragging) return;
-              setDragging(false);
-              apply(vRef.current, { snap: true });
-            }}
-            onPointerCancel={() => {
-              if (!dragging) return;
-              setDragging(false);
-              apply(vRef.current, { snap: true });
-            }}
-            onKeyDown={(e) => {
-              setTouched(true);
-              const order = STATIONS.map((s) => s.at);
-              const nextAt = order.find((a) => a > v + 1);
-              const prevAt = [...order].reverse().find((a) => a < v - 1);
-              const map: Record<string, number> = {
-                ArrowRight: v + 8,
-                ArrowUp: v + 8,
-                ArrowLeft: v - 8,
-                ArrowDown: v - 8,
-                PageUp: nextAt ?? v,
-                PageDown: prevAt ?? v,
-                Home: 0,
-                End: DIAL_MAX,
-              };
-              if (e.key in map) {
-                e.preventDefault();
-                apply(map[e.key]);
-              }
-              if (e.key === "Enter" && locked) {
-                e.preventDefault();
-                goIn(locked);
-              }
-            }}
-          >
-            <div className="ticks" aria-hidden="true">
-              {ticks}
-            </div>
-            <div className="nums" aria-hidden="true">
-              {STATIONS.map((s) => (
-                <span
-                  key={s.key}
-                  style={
-                    { "--p": `${(s.at / DIAL_MAX) * 100}%` } as CSSProperties
-                  }
-                >
-                  {s.freq}
-                </span>
-              ))}
-            </div>
-            <div className="marks" aria-hidden="true">
-              {STATIONS.map((s) => (
-                <b
-                  key={s.key}
-                  style={
-                    { "--p": `${(s.at / DIAL_MAX) * 100}%` } as CSSProperties
-                  }
-                />
-              ))}
-            </div>
-            <div
-              className="needle"
-              id="needle"
-              aria-hidden="true"
-              style={{ "--p": `${(v / DIAL_MAX) * 100}%` } as CSSProperties}
-            />
-          </div>
-
-          <div className="r-bottom">
-            <div className="keys" role="group" aria-label="Station presets">
-              {STATIONS.map((s, i) => (
-                <button
-                  key={s.key}
-                  type="button"
-                  className="key"
-                  data-at={s.at}
-                  aria-pressed={!!locked && locked.at === s.at}
-                  aria-label={`${s.name}, ${s.freq}. Press again to go in.`}
-                  onClick={() => {
-                    if (locked && locked.at === s.at) {
-                      goIn(s);
-                      return;
-                    }
-                    setTouched(true);
-                    setGliding(true);
-                    apply(s.at);
-                    setTimeout(() => setGliding(false), 500);
-                  }}
-                >
-                  <i className="kled" aria-hidden="true" />
-                  <small aria-hidden="true">{i + 1}</small>
-                  <span className="short" aria-hidden="true">
-                    <svg
-                      className="kicon"
-                      viewBox="0 0 16 16"
-                      width={16}
-                      height={16}
-                      dangerouslySetInnerHTML={{ __html: KEY_ICONS[s.key] }}
-                    />
-                    {s.short}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <div className="knob-well">
-              <div
-                className="knob"
-                id="knob"
-                aria-hidden="true"
+      <div className="radio-stage listening-room">
+        <div className="room-backdrop" aria-hidden="true">
+          <div className="room-rain">
+            <div className="rain-distant" />
+            {RAIN_DROPS.map((d, i) => (
+              <i
+                key={i}
                 style={
                   {
-                    "--r": `${(v / DIAL_MAX) * 300 - 150}deg`,
+                    "--x": `${d.x}%`,
+                    "--wait": `${d.wait}s`,
+                    "--duration": `${d.duration}s`,
+                    "--trail": `${d.trail}px`,
                   } as CSSProperties
                 }
-                onPointerDown={(e) => {
-                  knobStart.current = {
-                    x: e.clientX,
-                    y: e.clientY,
-                    v: vRef.current,
-                  };
-                  setTouched(true);
-                  (e.target as HTMLElement).setPointerCapture(e.pointerId);
-                }}
-                onPointerMove={(e) => {
-                  if (!knobStart.current) return;
-                  apply(
-                    knobStart.current.v +
-                      (e.clientX - knobStart.current.x) -
-                      (e.clientY - knobStart.current.y),
-                  );
-                }}
-                onPointerUp={() => {
-                  if (knobStart.current) {
-                    knobStart.current = null;
-                    apply(vRef.current, { snap: true });
-                  }
-                }}
-                onPointerCancel={() => {
-                  if (knobStart.current) {
-                    knobStart.current = null;
-                    apply(vRef.current, { snap: true });
-                  }
-                }}
-              >
-                <span />
-              </div>
-              <span className="silk" aria-hidden="true">
-                Tune
-              </span>
-            </div>
+              />
+            ))}
           </div>
+        </div>
+        <div className="room-window" aria-hidden="true">
+          <i />
+          <i />
+        </div>
+        <div className="room-surface" aria-hidden="true">
+          <div className="table-top" />
+        </div>
+        <div
+          className="room-reading"
+          aria-label="On the shelf: The Creative Act by Rick Rubin and The Magic Faraway Tree by Enid Blyton"
+        >
+          <div className="shelf-book book-faraway">
+            <span>The Magic Faraway Tree</span>
+            <small>Enid Blyton</small>
+          </div>
+          <div className="shelf-book book-creative">
+            <span>The Creative Act</span>
+            <small>Rick Rubin</small>
+          </div>
+        </div>
+        <div className="room-postcard" aria-hidden="true">
+          <img
+            src="/assets/room/little-house.jpg"
+            alt=""
+            width={320}
+            height={200}
+          />
+        </div>
+        <div className="room-vignette" aria-hidden="true" />
 
-          <div className="plate-row">
-            <div className="switch-well">
-              <span className="silk">Sound</span>
-              <span className="sw-track">
-                <span className="silk" aria-hidden="true">
-                  Off
-                </span>
-                <button
-                  type="button"
-                  className="switch"
-                  id="radio-sound"
-                  role="switch"
-                  aria-checked={soundOn}
-                  aria-label="Sound"
-                  onClick={() => {
-                    if (soundRef.current) {
-                      soundRef.current.stop();
-                      soundRef.current = null;
-                      setSoundOn(false);
-                      return;
+        <div className="room-receiver">
+          <div className="room-radio-depth" aria-hidden="true" />
+          <div className="room-radio-feet" aria-hidden="true">
+            <i />
+            <i />
+          </div>
+          <section
+            className={`radio${gliding ? " gliding" : ""}${dragging ? " dragging" : ""}`}
+            aria-labelledby="who"
+            id="radio"
+            data-locked={locked?.key ?? ""}
+            data-idle={String(!locked && !touched)}
+          >
+            <div className="r-top">
+              <div className="screen">
+                <div className="readout">
+                  <span className="led" aria-hidden="true" />
+                  <b id="freq">{freqAt(v)}</b>
+                  <span>MHz</span>
+                  <span className="fm" aria-hidden="true">
+                    <i>MW</i>
+                    <i>SW</i>
+                    <em>FM</em>
+                  </span>
+                </div>
+                <canvas
+                  className="static"
+                  id="static"
+                  ref={canvasRef}
+                  width={160}
+                  height={100}
+                  aria-hidden="true"
+                />
+                <div className="scan" aria-hidden="true" />
+                <div className="idle welcome-screen">
+                  <p className="welcome-kicker">A few sides of the same person</p>
+                  <p className="welcome-name">Hi, I&apos;m Debjeet.</p>
+                  <p className="welcome-bio">
+                    Product leader at Rippling.
+                    <br />
+                    Husband, dad, and keeper of too many side projects.
+                  </p>
+                  <div className="welcome-extra">
+                    <p
+                      className="welcome-fact"
+                      id="welcome-fact"
+                      ref={factRef}
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      {factIndex >= 0 ? WELCOME_FACTS[factIndex] : ""}
+                    </p>
+                    <button
+                      type="button"
+                      className="welcome-next"
+                      id="welcome-next"
+                      onClick={cycleFact}
+                    >
+                      One more thing <span aria-hidden="true">↻</span>
+                    </button>
+                  </div>
+                  <p className="welcome-invite">
+                    Pick a station. See where it takes you.
+                  </p>
+                </div>
+                <p className="between" id="between" aria-live="polite">
+                  {betweenLine}
+                </p>
+                <div className="preview" id="preview" aria-live="polite">
+                  {locked ? <StationPreview s={locked} /> : null}
+                </div>
+              </div>
+              <div className="side-col">
+                <div className="badge">
+                  <h1 id="who">Debjeet Swain</h1>
+                  <span>DS–1 · Bengaluru</span>
+                </div>
+                <div className="grille" aria-hidden="true" />
+              </div>
+            </div>
+
+            <div
+              className="band"
+              id="band"
+              ref={bandRef}
+              role="slider"
+              tabIndex={0}
+              aria-label="Tuning dial. Arrow keys move, Page Up and Down jump between stations, Enter goes in."
+              aria-valuemin={0}
+              aria-valuemax={DIAL_MAX}
+              aria-valuenow={Math.round(v)}
+              aria-valuetext={
+                locked
+                  ? `${locked.name}, ${locked.freq}`
+                  : `Between stations, ${freqAt(v)}`
+              }
+              onPointerDown={(e) => {
+                setDragging(true);
+                setTouched(true);
+                (e.target as HTMLElement).setPointerCapture(e.pointerId);
+                apply(fromPointer(e));
+              }}
+              onPointerMove={(e) => {
+                if (dragging) apply(fromPointer(e));
+              }}
+              onPointerUp={() => {
+                if (!dragging) return;
+                setDragging(false);
+                apply(vRef.current, { snap: true });
+              }}
+              onPointerCancel={() => {
+                if (!dragging) return;
+                setDragging(false);
+                apply(vRef.current, { snap: true });
+              }}
+              onKeyDown={(e) => {
+                setTouched(true);
+                const order = STATIONS.map((s) => s.at);
+                const nextAt = order.find((a) => a > v + 1);
+                const prevAt = [...order].reverse().find((a) => a < v - 1);
+                const map: Record<string, number> = {
+                  ArrowRight: v + 8,
+                  ArrowUp: v + 8,
+                  ArrowLeft: v - 8,
+                  ArrowDown: v - 8,
+                  PageUp: nextAt ?? v,
+                  PageDown: prevAt ?? v,
+                  Home: 0,
+                  End: DIAL_MAX,
+                };
+                if (e.key in map) {
+                  e.preventDefault();
+                  apply(map[e.key]);
+                }
+                if (e.key === "Enter" && locked) {
+                  e.preventDefault();
+                  goIn(locked);
+                }
+              }}
+            >
+              <div className="ticks" aria-hidden="true">
+                {ticks}
+              </div>
+              <div className="nums" aria-hidden="true">
+                {STATIONS.map((s) => (
+                  <span
+                    key={s.key}
+                    style={
+                      { "--p": `${(s.at / DIAL_MAX) * 100}%` } as CSSProperties
                     }
-                    soundRef.current = makeStaticSound();
-                    soundRef.current.level(locked ? 0 : 0.6);
-                    setSoundOn(true);
+                  >
+                    {s.freq}
+                  </span>
+                ))}
+              </div>
+              <div className="marks" aria-hidden="true">
+                {STATIONS.map((s) => (
+                  <b
+                    key={s.key}
+                    style={
+                      { "--p": `${(s.at / DIAL_MAX) * 100}%` } as CSSProperties
+                    }
+                  />
+                ))}
+              </div>
+              <div
+                className="needle"
+                id="needle"
+                aria-hidden="true"
+                style={{ "--p": `${(v / DIAL_MAX) * 100}%` } as CSSProperties}
+              />
+            </div>
+
+            <div className="r-bottom">
+              <div className="keys" role="group" aria-label="Station presets">
+                {STATIONS.map((s, i) => (
+                  <button
+                    key={s.key}
+                    type="button"
+                    className="key"
+                    data-at={s.at}
+                    aria-pressed={!!locked && locked.at === s.at}
+                    aria-label={`${s.name}, ${s.freq}. Press again to go in.`}
+                    onClick={() => {
+                      if (locked && locked.at === s.at) {
+                        goIn(s);
+                        return;
+                      }
+                      setTouched(true);
+                      setGliding(true);
+                      apply(s.at);
+                      setTimeout(() => setGliding(false), 500);
+                    }}
+                  >
+                    <i className="kled" aria-hidden="true" />
+                    <small aria-hidden="true">{i + 1}</small>
+                    <span className="short" aria-hidden="true">
+                      <svg
+                        className="kicon"
+                        viewBox="0 0 16 16"
+                        width={16}
+                        height={16}
+                        dangerouslySetInnerHTML={{ __html: KEY_ICONS[s.key] }}
+                      />
+                      {s.short}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className="knob-well">
+                <div
+                  className="knob"
+                  id="knob"
+                  aria-hidden="true"
+                  style={
+                    {
+                      "--r": `${(v / DIAL_MAX) * 300 - 150}deg`,
+                    } as CSSProperties
+                  }
+                  onPointerDown={(e) => {
+                    knobStart.current = {
+                      x: e.clientX,
+                      y: e.clientY,
+                      v: vRef.current,
+                    };
+                    setTouched(true);
+                    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+                  }}
+                  onPointerMove={(e) => {
+                    if (!knobStart.current) return;
+                    apply(
+                      knobStart.current.v +
+                        (e.clientX - knobStart.current.x) -
+                        (e.clientY - knobStart.current.y),
+                    );
+                  }}
+                  onPointerUp={() => {
+                    if (knobStart.current) {
+                      knobStart.current = null;
+                      apply(vRef.current, { snap: true });
+                    }
+                  }}
+                  onPointerCancel={() => {
+                    if (knobStart.current) {
+                      knobStart.current = null;
+                      apply(vRef.current, { snap: true });
+                    }
                   }}
                 >
-                  <span className="thumb" aria-hidden="true" />
-                </button>
+                  <span />
+                </div>
                 <span className="silk" aria-hidden="true">
-                  On
+                  Tune
                 </span>
-              </span>
+              </div>
             </div>
-            <p className="silk key-hint" id="key-hint">
-              Press <kbd>1</kbd>–<kbd>4</kbd> to tune · press again or{" "}
-              <kbd>Enter</kbd> to go in
-            </p>
-          </div>
-        </section>
+
+            <div className="plate-row">
+              <div className="switch-well">
+                <span className="silk">Sound</span>
+                <span className="sw-track">
+                  <span className="silk" aria-hidden="true">
+                    Off
+                  </span>
+                  <button
+                    type="button"
+                    className="switch"
+                    id="radio-sound"
+                    role="switch"
+                    aria-checked={soundOn}
+                    aria-label="Sound"
+                    onClick={() => {
+                      if (soundRef.current) {
+                        soundRef.current.stop();
+                        soundRef.current = null;
+                        setSoundOn(false);
+                        return;
+                      }
+                      soundRef.current = makeStaticSound();
+                      soundRef.current.level(locked ? 0 : 0.6);
+                      setSoundOn(true);
+                    }}
+                  >
+                    <span className="thumb" aria-hidden="true" />
+                  </button>
+                  <span className="silk" aria-hidden="true">
+                    On
+                  </span>
+                </span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <a className="room-scroll" href="#hello-h">
+          Say hello
+        </a>
       </div>
 
       <section className="home-contact" aria-labelledby="hello-h">
