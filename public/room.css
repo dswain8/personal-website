@@ -2,10 +2,10 @@
 body[data-side="radio"] { background: #e9e4d7; }
 body[data-side="radio"] .home.wrap { max-width: none; padding: 0 0 100px; overflow-x: clip; background: #e9e4d7; }
 body[data-side="radio"] .radio-stage.listening-room {
-  /* --radio-floor is the resting plane above the stage bottom (handoff desk contact). */
   --room-wood: #927253; --radio-floor: 120px; --prop-floor: 84px; --shelf-front: 62px;
-  isolation: isolate; position: relative; display: block;
-  min-height: 760px; height: min(100svh, 1000px); padding: 0; background: #c4c5af;
+  /* column: align-items centers horizontally (clears postcard); justify-end + --radio-floor plants feet on oak */
+  isolation: isolate; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  min-height: 760px; height: min(100svh, 1000px); padding: 0 0 var(--radio-floor); background: #c4c5af;
 }
 body[data-side="radio"] .room-backdrop {
   position: absolute; inset: 0 0 24%; z-index: -5; pointer-events: none;
@@ -48,11 +48,7 @@ body[data-side="radio"] .room-surface::after {
   background: linear-gradient(180deg, #e2cda23d, #42301f10 14%, #30251c55 85%, #211c16a3), url("assets/room/table-oak-edge.jpg") center / 100% 100%;
   box-shadow: 0 2px 2px #241e18a6, 0 10px 13px #29271e80, inset 0 1px 1px #d7b67d80;
 }
-/* Pin casing to the handoff resting plane. Scale from the bottom so --radio-floor stays in viewport px (unlike zoom). */
-body[data-side="radio"] .room-receiver {
-  position: absolute; right: 0; bottom: var(--radio-floor); width: 1040px; max-width: none;
-  transform: scale(.72); transform-origin: right bottom; z-index: 2;
-}
+body[data-side="radio"] .room-receiver { position: relative; width: 1040px; max-width: none; zoom: .72; z-index: 2; }
 body[data-side="radio"] .room-vignette { position: absolute; inset: 0; pointer-events: none; z-index: 4; box-shadow: inset 0 0 85px 5px #293c201f; }
 body[data-side="radio"] .room-scroll { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 5; color: #f4ecd8; font: 400 11px/1.4 var(--mono); text-decoration: none; padding: 5px 12px; }
 body[data-side="radio"] .room-scroll::after { content: "↓"; margin-left: 12px; }
@@ -73,19 +69,15 @@ body[data-side="radio"] .home-contact li a span:last-child { font-size: 12px; ov
 body[data-side="radio"] .home-contact li a:hover { border-bottom-color: #4f613f; }
 body[data-side="radio"] .foot { display: none; }
 @media (min-width: 1600px) {
-  body[data-side="radio"] .radio-stage.listening-room { min-height: 940px; --radio-floor: 190px; }
-  body[data-side="radio"] .room-receiver { transform: scale(.88); }
+  body[data-side="radio"] .radio-stage.listening-room { min-height: 940px; padding-bottom: 190px; }
+  body[data-side="radio"] .room-receiver { zoom: .88; }
 }
 @media (min-width: 861px) and (max-width: 1240px) {
-  body[data-side="radio"] .radio-stage.listening-room { --radio-floor: 230px; }
-  body[data-side="radio"] .room-receiver { transform: scale(.7); }
+  body[data-side="radio"] .room-receiver { zoom: .7; }
 }
 @media (max-width: 860px) {
-  body[data-side="radio"] .radio-stage.listening-room { height: auto; min-height: 850px; --radio-floor: 215px; }
-  body[data-side="radio"] .room-receiver {
-    width: calc(100% - 64px); max-width: 650px; right: auto; left: 50%;
-    transform: translateX(-50%) scale(1); transform-origin: center bottom;
-  }
+  body[data-side="radio"] .radio-stage.listening-room { height: auto; min-height: 850px; padding: 190px 0 170px; justify-content: center; }
+  body[data-side="radio"] .room-receiver { zoom: 1; width: calc(100% - 64px); max-width: 650px; }
   body[data-side="radio"] .room-backdrop { background-position: 45% 48%; bottom: 180px; }
   body[data-side="radio"] .room-window { bottom: 200px; border-width: 16px 18px 20px; }
   body[data-side="radio"] .room-surface { top: auto; height: 240px; }
@@ -97,7 +89,7 @@ body[data-side="radio"] .foot { display: none; }
 }
 @media (max-width: 560px) {
   body[data-side="radio"] .home.wrap { padding-bottom: 64px; }
-  body[data-side="radio"] .radio-stage.listening-room { min-height: 900px; --radio-floor: 215px; }
+  body[data-side="radio"] .radio-stage.listening-room { min-height: 900px; padding: 140px 0 190px; }
   body[data-side="radio"] .room-receiver { width: calc(100% - 28px); }
   body[data-side="radio"] .room-backdrop { background-position: 43% 50%; }
   body[data-side="radio"] .room-window { border-width: 12px 12px 17px; }
@@ -146,17 +138,18 @@ body[data-side="radio"] .room-postcard::before, body[data-side="radio"] .room-po
 body[data-side="radio"] .room-postcard::after { left: auto; right: 5px; transform: rotate(13deg); }
 body[data-side="radio"] .room-postcard img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; opacity: .9; }
 @media (min-width: 1600px) {
- body[data-side="radio"] .listening-room { --prop-floor: 115px; }
+ body[data-side="radio"] .listening-room { --radio-floor: 190px; --prop-floor: 115px; }
  body[data-side="radio"] .room-reading { right: calc(50% - 745px); }
  body[data-side="radio"] .room-postcard { right: calc(50% - 700px); }
 }
 @media (min-width: 861px) and (max-width: 1240px) {
- body[data-side="radio"] .radio-stage.listening-room { min-height: 960px; }
+ body[data-side="radio"] .radio-stage.listening-room { min-height: 960px; padding-bottom: 230px; }
  body[data-side="radio"] .room-reading { right: 30px; }
  body[data-side="radio"] .room-postcard { bottom: 125px; right: 55px; width: 130px; height: 90px; z-index: 1; }
 }
 @media (max-width: 860px) {
  body[data-side="radio"] .listening-room { --prop-floor: 76px; }
+ body[data-side="radio"] .radio-stage.listening-room { padding-bottom: 215px; }
  body[data-side="radio"] .room-reading { right: 30px; transform: scale(.9); transform-origin: right bottom; }
  body[data-side="radio"] .room-postcard { bottom: 132px; right: 55px; width: 126px; height: 88px; z-index: 1; }
  body[data-side="radio"] .room-window::after { left: -18px; right: -18px; }
@@ -164,6 +157,7 @@ body[data-side="radio"] .room-postcard img { width: 100%; height: 100%; object-f
 }
 @media (max-width: 560px) {
  body[data-side="radio"] .listening-room { --prop-floor: 74px; --shelf-front: 56px; }
+ body[data-side="radio"] .radio-stage.listening-room { padding-bottom: 215px; }
  body[data-side="radio"] .room-reading { right: 18px; transform: scale(.65); }
  body[data-side="radio"] .room-postcard { bottom: 114px; right: 34px; width: 105px; height: 74px; padding: 6px; }
  body[data-side="radio"] .room-postcard::before, body[data-side="radio"] .room-postcard::after { display: none; }
@@ -215,8 +209,9 @@ body[data-side="radio"] .wrap.home {
 body[data-side="radio"] .radio-stage.listening-room {
   flex: none;
 }
+/* Match murphy casing size from handoff (not the above-fold 18px shrink). */
 body[data-side="radio"] .listening-room .screen { min-height: 320px; }
-body[data-side="radio"] .listening-room .radio { padding: 18px; }
+body[data-side="radio"] .listening-room .radio { padding: clamp(20px, 2.6vw, 30px); }
 body[data-side="radio"] .listening-room .band { height: 72px; margin-top: 14px; }
 body[data-side="radio"] .listening-room .r-bottom { margin-top: 14px; }
 body[data-side="radio"] .listening-room .key { min-height: 76px; }
