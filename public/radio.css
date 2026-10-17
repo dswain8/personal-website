@@ -352,73 +352,152 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
 .desk p { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
 
 /* =================================================================
-   QUIET: dark, sparse, slow. One thing at a time.
+   QUIET: starry field, observer frame, short scroll.
    ================================================================= */
 .q { max-width: 680px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 32px); }
-.q-open { min-height: min(calc(100svh - 64px), 820px); display: flex; flex-direction: column; justify-content: center; padding: 72px 0; }
-.q-open h1 { font-weight: 300; font-size: clamp(44px, 7vw, 84px); }
-.q-open .lede { color: var(--ink-2); margin-top: 28px; max-width: 30ch; }
-.q-open .down { margin-top: 56px; font-size: 15px; color: var(--ink-2); text-decoration: none; display: inline-flex; gap: 10px; align-items: center; min-height: 44px; }
+.q-open {
+  min-height: min(calc(100svh - 64px), 520px);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 48px 0 36px;
+}
+.q-open h1 { font-weight: 300; font-size: clamp(52px, 9vw, 96px); letter-spacing: -0.02em; }
+.q-open .lede { color: var(--ink-2); margin-top: 22px; max-width: 34ch; }
+.q-open .down {
+  margin-top: 40px; font-size: 15px; color: var(--ink-2); text-decoration: none;
+  display: inline-flex; gap: 10px; align-items: center; min-height: 44px;
+}
 .q-open .down:hover { color: var(--ink); }
-.q-sec { padding: clamp(64px, 12vw, 140px) 0; }
+.q-sec { padding: clamp(48px, 8vw, 88px) 0; }
+.q-sec.q-sec-tight { padding: clamp(36px, 6vw, 64px) 0; }
 .q-sec p { font: 300 clamp(20px, 2.2vw, 24px)/1.6 var(--serif); color: var(--ink); max-width: 34ch; }
 .q-sec p.small { font: 400 16px/1.65 var(--sans); color: var(--ink-2); max-width: 52ch; }
 .q-sec h2 { font-weight: 300; margin-bottom: 28px; font-size: clamp(30px, 3.6vw, 42px); }
 .q .kicker { color: var(--ink-2); }
 
-.field-wrap { max-width: 980px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+.field-wrap { max-width: 980px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px) clamp(24px, 4vw, 40px); }
 .field {
-  position: relative; height: clamp(420px, 62vh, 560px); border-radius: 18px; overflow: hidden;
-  background: radial-gradient(ellipse at 50% 120%, #1b1f2a 0%, #101218 70%);
-  border: 1px solid var(--rule);
+  position: relative; height: clamp(480px, 68vh, 640px); border-radius: 20px; overflow: hidden;
+  background: #05060c;
+  border: 1px solid color-mix(in srgb, var(--rule) 70%, #1a2030);
+  box-shadow: inset 0 0 80px rgba(8, 12, 28, 0.55);
+}
+/* ---- cosmos layers (Milky Way + stars) ---- */
+.field .cosmos { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.field .cosmos-deep {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 110%, #12182a 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 18% 20%, rgba(40, 52, 90, 0.35), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 88% 30%, rgba(55, 40, 70, 0.22), transparent 55%),
+    linear-gradient(180deg, #070910 0%, #0a0d18 45%, #080b14 100%);
+}
+.field .cosmos-milky {
+  position: absolute; inset: -20%;
+  background:
+    linear-gradient(
+      118deg,
+      transparent 28%,
+      rgba(180, 190, 220, 0.04) 38%,
+      rgba(220, 210, 240, 0.14) 48%,
+      rgba(255, 236, 210, 0.18) 52%,
+      rgba(190, 200, 240, 0.12) 58%,
+      rgba(160, 175, 210, 0.05) 66%,
+      transparent 74%
+    );
+  filter: blur(1.5px);
+  animation: milky-drift 48s ease-in-out infinite alternate;
+  transform-origin: 50% 50%;
+}
+.field .cosmos-glow {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 45% 28% at 58% 42%, rgba(255, 230, 190, 0.09), transparent 70%),
+    radial-gradient(ellipse 30% 22% at 42% 55%, rgba(170, 190, 255, 0.06), transparent 70%);
+  animation: milky-pulse 14s ease-in-out infinite alternate;
+}
+.field .cosmos-star {
+  position: absolute;
+  width: calc(var(--s, 1) * 2px);
+  height: calc(var(--s, 1) * 2px);
+  margin: calc(var(--s, 1) * -1px) 0 0 calc(var(--s, 1) * -1px);
+  border-radius: 50%;
+  background: #f2efe6;
+  box-shadow: 0 0 4px rgba(242, 239, 230, 0.55);
+  opacity: 0.55;
+  animation: star-twinkle 4.8s ease-in-out var(--d, 0s) infinite;
+}
+@keyframes milky-drift {
+  from { transform: translate3d(-1.5%, 0.8%, 0) rotate(-1.2deg) scale(1.02); }
+  to { transform: translate3d(1.8%, -1%, 0) rotate(1deg) scale(1.05); }
+}
+@keyframes milky-pulse {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50% { opacity: 0.95; transform: scale(1.15); }
 }
 .thought {
-  position: absolute; left: var(--x); bottom: -40px;
-  font: 400 clamp(15px, 1.6vw, 17px)/1.2 var(--serif); font-style: italic; color: #b9b4a7;
+  position: absolute; left: var(--x); bottom: -40px; z-index: 2;
+  font: 400 clamp(15px, 1.6vw, 17px)/1.2 var(--serif); font-style: italic; color: #c8c2b4;
   background: transparent; border: 0; padding: 10px 12px; min-height: 44px; border-radius: 999px; cursor: pointer;
   animation: rise-thought var(--dur) linear var(--delay) infinite;
   white-space: nowrap; max-width: 90%;
+  text-shadow: 0 0 18px rgba(214, 178, 106, 0.18);
 }
-.thought:hover, .thought:focus-visible { color: #efe9db; background: rgba(214, 178, 106, 0.08); animation-play-state: paused; }
+.thought:hover, .thought:focus-visible {
+  color: #efe9db;
+  background: rgba(214, 178, 106, 0.1);
+  animation-play-state: paused;
+  text-shadow: 0 0 22px rgba(214, 178, 106, 0.35);
+}
 @keyframes rise-thought {
   0% { transform: translateY(0); opacity: 0; }
   12% { opacity: 1; }
   80% { opacity: 1; }
-  100% { transform: translateY(calc(-1 * clamp(460px, 66vh, 600px))); opacity: 0; }
+  100% { transform: translateY(calc(-1 * clamp(500px, 72vh, 680px))); opacity: 0; }
 }
 .field-center { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; text-align: center; padding: 24px; }
 .field-center .still { font: 300 15px/1.5 var(--sans); color: #8d897d; max-width: 30ch; }
 .field[data-state="carried"] .thought { opacity: 0 !important; pointer-events: none; animation-play-state: paused; transition: opacity .4s; }
 .field[data-state="carried"] .field-center .still { display: none; }
-.chain { position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 14px; padding: 24px; text-align: center; }
+.field[data-state="carried"] .cosmos { opacity: 0.55; transition: opacity 0.5s var(--ease); }
+.chain {
+  position: absolute; inset: 0; z-index: 3; display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 14px; padding: 24px; text-align: center;
+  pointer-events: none;
+}
 .field[data-state="carried"] .chain { display: flex; }
 .chain p { margin: 0; font: 400 clamp(20px, 2.6vw, 30px)/1.25 var(--serif); font-style: italic; color: #efe9db; animation: link-in .8s var(--ease) both; }
 .chain p:nth-child(2) { font-size: clamp(18px, 2.2vw, 25px); color: #d8d2c4; }
 .chain p:nth-child(3) { font-size: clamp(17px, 2vw, 22px); color: #c4beb0; }
 .chain p:nth-child(4) { font-size: clamp(16px, 1.8vw, 20px); color: #b2ac9f; }
 @keyframes link-in { from { opacity: 0; transform: translateY(8px); } }
-.come-back { pointer-events: auto; margin-top: 28px; font: 600 14px/1 var(--sans); min-height: 46px; padding: 0 22px; border-radius: 999px; background: #d6b26a; color: #13151c; border: 0; cursor: pointer; }
+.come-back {
+  pointer-events: auto; margin-top: 28px; font: 600 14px/1 var(--sans);
+  min-height: 46px; padding: 0 22px; border-radius: 999px;
+  background: #d6b26a; color: #13151c; border: 0; cursor: pointer;
+}
 .field-meta { display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding: 14px 4px 0; font-size: 14px; color: var(--ink-2); }
-.field-meta p { margin: 0; }
-.field-meta .tag { color: var(--ink-2); }
-/* reduced motion: thoughts sit still, scattered */
+.field-meta p { margin: 0; max-width: 52ch; }
+/* reduced motion: thoughts sit still, sky holds */
 .field.still-mode .thought { animation: none; bottom: auto; top: var(--y); opacity: 1; }
+.field.still-mode .cosmos-milky,
+.field.still-mode .cosmos-glow,
+.field.still-mode .cosmos-star { animation: none; }
 
-.places { list-style: none; padding: 0; margin: 36px 0 0; }
-.places li { display: grid; grid-template-columns: 110px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--rule); }
-.places b { font: 500 12px/1.8 var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
-.places span { font: 300 21px/1.4 var(--serif); }
 .voices { list-style: none; padding: 0; margin: 28px 0 0; }
 .voices li { border-top: 1px solid var(--rule); }
 .voices a { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 18px 0; text-decoration: none; min-height: 44px; }
 .voices a span:first-child { font: 300 26px/1.2 var(--serif); }
 .voices a span:last-child { font-size: 14px; color: var(--ink-2); text-align: right; }
 .voices a:hover span:first-child { color: var(--accent); }
-.moods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 28px; border-top: 1px solid var(--rule); }
-.moods div { padding: 18px 16px 0 0; }
-.moods b { display: block; font: 300 24px/1.2 var(--serif); }
-.moods small { color: var(--ink-2); font-size: 14px; }
-@media (max-width: 560px) { .moods { grid-template-columns: 1fr; } .moods div { padding: 14px 0; border-bottom: 1px solid var(--rule); } .places li { grid-template-columns: 1fr; gap: 2px; } .voices a { flex-direction: column; gap: 2px; } .voices a span:last-child { text-align: left; } }
+@media (max-width: 560px) {
+  .voices a { flex-direction: column; gap: 2px; }
+  .voices a span:last-child { text-align: left; }
+}
 
 .sound { display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: center; margin-top: 24px; padding: 18px; border: 1px solid var(--rule); border-radius: 14px; }
 .sound button { font: 600 14px/1 var(--sans); min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--ink-2); background: transparent; color: var(--ink); cursor: pointer; }
@@ -427,8 +506,11 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
 .sound input[type=range] { accent-color: var(--accent); min-height: 28px; }
 .sound p { margin: 0; font-size: 14px; color: var(--ink-2); flex-basis: 100%; }
 
-.empty-note { border: 1px dashed var(--rule); border-radius: 14px; padding: 22px; margin-top: 24px; }
-.empty-note p { margin: 10px 0 0; }
+@media (prefers-reduced-motion: reduce) {
+  .field .cosmos-milky,
+  .field .cosmos-glow,
+  .field .cosmos-star { animation: none !important; }
+}
 
 /* =================================================================
    TRY: kraft board, pinned prints
@@ -481,7 +563,7 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
 
 /* fixes */
 .q-sec p.kicker { font: 600 12px/1.2 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); max-width: none; margin-bottom: 18px; }
-.field-hint { font: 400 15px/1.6 var(--sans); color: var(--ink-2); max-width: 52ch; margin: 0 0 16px 4px; }
+.field-hint { font: 400 15px/1.6 var(--sans); color: var(--ink-2); max-width: 48ch; margin: 0 0 14px 4px; }
 @media (max-width: 860px) {
   .bar { position: static; }
   .sides { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; margin: 0 -10px; padding: 4px 0 8px; gap: 2px; }
@@ -894,23 +976,7 @@ body[data-side="home"] .bar { display: none; }
 @keyframes hud-flash { 30% { color: var(--accent); transform: scale(1.06); } }
 @media (max-width: 860px) { .hud { top: 0; } .hud-stat { font-size: 11.5px; } .hud-name small { display: none; } }
 
-/* ---- Quiet: scenes + the player in the field ---- */
-.scenes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 12px 4px; }
-.scenes-k { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin-right: 6px; }
-.scenes button { font: 500 14px/1 var(--sans); min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer; }
-.scenes button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
-.field .scene-art { position: absolute; inset: 0; pointer-events: none; transition: opacity .8s var(--ease); }
-.field[data-scene="flight"] .scene-art { background:
-  radial-gradient(ellipse 120px 160px at 82% 40%, rgba(120, 140, 170, .22), rgba(120,140,170,.05) 70%, transparent 71%),
-  radial-gradient(ellipse 132px 172px at 82% 40%, transparent 70%, rgba(214,178,106,.10) 71%, transparent 75%); }
-.field[data-scene="car"] .scene-art { background:
-  linear-gradient(transparent 62%, rgba(255,255,255,.03) 62%),
-  repeating-linear-gradient(90deg, transparent 0 46%, rgba(214,178,106,.18) 46% 47%, transparent 47% 53%, rgba(214,178,106,.18) 53% 54%, transparent 54%) 0 0 / 100% 100%; 
-  -webkit-mask: linear-gradient(transparent 60%, #000 100%); mask: linear-gradient(transparent 60%, #000 100%); }
-.field[data-scene="bedroom"] .scene-art { background: radial-gradient(circle at 12% 18%, rgba(214, 160, 90, .22), transparent 40%); }
-.field-av { position: absolute; left: 50%; bottom: -8px; width: clamp(150px, 20vw, 200px); transform: translateX(-50%); pointer-events: none; opacity: .9; transition: opacity .4s var(--ease); }
-.field-av .avatar { width: 100%; }
-.field[data-state="carried"] .field-av { opacity: .35; }
+/* ---- Quiet field stacking (cosmos lives in the QUIET block above) ---- */
 .field .thought { z-index: 2; }
 .field .chain { z-index: 3; }
 
