@@ -121,16 +121,24 @@ export default function BuildRoom() {
         <header className="b3-head">
           <h1 className="reveal">How I build with AI.</h1>
           <p className="lede reveal">
-            I do most of my product work in Claude Code. Anything I repeat
-            becomes a skill: a plain file that fires when I describe the task.
-            Here are all {total} of mine. Read any of them before you take it.
+            An interchangeable agentic harness — right now heavy on Codex,
+            Claude Code, and Cursor. Anything I repeat becomes a skill: a plain
+            file that travels with me and fires when I describe the task. Here
+            are all {total} of mine. Read any of them before you take it.
+          </p>
+          <p className="b3-harness reveal" aria-label="Harnesses in rotation">
+            <span>Codex</span>
+            <i aria-hidden="true" />
+            <span>Claude Code</span>
+            <i aria-hidden="true" />
+            <span>Cursor</span>
           </p>
         </header>
 
         <ol className="how3" aria-label="How it works">
           <li>
-            <b>Say the task.</b> A hook reads the prompt and fires the matching
-            skill. No slash commands to remember.
+            <b>Say the task.</b> A matcher reads the prompt and fires the skill
+            — same idea whether I&apos;m in Codex, Claude Code, or Cursor.
           </li>
           <li>
             <b>Get a second opinion.</b> A different model critiques every draft
@@ -255,63 +263,6 @@ export default function BuildRoom() {
               />
             </article>
           </div>
-        </section>
-
-        <section className="judge" aria-labelledby="judge-h">
-          <h2 id="judge-h">How I judge the work</h2>
-          <div className="judge-grid">
-            <blockquote>
-              <p>
-                A good-enough decision made early is usually worth more than the
-                perfect decision made too late.
-              </p>
-            </blockquote>
-            <blockquote>
-              <p>
-                Building forces clarity in a way writing a spec never quite
-                does.
-              </p>
-            </blockquote>
-            <div className="judge-checks">
-              <p>And every draft, mine or a model&apos;s, has to pass seven checks:</p>
-              <ol>
-                <li>Is the point up front?</li>
-                <li>Is it specific?</li>
-                <li>Is there a recommendation?</li>
-                <li>Does it match the reader?</li>
-                <li>Are the tradeoffs named?</li>
-                <li>Are assumptions surfaced?</li>
-                <li>Does it close with an action?</li>
-              </ol>
-            </div>
-          </div>
-          <p className="tools3">
-            Tools:{" "}
-            <a className="textlink" href="https://claude.ai/code" rel="noreferrer">
-              Claude Code
-            </a>
-            ,{" "}
-            <a className="textlink" href="https://www.cursor.com" rel="noreferrer">
-              Cursor
-            </a>
-            ,{" "}
-            <a className="textlink" href="https://www.wispr.ai" rel="noreferrer">
-              Wispr Flow
-            </a>
-            ,{" "}
-            <a className="textlink" href="https://obsidian.md" rel="noreferrer">
-              Obsidian
-            </a>
-            , and{" "}
-            <a
-              className="textlink"
-              href="https://modelcontextprotocol.io"
-              rel="noreferrer"
-            >
-              MCP
-            </a>{" "}
-            to connect them.
-          </p>
         </section>
 
         <NextSide
