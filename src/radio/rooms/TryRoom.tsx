@@ -109,8 +109,8 @@ export default function TryRoom() {
         <header className="bp-head">
           <h1 className="reveal">I tinker.</h1>
           <p className="lede reveal">
-            AI is how I turn an itch into something that runs. These are the
-            things on my bench. Pick one up.
+            AI is how I explore different ideas and turn the good ones into
+            something that runs. These are the things on my bench. Pick one up.
           </p>
         </header>
 

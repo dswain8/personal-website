@@ -16,10 +16,13 @@ export const TOOLS = [
   "MCP",
   "cron",
   "React",
+  "Vite",
   "Next.js",
   "SQLite",
   "Ollama",
   "Web Speech",
+  "ElevenLabs",
+  "Higgsfield",
   "Vercel",
   "Anthropic API",
   "Cursor",
@@ -68,7 +71,7 @@ export const BENCH: BenchProject[] = [
     why: "PM knowledge compounds slowly. The principle was right there; the muscle wasn't.",
     trick:
       "It's a stack. Each layer is useful on its own; stacked, they turn any AI conversation into a sparring coach.",
-    stack: ["Claude Code", "Vercel", "Anthropic API"],
+    stack: ["React", "Vite", "Vercel", "Anthropic API"],
     links: [
       ["Spar a round", "https://app-two-omega-syz9qw9qo8.vercel.app"],
       ["Source", "https://github.com/dswain8/pm-dojo"],
@@ -76,14 +79,20 @@ export const BENCH: BenchProject[] = [
     ],
   },
   {
-    key: "radio",
-    name: "This website",
-    status: "You're on it",
-    what: "A pocket radio with four stations. Ported into React + Vite from the radio redesign.",
-    why: "One person, multiple sides; visitors choose where their curiosity takes them.",
-    trick: "Every room is a station. Press a key twice and you're in.",
-    stack: ["Claude Code", "React", "Vite"],
-    links: [["Back to the dial", "/"]],
+    key: "boardroom",
+    name: "Lenny Boardroom",
+    status: "Buildathon · offline",
+    what: "A PM decision-sparring board built for Lenny Rachitsky’s Buildathon. You enter a decision; three operator lenses from Lenny’s archive pressure-test the tradeoff and return a memo — recommendation, risks, kill criteria, next actions.",
+    why: "Fun way to spar PM materials against real operator voices, not generic advice.",
+    trick:
+      "Keep the first version focused. A few decision patterns beat answering every possible question.",
+    stack: ["React", "Vite", "Anthropic API"],
+    links: [
+      [
+        "Buildathon write-up",
+        "https://www.linkedin.com/posts/debjeetswain_built-lenny-boardroom-for-lenny-rachitsky-activity-7464389300672045056-53q2",
+      ],
+    ],
   },
   {
     key: "site",
@@ -95,16 +104,6 @@ export const BENCH: BenchProject[] = [
     stack: [],
     links: [["Visit the site", "https://www.sppmt.org/"]],
   },
-  {
-    key: "sheets",
-    name: "AI worksheet generator",
-    status: "Private",
-    what: "School worksheets across grades and subjects, built end to end with Claude Code.",
-    why: "Not public yet, but fully shaped enough to count as real work.",
-    trick: "",
-    stack: ["Claude Code"],
-    links: [],
-  },
 ];
 
 export const GADGET_SVG: Record<string, string> = {
@@ -115,6 +114,10 @@ export const GADGET_SVG: Record<string, string> = {
       <circle cx="58" cy="38" r="12" fill="#f6eecf"/><circle cx="63" cy="34" r="10" fill="#4b2f6b"/><circle cx="40" cy="26" r="1.6" fill="#f6eecf"/><circle cx="72" cy="56" r="1.6" fill="#f6eecf"/><circle cx="46" cy="60" r="1.2" fill="#f6eecf"/>`,
   dojo: `<path d="M50 4v12" stroke="#5b4a3a" stroke-width="3"/><rect x="34" y="16" width="32" height="56" rx="14" fill="#b8432b"/><rect x="34" y="30" width="32" height="5" fill="#8f2f1c"/><rect x="34" y="52" width="32" height="5" fill="#8f2f1c"/>
       <ellipse cx="50" cy="76" rx="20" ry="3" fill="rgba(0,0,0,.2)"/>`,
+  boardroom: `<ellipse cx="50" cy="58" rx="34" ry="12" fill="#3a2a20"/><ellipse cx="50" cy="54" rx="30" ry="9" fill="#5c4634"/>
+      <rect x="42" y="28" width="16" height="22" rx="3" fill="#f0c64a"/><circle cx="50" cy="22" r="8" fill="#f6eecf"/><circle cx="22" cy="40" r="6" fill="#e8dcc8"/><circle cx="78" cy="40" r="6" fill="#e8dcc8"/>
+      <rect x="16" y="46" width="12" height="10" rx="2" fill="#7d8790"/><rect x="72" y="46" width="12" height="10" rx="2" fill="#7d8790"/>
+      <path d="M28 18l4 6h-8z" fill="#e2501c"/><path d="M72 18l4 6h-8z" fill="#e2501c"/><path d="M50 8l4 6h-8z" fill="#e2501c"/>`,
   radio: `<rect x="12" y="20" width="76" height="52" rx="8" fill="#e8e4db" stroke="#b3ac9e" stroke-width="2"/><rect x="18" y="26" width="42" height="24" rx="3" fill="#15171c"/>
       <text x="22" y="43" font-family="JetBrains Mono, monospace" font-size="11" fill="#ece7da">90.5</text><circle cx="74" cy="38" r="9" fill="#efebe3" stroke="#8f887b"/><path d="M74 31v6" stroke="#e2501c" stroke-width="2"/>
       <rect x="18" y="56" width="16" height="9" rx="2" fill="#f2efe8" stroke="#8f887b"/><rect x="38" y="56" width="16" height="9" rx="2" fill="#f2efe8" stroke="#8f887b"/><rect x="58" y="56" width="16" height="9" rx="2" fill="#dcd6ca" stroke="#8f887b"/>`,
