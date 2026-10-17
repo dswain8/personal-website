@@ -30,7 +30,25 @@ type BedVoice = {
   stop: () => void;
 };
 
+const BED_URLS: Record<BedId, string> = {
+  rain: "/audio/rain.mp3",
+  quiet: "/audio/quiet.mp3",
+  build: "/audio/build.mp3",
+  try: "/audio/try.mp3",
+  life: "/audio/life.mp3",
+};
+
+/** Target levels — Quiet softest; rain gentle; stations sit under UI. */
+const BED_LEVEL: Record<BedId, number> = {
+  rain: 0.28,
+  quiet: 0.22,
+  build: 0.26,
+  try: 0.24,
+  life: 0.25,
+};
+
 let drone: DroneState | null = null;
+const bufferCache = new Map<string, AudioBuffer>();
 
 function audioContext(): AudioContext {
   const AudioCtx =
@@ -45,338 +63,110 @@ async function unlock(ctx: AudioContext) {
     try {
       await ctx.resume();
     } catch {
-      /* gesture may still be required on some browsers */
+      /* gesture may still be required */
     }
+  }
+}
+
+async function loadBuffer(
+  ctx: AudioContext,
+  url: string,
+): Promise<AudioBuffer | null> {
+  const hit = bufferCache.get(url);
+  if (hit) return hit;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const raw = await res.arrayBuffer();
+    const buf = await ctx.decodeAudioData(raw.slice(0));
+    bufferCache.set(url, buf);
+    return buf;
+  } catch {
+    return null;
   }
 }
 
 function noiseBuffer(ctx: AudioContext, seconds = 2): AudioBuffer {
   const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
   const d = buf.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  let last = 0;
+  for (let i = 0; i < d.length; i++) {
+    const white = Math.random() * 2 - 1;
+    // simple pink-ish
+    last = (last + 0.02 * white) / 1.02;
+    d[i] = last * 3;
+  }
   return buf;
 }
 
-function loopNoise(ctx: AudioContext): AudioBufferSourceNode {
-  const src = ctx.createBufferSource();
-  src.buffer = noiseBuffer(ctx);
-  src.loop = true;
-  src.start();
-  return src;
-}
-
-/** Soft rain bed — pinkish noise + sparse drop ticks. */
-function startRain(ctx: AudioContext, master: GainNode): BedVoice {
+/** Fallback rain if the mp3 fails to load. */
+function startRainFallback(ctx: AudioContext, master: GainNode): BedVoice {
   const gain = ctx.createGain();
   gain.gain.value = 0;
   gain.connect(master);
 
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuffer(ctx, 3);
+  src.loop = true;
   const hp = ctx.createBiquadFilter();
   hp.type = "highpass";
-  hp.frequency.value = 400;
+  hp.frequency.value = 500;
   const bp = ctx.createBiquadFilter();
   bp.type = "bandpass";
-  bp.frequency.value = 1400;
-  bp.Q.value = 0.55;
+  bp.frequency.value = 1600;
+  bp.Q.value = 0.5;
+  src.connect(hp).connect(bp).connect(gain);
+  src.start();
 
-  const src = loopNoise(ctx);
-  src.connect(hp);
-  hp.connect(bp);
-  bp.connect(gain);
-
-  const dropGain = ctx.createGain();
-  dropGain.gain.value = 0.035;
-  dropGain.connect(gain);
-  let dropTimer = 0;
-  const scheduleDrops = () => {
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    const f = ctx.createBiquadFilter();
-    f.type = "bandpass";
-    f.frequency.value = 2200 + Math.random() * 1800;
-    f.Q.value = 4;
-    o.type = "triangle";
-    o.frequency.value = 600 + Math.random() * 900;
-    const t = ctx.currentTime;
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.04 + Math.random() * 0.03, t + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08 + Math.random() * 0.1);
-    o.connect(f).connect(g).connect(dropGain);
-    o.start(t);
-    o.stop(t + 0.2);
-    dropTimer = window.setTimeout(scheduleDrops, 280 + Math.random() * 900);
-  };
-  scheduleDrops();
-
-  gain.gain.setTargetAtTime(0.22, ctx.currentTime, 0.8);
-
+  gain.gain.setTargetAtTime(BED_LEVEL.rain, ctx.currentTime, 0.8);
   return {
     id: "rain",
     gain,
     stop: () => {
-      window.clearTimeout(dropTimer);
       gain.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
       try {
         src.stop();
       } catch {
-        /* already stopped */
+        /* */
       }
     },
   };
 }
 
-function startQuietBed(ctx: AudioContext, master: GainNode): BedVoice {
+function startFileBed(
+  ctx: AudioContext,
+  master: GainNode,
+  id: BedId,
+  buffer: AudioBuffer,
+): BedVoice {
   const gain = ctx.createGain();
   gain.gain.value = 0;
   gain.connect(master);
-  const lp = ctx.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = 680;
-  lp.connect(gain);
-  const oscillators: OscillatorNode[] = [];
-  (
-    [
-      [110, 0.45],
-      [164.8, 0.28],
-      [220, 0.1],
-    ] as const
-  ).forEach(([f, g]) => {
-    const o = ctx.createOscillator();
-    const gn = ctx.createGain();
-    o.type = "triangle";
-    o.frequency.value = f;
-    gn.gain.value = g;
-    const lfo = ctx.createOscillator();
-    const lg = ctx.createGain();
-    lfo.frequency.value = 0.05 + f / 4000;
-    lg.gain.value = g * 0.35;
-    lfo.connect(lg).connect(gn.gain);
-    o.connect(gn).connect(lp);
-    o.start();
-    lfo.start();
-    oscillators.push(o, lfo);
-  });
-  gain.gain.setTargetAtTime(0.2, ctx.currentTime, 1);
+  const src = ctx.createBufferSource();
+  src.buffer = buffer;
+  src.loop = true;
+  // Slight overlap on loop seams the fades already soften.
+  src.loopStart = 0.05;
+  src.loopEnd = Math.max(0.5, buffer.duration - 0.05);
+  src.connect(gain);
+  src.start();
+  gain.gain.setTargetAtTime(BED_LEVEL[id], ctx.currentTime, 0.7);
   return {
-    id: "quiet",
+    id,
     gain,
     stop: () => {
-      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
-      oscillators.forEach((o) => {
-        try {
-          o.stop();
-        } catch {
-          /* */
-        }
-      });
-    },
-  };
-}
-
-/** Deep-focus low pulse — muted, no melody hook. */
-function startBuildBed(ctx: AudioContext, master: GainNode): BedVoice {
-  const gain = ctx.createGain();
-  gain.gain.value = 0;
-  gain.connect(master);
-  const lp = ctx.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = 420;
-  lp.connect(gain);
-
-  const o = ctx.createOscillator();
-  const og = ctx.createGain();
-  o.type = "sine";
-  o.frequency.value = 55;
-  og.gain.value = 0.55;
-  o.connect(og).connect(lp);
-  o.start();
-
-  const pulse = ctx.createOscillator();
-  const pg = ctx.createGain();
-  pulse.type = "sine";
-  pulse.frequency.value = 1.15;
-  pg.gain.value = 0.35;
-  pulse.connect(pg).connect(og.gain);
-  pulse.start();
-
-  const hum = ctx.createOscillator();
-  const hg = ctx.createGain();
-  hum.type = "triangle";
-  hum.frequency.value = 110;
-  hg.gain.value = 0.12;
-  hum.connect(hg).connect(lp);
-  hum.start();
-
-  gain.gain.setTargetAtTime(0.18, ctx.currentTime, 0.9);
-  return {
-    id: "build",
-    gain,
-    stop: () => {
-      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
-      [o, pulse, hum].forEach((n) => {
-        try {
-          n.stop();
-        } catch {
-          /* */
-        }
-      });
-    },
-  };
-}
-
-/** Curious workshop energy — soft mallet-ish fifths. */
-function startTryBed(ctx: AudioContext, master: GainNode): BedVoice {
-  const gain = ctx.createGain();
-  gain.gain.value = 0;
-  gain.connect(master);
-  const nodes: AudioScheduledSourceNode[] = [];
-
-  const playPluck = (freq: number, when: number) => {
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    const f = ctx.createBiquadFilter();
-    f.type = "lowpass";
-    f.frequency.value = 1800;
-    o.type = "triangle";
-    o.frequency.value = freq;
-    g.gain.setValueAtTime(0.0001, when);
-    g.gain.exponentialRampToValueAtTime(0.09, when + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, when + 1.4);
-    o.connect(f).connect(g).connect(gain);
-    o.start(when);
-    o.stop(when + 1.5);
-    nodes.push(o);
-  };
-
-  let step = 0;
-  const pattern = [392, 494, 587, 440]; // G B D A — light, curious
-  const tick = () => {
-    const t = ctx.currentTime;
-    playPluck(pattern[step % pattern.length], t);
-    playPluck(pattern[(step + 2) % pattern.length] / 2, t + 0.02);
-    step++;
-  };
-  tick();
-  const iv = window.setInterval(tick, 1600);
-
-  // soft noise floor
-  const floor = ctx.createGain();
-  floor.gain.value = 0.04;
-  floor.connect(gain);
-  const hp = ctx.createBiquadFilter();
-  hp.type = "highpass";
-  hp.frequency.value = 800;
-  const src = loopNoise(ctx);
-  src.connect(hp);
-  hp.connect(floor);
-
-  gain.gain.setTargetAtTime(0.16, ctx.currentTime, 0.8);
-  return {
-    id: "try",
-    gain,
-    stop: () => {
-      window.clearInterval(iv);
-      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
+      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
       try {
         src.stop();
       } catch {
         /* */
       }
-      nodes.forEach((n) => {
-        try {
-          n.stop();
-        } catch {
-          /* */
-        }
-      });
     },
   };
-}
-
-/** Warm home pad — soft major triad. */
-function startLifeBed(ctx: AudioContext, master: GainNode): BedVoice {
-  const gain = ctx.createGain();
-  gain.gain.value = 0;
-  gain.connect(master);
-  const lp = ctx.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = 900;
-  lp.connect(gain);
-  const oscillators: OscillatorNode[] = [];
-  (
-    [
-      [130.81, 0.35], // C3
-      [164.81, 0.28], // E3
-      [196.0, 0.22], // G3
-      [261.63, 0.1], // C4
-    ] as const
-  ).forEach(([f, g]) => {
-    const o = ctx.createOscillator();
-    const gn = ctx.createGain();
-    o.type = "sine";
-    o.frequency.value = f;
-    gn.gain.value = g;
-    const lfo = ctx.createOscillator();
-    const lg = ctx.createGain();
-    lfo.frequency.value = 0.04;
-    lg.gain.value = g * 0.25;
-    lfo.connect(lg).connect(gn.gain);
-    o.connect(gn).connect(lp);
-    o.start();
-    lfo.start();
-    oscillators.push(o, lfo);
-  });
-  // light vinyl-ish noise
-  const crackle = ctx.createGain();
-  crackle.gain.value = 0.02;
-  crackle.connect(gain);
-  const bp = ctx.createBiquadFilter();
-  bp.type = "bandpass";
-  bp.frequency.value = 2500;
-  bp.Q.value = 0.4;
-  const src = loopNoise(ctx);
-  src.connect(bp);
-  bp.connect(crackle);
-
-  gain.gain.setTargetAtTime(0.17, ctx.currentTime, 1);
-  return {
-    id: "life",
-    gain,
-    stop: () => {
-      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
-      try {
-        src.stop();
-      } catch {
-        /* */
-      }
-      oscillators.forEach((o) => {
-        try {
-          o.stop();
-        } catch {
-          /* */
-        }
-      });
-    },
-  };
-}
-
-function startBed(ctx: AudioContext, master: GainNode, id: BedId): BedVoice {
-  switch (id) {
-    case "rain":
-      return startRain(ctx, master);
-    case "quiet":
-      return startQuietBed(ctx, master);
-    case "build":
-      return startBuildBed(ctx, master);
-    case "try":
-      return startTryBed(ctx, master);
-    case "life":
-      return startLifeBed(ctx, master);
-  }
 }
 
 /**
- * Home-radio atmosphere: rain between stations, distinct bed per lock.
+ * Home-radio atmosphere: Mixkit beds (rain + per-station), generative rain fallback.
  * Must be constructed inside a user gesture (SOUND toggle).
  */
 export function createRadioSound(): RadioSound {
@@ -387,24 +177,39 @@ export function createRadioSound(): RadioSound {
   master.connect(ctx.destination);
 
   let current: BedVoice | null = null;
+  let generation = 0;
 
-  const crossfadeTo = (id: BedId) => {
+  const crossfadeTo = async (id: BedId) => {
+    const gen = ++generation;
+    await unlock(ctx);
+    const buf = await loadBuffer(ctx, BED_URLS[id]);
+    if (gen !== generation) return; // superseded by a newer dial move
+
     if (current?.id === id) return;
+
     const prev = current;
-    current = startBed(ctx, master, id);
+    const voice = buf
+      ? startFileBed(ctx, master, id, buf)
+      : startRainFallback(ctx, master);
+    // Keep requested id even when falling back to generative rain.
+    current = { ...voice, id };
+
     if (prev) {
-      prev.gain.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
+      prev.gain.gain.setTargetAtTime(0, ctx.currentTime, 0.18);
       const dying = prev;
-      window.setTimeout(() => dying.stop(), 600);
+      window.setTimeout(() => dying.stop(), 700);
     }
   };
 
-  crossfadeTo("rain");
+  void crossfadeTo("rain");
+  // Warm the other beds in the background after the gesture.
+  (["quiet", "build", "try", "life"] as BedId[]).forEach((id) => {
+    void loadBuffer(ctx, BED_URLS[id]);
+  });
 
   return {
     setBed: (locked) => {
-      void unlock(ctx);
-      crossfadeTo(locked ?? "rain");
+      void crossfadeTo(locked ?? "rain");
     },
     click: () => {
       void unlock(ctx);
@@ -418,6 +223,7 @@ export function createRadioSound(): RadioSound {
       o.stop(ctx.currentTime + 0.07);
     },
     stop: () => {
+      generation++;
       current?.stop();
       current = null;
       master.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
@@ -426,12 +232,11 @@ export function createRadioSound(): RadioSound {
   };
 }
 
-/** @deprecated Prefer createRadioSound — kept for any leftover callers. */
+/** @deprecated Prefer createRadioSound */
 export function makeStaticSound(): StaticSound {
   const radio = createRadioSound();
   return {
     level: (x) => {
-      // Legacy: non-zero → rain, zero → keep rain quietly (beds handle lock now)
       if (x > 0.01) radio.setBed(null);
     },
     click: () => radio.click(),
