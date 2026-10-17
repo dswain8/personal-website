@@ -1,0 +1,25 @@
+{
+  "fuel": [
+    { "name": "Isha Life", "url": "https://www.ishalife.com", "logo": "ishalife.svg" },
+    { "name": "Plix", "url": "https://www.plix.life", "logo": "plix.svg" },
+    { "name": "Fast&Up", "url": "https://www.fastandup.in", "logo": "fastandup.png" }
+  ],
+  "care": [
+    { "name": "Idam", "url": "https://www.idam.in", "logo": "idam.svg" },
+    { "name": "Dot & Key", "url": "https://www.dotandkey.com", "logo": "dotandkey.svg" },
+    { "name": "Forest Essentials", "url": "https://www.forestessentialsindia.com", "logo": "forestessentials.svg" },
+    { "name": "Cetaphil", "url": "https://www.cetaphil.in", "logo": "cetaphil.png" },
+    { "name": "Arata", "url": "https://www.arata.in", "logo": "arata.svg" },
+    { "name": "Nat Habit", "url": "https://www.nathabit.in", "logo": "nathabit.svg" }
+  ],
+  "wear": [
+    { "name": "Andamen", "url": "https://www.andamen.com", "logo": "andamen.png" },
+    { "name": "Uniqlo", "url": "https://www.uniqlo.com", "logo": "uniqlo.png" },
+    { "name": "Utkalamrita", "url": "https://utkalamrita.com", "logo": "utkalamrita.svg" },
+    { "name": "Fabindia", "url": "https://www.fabindia.com", "logo": "fabindia.svg" },
+    { "name": "Wellbi", "url": "https://wellbi.in", "logo": "wellbi.png" }
+  ],
+  "sections": ["Fuel", "Care", "Wear"],
+  "hero": "My family — photos, daughter drawings/caricatures, Tokyo",
+  "family_drop": "/public/life/family/"
+}

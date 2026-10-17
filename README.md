@@ -1,25 +1,27 @@
 # Debjeet Swain — Personal Website
 
-Personal site for [debjeetswain.com](https://debjeetswain.com), built with React, TypeScript, and Vite.
+Personal site for [debjeetswain.com](https://debjeetswain.com). React + TypeScript + Vite SPA with a **pocket-radio** metaphor: four stations, dial + keys `1`–`4`, interactive rooms.
 
-The site is structured as a calm editorial portfolio with six primary sections:
+## Routes
 
-- `/` home
-- `/build` projects, experiments, and AI tools
-- `/pm-dojo` PM Dojo project page
-- `/stack` workflow and tooling
-- `/living` curated directory for intentional living
-- `/about` longer personal narrative
-- `/contact` outreach page
+| Path | Room |
+|------|------|
+| `/` | Radio home (dial). `/?tune=build` opens already locked. |
+| `/build` | Build something — skill bookcase |
+| `/quiet` | Find a little quiet — thought field |
+| `/try` | Try what I've made — workshop bench |
+| `/life` | Off the clock — cutaway house |
+| `/wonder-journal`, `/pm-dojo`, `/postcard-desk` | Project write-ups |
+| `/contact` | Say hello |
+
+Legacy paths `/projects`, `/living`, `/stack`, `/about` redirect into the radio map.
 
 ## Stack
 
-- React 19
-- TypeScript
-- Vite
-- React Router
-- Tailwind v4 utilities plus custom CSS system
-- Vercel for deployment
+- React 19, TypeScript, Vite, React Router
+- Design system ported from the radio prototype (`public/radio.css`)
+- Skill library: `public/skills-clean/` (+ `public/commands/` kept)
+- Vercel static SPA (`vercel.json` rewrites)
 
 ## Local Development
 
@@ -28,24 +30,13 @@ npm install
 npm run dev
 ```
 
-The local production preview flow:
-
 ```bash
 npm run build
 npm run preview
 ```
 
-## Deployment
-
-This repo is linked to Vercel and deploys as a static SPA.
-
-- `vercel.json` rewrites all routes to `index.html`
-- `public/sitemap.xml` contains the published routes
-- `public/robots.txt` points crawlers to the sitemap
-
 ## Notes
 
-- The main visual system lives in `src/index.css`.
-- Shared page chrome lives in `src/components/Layout.tsx`.
-- Route definitions live in `src/App.tsx`.
-- Downloadable prompt files for the Build and PM Dojo pages live in `public/commands/`.
+- Radio shell + rooms live under `src/radio/`.
+- Prototype CSS is served as `/radio.css` (not bundled through Tailwind) for nesting / view-transition fidelity.
+- Optional Web Audio: radio static (Sound switch) and Quiet-page drone.

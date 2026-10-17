@@ -1,0 +1,229 @@
+/* An imagined rainy morning. All scenery and contact styles are homepage-only. */
+body[data-side="radio"] { background: #e9e4d7; }
+body[data-side="radio"] .home.wrap { max-width: none; padding: 0 0 100px; overflow-x: clip; background: #e9e4d7; }
+body[data-side="radio"] .radio-stage.listening-room {
+  --room-wood: #927253; --radio-floor: 120px; --prop-floor: 84px; --shelf-front: 62px;
+  /* column: align-items centers horizontally (clears postcard); justify-end + --radio-floor plants feet on oak */
+  isolation: isolate; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  min-height: 760px; height: min(100svh, 1000px); padding: 0 0 var(--radio-floor); background: #c4c5af;
+}
+body[data-side="radio"] .room-backdrop {
+  position: absolute; inset: 0 0 24%; z-index: -5; pointer-events: none;
+  background: #b8c0a8;
+}
+body[data-side="radio"] .room-backdrop::after {
+  pointer-events: none;
+  content: ""; position: absolute; inset: 0;
+  background: url("assets/room/rain-glass.svg") center / cover, linear-gradient(112deg, #faf5d53b, transparent 24%, #e5e9d51a 62%, #ffffeb30);
+  box-shadow: inset 0 0 80px #172e2638;
+}
+body[data-side="radio"] .room-window {
+  position: absolute; inset: 0 0 25%; z-index: -4; pointer-events: none;
+  border: solid #796446;
+  border-width: 20px 24px 21px;
+  box-shadow: inset 0 0 0 3px #d8c29a, inset 0 0 0 7px #4b4d39, 0 12px 14px #273a2d40;
+  background: linear-gradient(180deg, #ebe4ce 0 6px, transparent 6px);
+}
+body[data-side="radio"] .room-window i {
+  position: absolute; width: 17px; top: 0; bottom: 0; left: 24%;
+  background: linear-gradient(90deg, #4c4935, #9b825d 27%, #b49a6f 57%, #5c573d 70%, #414a37);
+  box-shadow: 5px 0 0 #dfd8b848, -2px 0 1px #1f342b70;
+}
+body[data-side="radio"] .room-window i + i { left: 78%; }
+body[data-side="radio"] .room-surface {
+  position: absolute; inset: 69% 0 0; z-index: -3; pointer-events: none;
+  background: #63523e;
+  border-top: 0;
+  box-shadow: 0 -2px 10px #28372652;
+}
+/* The top is lit from the window; the rounded solid edge falls into room shadow. */
+body[data-side="radio"] .room-surface .table-top {
+  position: absolute; inset: 0 0 48px;
+  background: linear-gradient(180deg, #d9d4b329 0%, transparent 22%, #47351f14 85%, #48352230), url("assets/room/table-oak-top.jpg") center / 100% 100%;
+  box-shadow: inset 0 4px 6px #313b2b59;
+}
+body[data-side="radio"] .room-surface::after {
+  content: ""; position: absolute; height: 25px; bottom: 24px; left: 0; right: 0;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #e2cda23d, #42301f10 14%, #30251c55 85%, #211c16a3), url("assets/room/table-oak-edge.jpg") center / 100% 100%;
+  box-shadow: 0 2px 2px #241e18a6, 0 10px 13px #29271e80, inset 0 1px 1px #d7b67d80;
+}
+body[data-side="radio"] .room-receiver { position: relative; width: 1040px; max-width: none; zoom: .72; z-index: 2; }
+body[data-side="radio"] .room-vignette { position: absolute; inset: 0; pointer-events: none; z-index: 4; box-shadow: inset 0 0 85px 5px #293c201f; }
+body[data-side="radio"] .room-scroll { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 5; color: #f4ecd8; font: 400 11px/1.4 var(--mono); text-decoration: none; padding: 5px 12px; }
+body[data-side="radio"] .room-scroll::after { content: "↓"; margin-left: 12px; }
+body[data-side="radio"] .room-scroll:focus-visible { outline: 2px solid #f2c56b; outline-offset: 2px; }
+body[data-side="radio"] .home-contact {
+  max-width: 1000px; width: calc(100% - 96px); margin: 0 auto; padding: clamp(62px, 8vw, 104px) 0 0; gap: clamp(36px, 7vw, 100px);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); color: #3c4635; --ink-2: #626955; --rule: #a6aa94;
+  border: 0; background: transparent; box-shadow: none;
+}
+body[data-side="radio"] .home-contact h2 { font-size: clamp(48px, 6vw, 76px); letter-spacing: -.045em; }
+body[data-side="radio"] .home-contact p { font-size: 15px; line-height: 1.8; }
+body[data-side="radio"] .home-contact ul { padding-top: 6px; }
+body[data-side="radio"] .home-contact li { border: 0; }
+body[data-side="radio"] .home-contact li + li { margin-top: 15px; }
+body[data-side="radio"] .home-contact li a { color: #3c4635; padding: 6px 0 12px; border-bottom: 1px solid #a6aa9473; align-items: baseline; }
+body[data-side="radio"] .home-contact li a span:first-child { font: 400 23px/1.3 var(--serif); }
+body[data-side="radio"] .home-contact li a span:last-child { font-size: 12px; overflow-wrap: anywhere; }
+body[data-side="radio"] .home-contact li a:hover { border-bottom-color: #4f613f; }
+body[data-side="radio"] .foot { display: none; }
+@media (min-width: 1600px) {
+  body[data-side="radio"] .radio-stage.listening-room { min-height: 940px; padding-bottom: 190px; }
+  body[data-side="radio"] .room-receiver { zoom: .88; }
+}
+@media (min-width: 861px) and (max-width: 1240px) {
+  body[data-side="radio"] .room-receiver { zoom: .7; }
+}
+@media (max-width: 860px) {
+  body[data-side="radio"] .radio-stage.listening-room { height: auto; min-height: 850px; padding: 190px 0 170px; justify-content: center; }
+  body[data-side="radio"] .room-receiver { zoom: 1; width: calc(100% - 64px); max-width: 650px; }
+  body[data-side="radio"] .room-backdrop { background-position: 45% 48%; bottom: 180px; }
+  body[data-side="radio"] .room-window { bottom: 200px; border-width: 16px 18px 20px; }
+  body[data-side="radio"] .room-surface { top: auto; height: 240px; }
+}
+@media (max-width: 760px) {
+  body[data-side="radio"] .home-contact { grid-template-columns: 1fr; gap: 30px; width: calc(100% - 56px); }
+  body[data-side="radio"] .home-contact li a { flex-direction: row; align-items: baseline; gap: 12px; }
+  body[data-side="radio"] .home-contact li a span:last-child { text-align: right; max-width: 62%; }
+}
+@media (max-width: 560px) {
+  body[data-side="radio"] .home.wrap { padding-bottom: 64px; }
+  body[data-side="radio"] .radio-stage.listening-room { min-height: 900px; padding: 140px 0 190px; }
+  body[data-side="radio"] .room-receiver { width: calc(100% - 28px); }
+  body[data-side="radio"] .room-backdrop { background-position: 43% 50%; }
+  body[data-side="radio"] .room-window { border-width: 12px 12px 17px; }
+  body[data-side="radio"] .room-window i { left: 18%; width: 12px; }
+  body[data-side="radio"] .room-window i + i { left: 84%; }
+  body[data-side="radio"] .room-surface { height: 225px; }
+  body[data-side="radio"] .room-vignette { box-shadow: inset 0 0 45px 5px #293c201f; }
+}
+@media (prefers-reduced-motion: reduce) { body[data-side="radio"] .listening-room { scroll-behavior: auto; } }
+
+/* Rain moves behind the timber frame. Near drops travel slowly; distant rain is fine and continuous. */
+body[data-side="radio"] .room-rain { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+body[data-side="radio"] .rain-distant { position: absolute; inset: -300px -40px 0; background: url("assets/room/rain-falling.svg") 0 0 / 480px 300px repeat; opacity: .42; animation: room-rainfall 1.8s linear infinite; }
+body[data-side="radio"] .room-rain > i { position: absolute; left: var(--x); top: -100px; width: 2px; height: var(--trail); border-radius: 60% 40% 60% 40%; background: linear-gradient(transparent, #e1ead34d 75%, #e4efdb9c); box-shadow: 1px 0 1px #243e2c55; animation: room-rivulet var(--duration) var(--wait) linear infinite; }
+body[data-side="radio"] .room-rain > i::after { content: ""; position: absolute; bottom: -5px; left: -1px; width: 4px; height: 7px; border-radius: 45% 50% 50% 50%; background: linear-gradient(120deg, #f2f5dcab, #607d6d66 55%, #d2dbc766); box-shadow: 1px 1px 1px #29473977; }
+@keyframes room-rainfall { to { transform: translate3d(0, 300px, 0); } }
+@keyframes room-rivulet { 0% { transform: translate3d(0,0,0); opacity: 0; } 8% { opacity: .8; } 90% { opacity: .7; } 100% { transform: translate3d(-8px, 1000px, 0); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+ body[data-side="radio"] .rain-distant, body[data-side="radio"] .room-rain > i { animation: none; }
+ body[data-side="radio"] .room-rain > i { display: none; }
+}
+
+/* Physical placement: a rear sill, a common table plane and two supporting feet. */
+body[data-side="radio"] .room-backdrop::before { content: ""; position: absolute; inset: -3px; background: linear-gradient(#d8ddc62e, #ced1bd14), url("assets/room/morning-garden.jpg") center 45% / cover; filter: blur(1.2px); }
+body[data-side="radio"] .room-backdrop::after { z-index: 2; }
+body[data-side="radio"] .room-rain { z-index: 1; }
+body[data-side="radio"] .room-window::after { content: ""; position: absolute; height: 21px; bottom: -27px; left: -24px; right: -24px; background: linear-gradient(#ccb692, #9c825d 15%, #746145 60%, #4a4733); box-shadow: 0 7px 8px #35412a40; }
+body[data-side="radio"] .room-surface::before { content: ""; position: absolute; inset: 0 0 48px; z-index: 1; background: radial-gradient(ellipse at 24% 0, #e9e4c826, transparent 55%), linear-gradient(105deg, transparent 14%, #e1dfb90f 16% 28%, transparent 30% 74%, #3246300d 80%); pointer-events: none; }
+body[data-side="radio"] .room-receiver::before { content: ""; position: absolute; left: 1%; right: -3%; height: 32px; bottom: -25px; border-radius: 50%; background: #342e22; opacity: .3; filter: blur(13px); z-index: -3; pointer-events: none; }
+body[data-side="radio"] .room-receiver::after { content: ""; position: absolute; left: 9%; right: 8%; height: 9px; bottom: -12px; background: #2d251c80; border-radius: 50%; filter: blur(3px); z-index: -2; pointer-events: none; }
+body[data-side="radio"] .room-radio-depth { position: absolute; inset: -4px -6px 1px 7px; z-index: -1; border-radius: 15px; background: linear-gradient(110deg, #92704c88, #4d301ee6 85%), url("assets/room/shelf-oak-v2.jpg") center / cover; box-shadow: inset 0 2px 1px #c59e6a66, 2px 1px 2px #30251b66; pointer-events: none; }
+body[data-side="radio"] .room-radio-feet { position: absolute; bottom: -10px; height: 14px; left: 10%; right: 9%; pointer-events: none; z-index: -1; }
+body[data-side="radio"] .room-radio-feet i { position: absolute; left: 0; width: 62px; height: 14px; background: linear-gradient(#352719, #1f211a); border-radius: 0 0 5px 5px; box-shadow: 2px 4px 3px #1e201a6b; }
+body[data-side="radio"] .room-radio-feet i + i { left: auto; right: 0; }
+body[data-theme="murphy"][data-side="radio"] .room-receiver .radio { box-shadow: inset 0 1px 0 #ffffff40, inset 0 0 0 10px #5a3720, inset 0 0 0 12px #3e2414, 0 3px 6px #36241459; }
+body[data-side="radio"] .room-reading { position: absolute; right: max(26px, calc(50% - 610px)); bottom: var(--prop-floor); width: 220px; height: 58px; pointer-events: none; z-index: 3; }
+body[data-side="radio"] .shelf-book { position: absolute; bottom: 0; left: 0; width: 220px; height: 29px; border-radius: 2px 4px 4px 2px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 12px; color: #eee4c8; background: url("assets/room/book-cloth.png"), linear-gradient(0deg, #384c3873, transparent 42%, #d3d4ad1f 80%, #203d284f), #647255; box-shadow: inset 4px 0 3px #26372459, inset -3px 0 3px #26372459, 2px 3px 4px #302b1f5c; border-top: 1px solid #abb28b; transform: rotate(-1.2deg); }
+body[data-side="radio"] .shelf-book::before { content: ""; position: absolute; height: 7px; left: 3px; right: -5px; top: -7px; transform: skewX(-32deg); transform-origin: bottom; background: repeating-linear-gradient(0deg, #b9b095 0 1px, #d0c7aa 1px 2px); clip-path: polygon(0 18%, 14% 7%, 35% 12%, 58% 0, 78% 9%, 100% 0, 100% 100%, 0 100%); border: 2px solid #657152; border-bottom: 0; }
+body[data-side="radio"] .shelf-book span { font: 500 12px/1.1 var(--serif); white-space: nowrap; }
+body[data-side="radio"] .shelf-book small { font: 400 6.5px/1.2 var(--sans); white-space: nowrap; }
+body[data-side="radio"] .book-creative { bottom: 30px; left: 11px; width: 200px; height: 23px; color: #575647; background: url("assets/room/book-cloth.png"), linear-gradient(0deg, #8f85622e, transparent 48%, #f2e9ce33 80%, #8f856233), #c7bea1; border-top-color: #d1c7aa; transform: rotate(.4deg); }
+body[data-side="radio"] .book-creative::before { border-color: #beb697; }
+body[data-side="radio"] .book-creative span { font-size: 13px; }
+body[data-side="radio"] .room-postcard { position: absolute; right: max(58px, calc(50% - 585px)); bottom: calc(31% + 28px); width: 142px; height: 100px; padding: 8px 9px 6px 7px; background: linear-gradient(135deg, #ece4cf, #e1d8be); box-shadow: 1px 3px 3px #2a392c40; transform: rotate(3deg); z-index: -3; pointer-events: none; }
+body[data-side="radio"] .room-postcard::before, body[data-side="radio"] .room-postcard::after { content: ""; position: absolute; top: -9px; left: 7px; height: 20px; width: 36px; background: #d3c5a780; box-shadow: inset 0 0 1px #f2e6c65c; transform: rotate(-15deg); }
+body[data-side="radio"] .room-postcard::after { left: auto; right: 5px; transform: rotate(13deg); }
+body[data-side="radio"] .room-postcard img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; opacity: .9; }
+@media (min-width: 1600px) {
+ body[data-side="radio"] .listening-room { --radio-floor: 190px; --prop-floor: 115px; }
+ body[data-side="radio"] .room-reading { right: calc(50% - 745px); }
+ body[data-side="radio"] .room-postcard { right: calc(50% - 700px); }
+}
+@media (min-width: 861px) and (max-width: 1240px) {
+ body[data-side="radio"] .radio-stage.listening-room { min-height: 960px; padding-bottom: 230px; }
+ body[data-side="radio"] .room-reading { right: 30px; }
+ body[data-side="radio"] .room-postcard { bottom: 125px; right: 55px; width: 130px; height: 90px; z-index: 1; }
+}
+@media (max-width: 860px) {
+ body[data-side="radio"] .listening-room { --prop-floor: 76px; }
+ body[data-side="radio"] .radio-stage.listening-room { padding-bottom: 215px; }
+ body[data-side="radio"] .room-reading { right: 30px; transform: scale(.9); transform-origin: right bottom; }
+ body[data-side="radio"] .room-postcard { bottom: 132px; right: 55px; width: 126px; height: 88px; z-index: 1; }
+ body[data-side="radio"] .room-window::after { left: -18px; right: -18px; }
+ body[data-side="radio"] .room-backdrop::before { background-position: 45% 48%; }
+}
+@media (max-width: 560px) {
+ body[data-side="radio"] .listening-room { --prop-floor: 74px; --shelf-front: 56px; }
+ body[data-side="radio"] .radio-stage.listening-room { padding-bottom: 215px; }
+ body[data-side="radio"] .room-reading { right: 18px; transform: scale(.65); }
+ body[data-side="radio"] .room-postcard { bottom: 114px; right: 34px; width: 105px; height: 74px; padding: 6px; }
+ body[data-side="radio"] .room-postcard::before, body[data-side="radio"] .room-postcard::after { display: none; }
+ body[data-side="radio"] .room-window::after { left: -12px; right: -12px; }
+ body[data-side="radio"] .room-backdrop::before { background-position: 43% 50%; }
+}
+
+@media (max-width: 1240px) {
+ body[data-side="radio"] .room-postcard::before, body[data-side="radio"] .room-postcard::after { display: none; }
+}
+
+
+/* A personal welcome before anyone chooses a station. */
+body[data-side="radio"] .idle.welcome-screen { padding: 24px 2px 18px; justify-content: center; gap: 0; }
+body[data-side="radio"] .welcome-screen > * { flex-shrink: 0; }
+body[data-side="radio"] .radio[data-idle="true"] .readout { visibility: hidden; }
+body[data-side="radio"] .welcome-screen .welcome-kicker { margin: 0 0 10px; max-width: none; font: 500 10px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #c1a875; }
+body[data-side="radio"] .welcome-screen .welcome-name { margin: 0; max-width: none; font: 400 50px/1.05 var(--serif); letter-spacing: -.035em; color: #f7e7c8; }
+body[data-side="radio"] .welcome-screen .welcome-bio { margin: 12px 0 0; max-width: 49ch; font: 400 15px/1.5 var(--sans); color: #d9c3a3; }
+body[data-side="radio"] .welcome-extra { margin-top: 16px; max-width: 49ch; }
+body[data-side="radio"] .welcome-screen .welcome-fact { margin: 0; min-height: 3em; max-width: 44ch; font: 400 15px/1.5 var(--serif); color: #efdbb4; }
+body[data-side="radio"] .welcome-next { display: inline-flex; gap: 10px; align-items: center; padding: 5px 0; min-height: 32px; border: 0; border-radius: 0; background: transparent; color: #e4b662; font: 400 12px/1.4 var(--mono); cursor: pointer; box-shadow: none; text-align: left; }
+body[data-side="radio"] .welcome-next:hover { color: #ffdda0; text-decoration: underline; text-underline-offset: 4px; }
+body[data-side="radio"] .welcome-next:focus-visible { outline: 2px solid #e4b662; outline-offset: 4px; }
+body[data-side="radio"] .welcome-screen .welcome-invite { margin: 10px 0 0; font: 400 12px/1.4 var(--mono); color: #bba889; }
+body[data-side="radio"] .radio[data-idle="true"] .static { opacity: .065; }
+@media (max-width: 860px) {
+ body[data-side="radio"] .welcome-screen .welcome-name { font-size: clamp(32px, 6vw, 48px); }
+}
+@media (max-width: 560px) {
+ body[data-side="radio"] .idle.welcome-screen { padding: 18px 0; }
+ body[data-side="radio"] .welcome-screen .welcome-kicker { display: none; }
+ body[data-side="radio"] .welcome-screen .welcome-name { font-size: 32px; }
+ body[data-side="radio"] .welcome-screen .welcome-bio { margin-top: 12px; font-size: 13px; line-height: 1.45; }
+ body[data-side="radio"] .welcome-extra { margin-top: 12px; }
+ body[data-side="radio"] .welcome-screen .welcome-fact { font-size: 14px; line-height: 1.4; min-height: 4.2em; }
+ body[data-side="radio"] .welcome-next { min-height: 34px; }
+ body[data-side="radio"] .welcome-screen .welcome-invite { margin-top: 10px; font-size: 10px; }
+}
+
+/* ---- React-port overrides: undo above-fold shrink so approved room matches handoff ---- */
+body[data-side="radio"] .home.wrap,
+body[data-side="radio"] .wrap.home {
+  min-height: 0;
+  display: block;
+  gap: 0;
+  padding-bottom: 0;
+}
+body[data-side="radio"] .radio-stage.listening-room {
+  flex: none;
+}
+/* Match murphy casing size from handoff (not the above-fold 18px shrink). */
+body[data-side="radio"] .listening-room .screen { min-height: 320px; }
+body[data-side="radio"] .listening-room .radio { padding: clamp(20px, 2.6vw, 30px); }
+body[data-side="radio"] .listening-room .band { height: 72px; margin-top: 14px; }
+body[data-side="radio"] .listening-room .r-bottom { margin-top: 14px; }
+body[data-side="radio"] .listening-room .key { min-height: 76px; }
+body[data-side="radio"] .listening-room .knob { width: 112px; height: 112px; }
+body[data-side="radio"] .listening-room .plate-row { margin-top: 12px; padding-top: 12px; display: flex; }
+@media (max-width: 860px) {
+  body[data-side="radio"] .listening-room .screen { min-height: 270px; }
+  body[data-side="radio"] .listening-room .knob { width: 72px; height: 72px; }
+  body[data-side="radio"] .listening-room .key { min-height: 64px; }
+  body[data-side="radio"] .home-contact p { display: block; }
+}
+@media (max-width: 860px) and (max-height: 780px) {
+  body[data-side="radio"] .listening-room .band { height: 64px; }
+  body[data-side="radio"] .listening-room .plate-row { display: flex; }
+}

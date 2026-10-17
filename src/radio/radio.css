@@ -1,0 +1,2 @@
+/* Prototype design system is served from /public/radio.css (linked in index.html)
+   so Vite/Tailwind does not reparse nesting / view-transition rules. Edit public/radio.css. */
