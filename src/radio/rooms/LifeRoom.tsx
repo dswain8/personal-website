@@ -3,8 +3,10 @@ import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
 import {
   FAMILY_FRAMES,
-  LIFE_SHELVES,
+  HOUSE_ROOMS,
+  shelfById,
   type FamilyFrame,
+  type HouseRoom,
   type LifeBrand,
   type LifeShelf,
 } from "../data/life-items";
@@ -38,40 +40,6 @@ function FamilyPhoto({ frame }: { frame: FamilyFrame }) {
   );
 }
 
-function BrandShelf({
-  shelf,
-  open,
-  onToggle,
-}: {
-  shelf: LifeShelf;
-  open: string | null;
-  onToggle: (key: string) => void;
-}) {
-  return (
-    <section className="life-shelf" aria-labelledby={`shelf-${shelf.id}`}>
-      <header className="life-shelf-head">
-        <h2 id={`shelf-${shelf.id}`}>{shelf.title}</h2>
-        <p>{shelf.blurb}</p>
-      </header>
-      <ul className="logo-rail">
-        {shelf.brands.map((brand) => {
-          const key = `${shelf.id}:${brand.name}`;
-          const isOpen = open === key;
-          return (
-            <li key={brand.name}>
-              <BrandTile
-                brand={brand}
-                open={isOpen}
-                onToggle={() => onToggle(key)}
-              />
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  );
-}
-
 function BrandTile({
   brand,
   open,
@@ -81,35 +49,92 @@ function BrandTile({
   open: boolean;
   onToggle: () => void;
 }) {
+  const noteId = `note-${brand.name.replace(/\s+/g, "-").toLowerCase()}`;
   return (
     <div className={`brand-tile${open ? " is-open" : ""}`}>
       <button
         type="button"
         className="brand-hit"
         aria-expanded={open}
-        aria-controls={`note-${brand.name.replace(/\s+/g, "-").toLowerCase()}`}
+        aria-controls={noteId}
         onClick={onToggle}
       >
         <span className="brand-logo">
-          <img
-            src={`/life/logos/${brand.logo}`}
-            alt=""
-            loading="lazy"
-          />
+          <img src={`/life/logos/${brand.logo}`} alt="" loading="lazy" />
         </span>
         <span className="brand-name">{brand.name}</span>
       </button>
-      <div
-        className="brand-note"
-        id={`note-${brand.name.replace(/\s+/g, "-").toLowerCase()}`}
-        hidden={!open}
-      >
+      <div className="brand-note" id={noteId} hidden={!open}>
         <p>{brand.note}</p>
         <a className="textlink" href={brand.url} rel="noreferrer">
           Visit {brand.name}
         </a>
       </div>
     </div>
+  );
+}
+
+function RoomShelf({
+  shelf,
+  open,
+  onToggle,
+}: {
+  shelf: LifeShelf;
+  open: string | null;
+  onToggle: (key: string) => void;
+}) {
+  return (
+    <div className="room-shelf">
+      <div className="room-shelf-label">
+        <h3>{shelf.title}</h3>
+        <p>{shelf.blurb}</p>
+      </div>
+      <ul className="logo-rail">
+        {shelf.brands.map((brand) => {
+          const key = `${shelf.id}:${brand.name}`;
+          return (
+            <li key={brand.name}>
+              <BrandTile
+                brand={brand}
+                open={open === key}
+                onToggle={() => onToggle(key)}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function BrandRoom({
+  room,
+  open,
+  onToggle,
+}: {
+  room: HouseRoom;
+  open: string | null;
+  onToggle: (key: string) => void;
+}) {
+  const shelf = room.shelfId ? shelfById(room.shelfId) : null;
+
+  return (
+    <section
+      className={`room ${room.className}`}
+      aria-label={room.room}
+    >
+      <h2>{room.room}</h2>
+      {shelf ? (
+        <RoomShelf shelf={shelf} open={open} onToggle={onToggle} />
+      ) : (
+        <div className="living-note">
+          <p>{room.note}</p>
+          <div className="living-window" aria-hidden="true">
+            <span>Sunday light</span>
+          </div>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -131,39 +156,49 @@ export default function LifeRoom() {
             have a golden retriever named Tokyo. Most of my best hours are spent
             with them.
           </p>
+          <p className="l4-hint">
+            A Sunday at home. The big room is family. The rest is where everyday
+            things live — tap a brand for a short note.
+          </p>
         </header>
 
-        <section className="family-hero" aria-labelledby="family-heading">
-          <div className="family-hero-copy">
-            <h2 id="family-heading">My family</h2>
-            <p>
-              Photos, her drawings and caricatures, and Tokyo — waiting for the
-              real frames to land.
-            </p>
-          </div>
-          <div className="family-wall" role="list">
-            {FAMILY_FRAMES.map((frame) => (
-              <div key={frame.id} role="listitem">
-                <FamilyPhoto frame={frame} />
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="house" id="house">
+          <div className="roof" aria-hidden="true" />
 
-        <div className="life-shelves">
-          <p className="life-shelves-lede">
-            A few brands I keep around the house. Not exhaustive, and not
-            affiliate links — just what I put in, put on, and wear.
-          </p>
-          {LIFE_SHELVES.map((shelf) => (
-            <BrandShelf
-              key={shelf.id}
-              shelf={shelf}
+          <section
+            className="room family-room"
+            aria-labelledby="family-heading"
+          >
+            <h2 id="family-heading">Family portrait</h2>
+            <p className="family-room-lede">
+              My family — photos, her drawings and caricatures, and Tokyo.
+              Frames wait for the real pictures (and a few Ghibli ones) to land.
+            </p>
+            <div className="family-wall" role="list">
+              {FAMILY_FRAMES.map((frame) => (
+                <div key={frame.id} role="listitem">
+                  <FamilyPhoto frame={frame} />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {HOUSE_ROOMS.map((room) => (
+            <BrandRoom
+              key={room.id}
+              room={room}
               open={openBrand}
               onToggle={onToggle}
             />
           ))}
+
+          <div className="floor-slab" aria-hidden="true" />
         </div>
+
+        <p className="l4-small">
+          The things in the house are brands I use. Not exhaustive, and not
+          affiliate links.
+        </p>
 
         <NextSide
           prev={{ key: "try", name: "Try what I've made", label: "Back to" }}

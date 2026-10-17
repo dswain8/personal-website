@@ -6,11 +6,25 @@ export type LifeBrand = {
   logo: string;
 };
 
+export type LifeShelfId = "fuel" | "care" | "wear";
+
 export type LifeShelf = {
-  id: "fuel" | "care" | "wear";
+  id: LifeShelfId;
+  /** Locked shelf title shown inside the room */
   title: string;
   blurb: string;
   brands: LifeBrand[];
+};
+
+export type HouseRoom = {
+  id: "kitchen" | "bath" | "bedroom" | "living";
+  /** Room name on the floorplan */
+  room: string;
+  className: string;
+  /** Brand shelf hosted in this room, if any */
+  shelfId?: LifeShelfId;
+  /** Living-room only: short personal note instead of brands */
+  note?: string;
 };
 
 export type FamilyFrame = {
@@ -23,7 +37,7 @@ export type FamilyFrame = {
   tilt: number;
 };
 
-/** Wall frames for the “My family” hero. Drop real files into /public/life/family/. */
+/** Wall frames for the family portrait room. Drop real files into /public/life/family/. */
 export const FAMILY_FRAMES: FamilyFrame[] = [
   {
     id: "us",
@@ -169,3 +183,37 @@ export const LIFE_SHELVES: LifeShelf[] = [
     ],
   },
 ];
+
+/** Four rooms under the family portrait room. Brands live on shelves inside. */
+export const HOUSE_ROOMS: HouseRoom[] = [
+  {
+    id: "kitchen",
+    room: "Kitchen",
+    className: "kitchen",
+    shelfId: "fuel",
+  },
+  {
+    id: "bath",
+    room: "Bathroom",
+    className: "bath",
+    shelfId: "care",
+  },
+  {
+    id: "bedroom",
+    room: "Bedroom",
+    className: "bedroom",
+    shelfId: "wear",
+  },
+  {
+    id: "living",
+    room: "Living room",
+    className: "living",
+    note: "Where the rest of the Sunday goes — board games, a slow cup of something, Tokyo claiming the sofa. No brands here on purpose.",
+  },
+];
+
+export function shelfById(id: LifeShelfId): LifeShelf {
+  const shelf = LIFE_SHELVES.find((s) => s.id === id);
+  if (!shelf) throw new Error(`Missing shelf: ${id}`);
+  return shelf;
+}
