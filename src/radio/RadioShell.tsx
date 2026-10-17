@@ -75,10 +75,7 @@ export default function RadioShell() {
       </main>
       <footer className="foot">
         <div className="foot-inner">
-          <p className="foot-line">
-            Built by me with Claude Code. If something&apos;s broken or too grey,
-            tell me.
-          </p>
+          <p className="foot-line">Bengaluru</p>
           <ul className="foot-links">
             <li>
               <a href="mailto:debjeet.swain87@gmail.com">Email</a>
@@ -95,9 +92,6 @@ export default function RadioShell() {
               <a href="https://github.com/dswain8" rel="noreferrer">
                 GitHub
               </a>
-            </li>
-            <li>
-              <a href="/rss.xml">RSS</a>
             </li>
           </ul>
         </div>

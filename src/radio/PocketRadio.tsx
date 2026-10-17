@@ -119,7 +119,6 @@ export default function PocketRadio() {
   const [touched, setTouched] = useState(!!tuneTo);
   const [gliding, setGliding] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [creditsOpen, setCreditsOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
 
   const vRef = useRef(v);
@@ -235,13 +234,11 @@ export default function PocketRadio() {
       ) {
         e.preventDefault();
         goIn(lockedRef.current);
-      } else if (e.key === "Escape" && creditsOpen) {
-        setCreditsOpen(false);
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [apply, goIn, creditsOpen]);
+  }, [apply, goIn]);
 
   useEffect(() => {
     return () => {
@@ -277,6 +274,14 @@ export default function PocketRadio() {
 
   return (
     <div className="wrap home">
+      <header className="home-brand">
+        <p className="home-brand__mark" aria-hidden="true">
+          DS
+        </p>
+        <h1 className="home-brand__name" id="who">
+          Debjeet Swain
+        </h1>
+      </header>
       <div className="radio-stage">
         <section
           className={`radio${gliding ? " gliding" : ""}${dragging ? " dragging" : ""}`}
@@ -333,9 +338,9 @@ export default function PocketRadio() {
               </div>
             </div>
             <div className="side-col">
-              <div className="badge">
-                <h1 id="who">Debjeet Swain</h1>
-                <span>DS–1 · Bengaluru</span>
+              <div className="badge" aria-hidden="true">
+                <p className="badge-name">DS–1</p>
+                <span>Bengaluru</span>
               </div>
               <div className="grille" aria-hidden="true" />
             </div>
@@ -554,77 +559,6 @@ export default function PocketRadio() {
               Press <kbd>1</kbd>–<kbd>4</kbd> to tune · press again or{" "}
               <kbd>Enter</kbd> to go in
             </p>
-            <button
-              type="button"
-              className="silk credits-btn"
-              id="credits-btn"
-              aria-expanded={creditsOpen}
-              aria-controls="credits"
-              onClick={() => setCreditsOpen((o) => !o)}
-            >
-              Credits
-            </button>
-          </div>
-
-          <div className="credits" id="credits" hidden={!creditsOpen}>
-            <p className="cr-k">Credits</p>
-            <dl>
-              <div>
-                <dt>Built by</dt>
-                <dd>
-                  Debjeet, with Claude Code. React, TypeScript and Vite — ported
-                  from the radio redesign.
-                </dd>
-              </div>
-              <div>
-                <dt>Type</dt>
-                <dd>
-                  Newsreader, Schibsted Grotesk and JetBrains Mono, from Google
-                  Fonts.
-                </dd>
-              </div>
-              <div>
-                <dt>Drawings</dt>
-                <dd>Hand-coded SVG. No stock images, no generated photos.</dd>
-              </div>
-              <div>
-                <dt>Sound</dt>
-                <dd>
-                  Generated in your browser when you turn it on. Nothing
-                  recorded, nothing licensed.
-                </dd>
-              </div>
-              <div>
-                <dt>Inspired by</dt>
-                <dd>
-                  <a
-                    className="textlink"
-                    href="https://deluxesalonmusic.in/"
-                    rel="noreferrer"
-                  >
-                    Deluxe Salon Music
-                  </a>
-                  , the valve radios in Indian living rooms,{" "}
-                  <a
-                    className="textlink"
-                    href="https://felixrieseberg.com/"
-                    rel="noreferrer"
-                  >
-                    Felix Rieseberg&apos;s site
-                  </a>
-                  , and Anshu Chimala&apos;s guest post in Lenny&apos;s
-                  Newsletter.
-                </dd>
-              </div>
-            </dl>
-            <button
-              type="button"
-              className="cr-close"
-              id="credits-close"
-              onClick={() => setCreditsOpen(false)}
-            >
-              Close
-            </button>
           </div>
         </section>
       </div>
