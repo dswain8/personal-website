@@ -3,6 +3,7 @@ import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
 import { renderMd } from "../markdown";
 import {
+  CLAUDE_SHAPED,
   SKILL_LINES,
   SKILLS,
   START3,
@@ -119,12 +120,11 @@ export default function BuildRoom() {
       <StationStrip stationKey="build" />
       <div className="wrap build3">
         <header className="b3-head">
-          <h1 className="reveal">How I build with AI.</h1>
+          <h1 className="reveal">The harness changes. The skills stay.</h1>
           <p className="lede reveal">
-            An interchangeable agentic harness — right now heavy on Codex,
-            Claude Code, and Cursor. Anything I repeat becomes a skill: a plain
-            file that travels with me and fires when I describe the task. Here
-            are all {total} of mine. Read any of them before you take it.
+            Anything I repeat becomes a skill: a plain file that fires when I
+            describe the task. Here are all {total} of mine. A few still assume
+            Claude Code. The rest travel. Read any of them before you take it.
           </p>
           <p className="b3-harness reveal" aria-label="Harnesses in rotation">
             <span>Codex</span>
@@ -135,20 +135,70 @@ export default function BuildRoom() {
           </p>
         </header>
 
-        <ol className="how3" aria-label="How it works">
-          <li>
-            <b>Say the task.</b> A matcher reads the prompt and fires the skill
-            — same idea whether I&apos;m in Codex, Claude Code, or Cursor.
-          </li>
-          <li>
-            <b>Get a second opinion.</b> A different model critiques every draft
-            against the same seven checks.
-          </li>
-          <li>
-            <b>Let it learn.</b> Every Friday it looks at what I repeated and
-            proposes the next skill.
-          </li>
-        </ol>
+        <section className="pass" aria-labelledby="pass-h">
+          <h2 id="pass-h">One pass</h2>
+          <div className="pass-body">
+            <figure className="pass-draft">
+              <figcaption>The draft</figcaption>
+              <blockquote>
+                <p>
+                  Excited to share an update on the launch. We&apos;ve been
+                  working hard and think this will be a great unlock for the
+                  team. Let me know your thoughts.
+                </p>
+              </blockquote>
+            </figure>
+            <div className="pass-score">
+              <p>
+                <b>Review fires.</b> A different model scores the same seven
+                checks.
+              </p>
+              <ol>
+                <li data-fail>
+                  <span>Point up front</span>
+                  <em>Buried.</em>
+                </li>
+                <li data-fail>
+                  <span>Specific</span>
+                  <em>No date, no name.</em>
+                </li>
+                <li data-fail>
+                  <span>Recommendation</span>
+                  <em>None.</em>
+                </li>
+                <li>
+                  <span>Matches the reader</span>
+                  <em>Could.</em>
+                </li>
+                <li data-fail>
+                  <span>Tradeoffs</span>
+                  <em>Unnamed.</em>
+                </li>
+                <li data-fail>
+                  <span>Assumptions</span>
+                  <em>Unnamed.</em>
+                </li>
+                <li data-fail>
+                  <span>Closes with an action</span>
+                  <em>Thoughts?</em>
+                </li>
+              </ol>
+            </div>
+            <figure className="pass-rewrite">
+              <figcaption>The rewrite</figcaption>
+              <blockquote>
+                <p>
+                  Ship the shared draft Thursday. Design owns the empty state;
+                  I own the note. The cost is slipping Friday&apos;s demo. I
+                  need a yes on the date by noon.
+                </p>
+              </blockquote>
+            </figure>
+          </div>
+          <p className="pass-next">
+            If I do that twice, Friday writes it down as the next skill.
+          </p>
+        </section>
 
         <section className="lib" id="library" aria-labelledby="lib-h">
           <div className="lib-top">
@@ -173,8 +223,9 @@ export default function BuildRoom() {
             </label>
           </div>
           <p className="lib-legend">
-            One shelf per kind of work. A thicker spine means a longer file.
-            Pull any book to read it.
+            One shelf per kind of work. A thicker spine means a longer file. A
+            gold band means the file still assumes Claude Code. Pull any book
+            to read it.
           </p>
           <div className="lib-body">
             <div
@@ -194,6 +245,7 @@ export default function BuildRoom() {
                       key={`cover-${f}`}
                       skill={s}
                       cover
+                      stays={CLAUDE_SHAPED.has(f)}
                       pressed={current === f}
                       dim={dimSet.has(f)}
                       onOpen={() => open(f, true)}
@@ -208,6 +260,7 @@ export default function BuildRoom() {
                       <BookButton
                         key={f}
                         skill={{ g, n, w, d, f }}
+                        stays={CLAUDE_SHAPED.has(f)}
                         pressed={current === f}
                         dim={dimSet.has(f)}
                         onOpen={() => open(f, true)}
@@ -231,6 +284,9 @@ export default function BuildRoom() {
                 </p>
                 <h3>{skill.n}</h3>
                 <p className="rd-d">{skill.d}</p>
+                {CLAUDE_SHAPED.has(current) && (
+                  <p className="rd-stay">This file still assumes Claude Code.</p>
+                )}
                 <p className="rd-acts">
                   <a className="btn" href={`/skills-clean/${current}`} download>
                     Download {current}
@@ -277,39 +333,46 @@ export default function BuildRoom() {
 function BookButton({
   skill,
   cover,
+  stays,
   pressed,
   dim,
   onOpen,
 }: {
   skill: Skill;
   cover?: boolean;
+  stays?: boolean;
   pressed: boolean;
   dim: boolean;
   onOpen: () => void;
 }) {
+  const stayNote = stays ? ", still assumes Claude Code" : "";
   if (cover) {
     return (
       <button
         type="button"
-        className={`book cover${dim ? " dim" : ""}`}
+        className={`book cover${stays ? " stays" : ""}${dim ? " dim" : ""}`}
         data-f={skill.f}
         aria-pressed={pressed}
+        aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines${stayNote}`}
         style={{ ["--c" as string]: groupColor(skill.g) }}
         onClick={onOpen}
       >
         <span className="cv-t">{skill.n}</span>
-        <span className="cv-l">{SKILL_LINES[skill.f] || "?"} lines</span>
+        <span className="cv-l">
+          {SKILL_LINES[skill.f] || "?"} lines
+          {stays ? " · Claude" : ""}
+        </span>
       </button>
     );
   }
   return (
     <button
       type="button"
-      className={`book${dim ? " dim" : ""}`}
+      className={`book${stays ? " stays" : ""}${dim ? " dim" : ""}`}
       data-f={skill.f}
       aria-pressed={pressed}
-      aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines`}
-      title={skill.n}
+      aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines${stayNote}`}
+      title={stays ? `${skill.n} — still assumes Claude Code` : skill.n}
       style={{
         ["--w" as string]: `${spineW(skill.f)}px`,
         ["--h" as string]: `${spineH(skill.f)}px`,

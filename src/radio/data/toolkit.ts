@@ -257,11 +257,24 @@ export const SKILLS: Skill[] = TOOLKIT.flatMap(({ g, items }) =>
   items.map(([n, w, d, f]) => ({ g, n, w, d, f })),
 );
 
+/** Face-out books. These travel; the library opens on the first. */
 export const START3 = [
+  "universal-rubric.md",
+  "review.md",
+  "handoff.md",
+];
+
+/**
+ * Files whose job is still a Claude Code install path.
+ * Other skills mention ~/.claude in passing; these ones do not travel as-is.
+ */
+export const CLAUDE_SHAPED = new Set([
   "claude-md-template.md",
   "skill-keyword-matcher.py",
-  "universal-rubric.md",
-];
+  "install-dojo.md",
+  "dojo-moment.md",
+  "find-session.md",
+]);
 
 export const GROUP_COLORS = [
   "#7a3b2e",
