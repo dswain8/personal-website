@@ -18,6 +18,8 @@ const cache: Record<string, string> = {};
 
 export default function BuildRoom() {
   const [query, setQuery] = useState("");
+  const [forward, setForward] = useState<string | null>(null);
+  const [travelsOnly, setTravelsOnly] = useState(false);
   const [current, setCurrent] = useState<string>(START3[0]);
   const [bodyHtml, setBodyHtml] = useState("<p class=\"rd-load\">Loading…</p>");
   const [copyLabel, setCopyLabel] = useState("Copy");
@@ -41,10 +43,16 @@ export default function BuildRoom() {
     return dim;
   }, [query]);
 
+  const filtering = Boolean(query.trim() || forward || travelsOnly);
+
   const visibleCount = useMemo(() => {
-    if (!query.trim()) return total;
-    return SKILLS.filter((s) => !dimSet.has(s.f)).length;
-  }, [dimSet, query, total]);
+    return SKILLS.filter((s) => {
+      if (query.trim() && dimSet.has(s.f)) return false;
+      if (travelsOnly && CLAUDE_SHAPED.has(s.f)) return false;
+      if (forward && s.g !== forward) return false;
+      return true;
+    }).length;
+  }, [dimSet, forward, query, travelsOnly]);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,7 +104,7 @@ export default function BuildRoom() {
     if (!["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"].includes(e.key))
       return;
     const books = [
-      ...(bookcaseRef.current?.querySelectorAll(".book") ?? []),
+      ...(bookcaseRef.current?.querySelectorAll(".book:not(.back)") ?? []),
     ] as HTMLButtonElement[];
     const i = books.indexOf(document.activeElement as HTMLButtonElement);
     if (i < 0) return;
@@ -205,9 +213,7 @@ export default function BuildRoom() {
             <h2 id="lib-h">
               The library{" "}
               <span className="lib-count" id="lib-count">
-                {query.trim()
-                  ? `${visibleCount} of ${total}`
-                  : `${total} skills`}
+                {filtering ? `${visibleCount} of ${total}` : `${total} skills`}
               </span>
             </h2>
             <label className="lib-search">
@@ -222,11 +228,27 @@ export default function BuildRoom() {
               />
             </label>
           </div>
-          <p className="lib-legend">
-            One shelf per kind of work. A thicker spine means a longer file. A
-            gold band means the file still assumes Claude Code. Pull any book
-            to read it.
-          </p>
+          <div className="lib-tools">
+            <p className="lib-legend">
+              Click a plaque to bring that shelf forward. A thicker spine means
+              a longer file. A gold band means the file still assumes Claude
+              Code.
+            </p>
+            <button
+              type="button"
+              className="lib-travels"
+              aria-pressed={travelsOnly}
+              onClick={() => {
+                setTravelsOnly((on) => {
+                  const next = !on;
+                  if (next && CLAUDE_SHAPED.has(current)) setCurrent(START3[0]);
+                  return next;
+                });
+              }}
+            >
+              What travels
+            </button>
+          </div>
           <div className="lib-body">
             <div
               className="bookcase"
@@ -247,14 +269,23 @@ export default function BuildRoom() {
                       cover
                       stays={CLAUDE_SHAPED.has(f)}
                       pressed={current === f}
-                      dim={dimSet.has(f)}
+                      back={
+                        current !== f &&
+                        ((travelsOnly && CLAUDE_SHAPED.has(f)) ||
+                          (forward !== null && s.g !== forward) ||
+                          dimSet.has(f))
+                      }
                       onOpen={() => open(f, true)}
                     />
                   );
                 })}
               </div>
               {TOOLKIT.map(({ g, items }) => (
-                <div key={g} className="shelf-group" aria-label={g}>
+                <div
+                  key={g}
+                  className={`shelf-group${forward === g ? " forward" : ""}`}
+                  aria-label={g}
+                >
                   <div className="books">
                     {items.map(([n, w, d, f]) => (
                       <BookButton
@@ -262,12 +293,38 @@ export default function BuildRoom() {
                         skill={{ g, n, w, d, f }}
                         stays={CLAUDE_SHAPED.has(f)}
                         pressed={current === f}
-                        dim={dimSet.has(f)}
+                        back={
+                          current !== f &&
+                          ((travelsOnly && CLAUDE_SHAPED.has(f)) ||
+                            (forward !== null && g !== forward) ||
+                            dimSet.has(f))
+                        }
                         onOpen={() => open(f, true)}
                       />
                     ))}
                   </div>
-                  <p className="plaque">{g}</p>
+                  <button
+                    type="button"
+                    className="plaque"
+                    aria-pressed={forward === g}
+                    onClick={(e) => {
+                      const next = forward === g ? null : g;
+                      setForward(next);
+                      if (next) {
+                        (
+                          e.currentTarget.closest(".shelf-group") as HTMLElement | null
+                        )?.scrollIntoView({
+                          block: "nearest",
+                          behavior: matchMedia("(prefers-reduced-motion: reduce)")
+                            .matches
+                            ? "auto"
+                            : "smooth",
+                        });
+                      }
+                    }}
+                  >
+                    {g}
+                  </button>
                 </div>
               ))}
             </div>
@@ -277,6 +334,7 @@ export default function BuildRoom() {
               ref={readerRef}
               aria-live="polite"
               tabIndex={-1}
+              style={{ ["--book" as string]: groupColor(skill.g) }}
             >
               <header className="rd-head">
                 <p className="rd-g">
@@ -335,22 +393,23 @@ function BookButton({
   cover,
   stays,
   pressed,
-  dim,
+  back,
   onOpen,
 }: {
   skill: Skill;
   cover?: boolean;
   stays?: boolean;
   pressed: boolean;
-  dim: boolean;
+  back?: boolean;
   onOpen: () => void;
 }) {
   const stayNote = stays ? ", still assumes Claude Code" : "";
+  const cls = `book${cover ? " cover" : ""}${stays ? " stays" : ""}${back ? " back" : ""}`;
   if (cover) {
     return (
       <button
         type="button"
-        className={`book cover${stays ? " stays" : ""}${dim ? " dim" : ""}`}
+        className={cls}
         data-f={skill.f}
         aria-pressed={pressed}
         aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines${stayNote}`}
@@ -368,7 +427,7 @@ function BookButton({
   return (
     <button
       type="button"
-      className={`book${stays ? " stays" : ""}${dim ? " dim" : ""}`}
+      className={cls}
       data-f={skill.f}
       aria-pressed={pressed}
       aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines${stayNote}`}
