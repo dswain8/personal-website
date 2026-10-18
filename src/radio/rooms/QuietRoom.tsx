@@ -7,34 +7,36 @@ import {
   startDrone,
   stopDrone,
 } from "../audio";
-import {
-  STARS,
-  THOUGHTS,
-  THOUGHT_POS,
-  VOICES,
-} from "../data/quiet";
+import { STARS, THOUGHTS, THOUGHT_POS } from "../data/quiet";
 
 export default function QuietRoom() {
   const [state, setState] = useState<"watching" | "carried">("watching");
   const [chain, setChain] = useState<string[]>([]);
   const [showComeBack, setShowComeBack] = useState(false);
   const returnsRef = useRef(0);
-  const [meta, setMeta] = useState(
-    "You are the observer. The thoughts are not you.",
-  );
+  const [meta, setMeta] = useState("");
   const [droneOn, setDroneOn] = useState(false);
   const [vol, setVol] = useState(30);
+  const [hintOn, setHintOn] = useState(true);
+  const [returned, setReturned] = useState(false);
+  const [watchKey, setWatchKey] = useState(0);
   const timers = useRef<number[]>([]);
   const lastBtn = useRef<HTMLButtonElement | null>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
   const noted = useRef(false);
   const inView = useRef(false);
   const idleT = useRef<number | null>(null);
+  const litT = useRef<number | null>(null);
   const reduceMotion = useRef(
     window.matchMedia("(prefers-reduced-motion: reduce)"),
   );
 
   useEffect(() => () => stopDrone(), []);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setHintOn(false), 7000);
+    return () => clearTimeout(t);
+  }, []);
 
   const clearTimers = () => {
     timers.current.forEach(clearTimeout);
@@ -81,6 +83,10 @@ export default function QuietRoom() {
         ? "You came back once. That's the whole practice, as far as I can tell."
         : `You came back ${n} times. Still no score.`,
     );
+    setReturned(true);
+    setWatchKey((k) => k + 1);
+    if (litT.current) clearTimeout(litT.current);
+    litT.current = window.setTimeout(() => setReturned(false), 2200);
     lastBtn.current?.focus();
     poke();
   };
@@ -92,52 +98,48 @@ export default function QuietRoom() {
     setState("carried");
     setChain([]);
     setShowComeBack(false);
-    const step = reduceMotion.current.matches ? 0 : 1100;
-    links.forEach((t, idx) => {
+    setHintOn(false);
+    const step = reduceMotion.current.matches ? 0 : 1400;
+    setChain([links[0]]);
+    links.slice(1).forEach((t, idx) => {
       timers.current.push(
         window.setTimeout(() => {
           setChain((c) => [...c, t]);
-        }, idx * step),
+        }, (idx + 1) * step),
       );
     });
     timers.current.push(
       window.setTimeout(
         () => setShowComeBack(true),
-        links.length * step + (step ? 300 : 0),
+        links.length * step + (step ? 400 : 0),
       ),
     );
   };
 
+  const playTone = () => {
+    startDrone(vol / 100);
+    setDroneOn(true);
+  };
+
+  const silence = () => {
+    stopDrone();
+    setDroneOn(false);
+  };
+
+  const depth = chain.length;
+  const currentThought = chain[chain.length - 1] ?? "";
+
   return (
     <>
       <StationStrip stationKey="quiet" />
-      <div className="q">
-        <section className="q-open">
-          <h1 className="reveal">Quiet</h1>
-          <p className="lede reveal">
-            You are the observer, not the thoughts. They drift through. Watch,
-            or follow one — then come back when you notice.
-          </p>
-          <a className="down reveal" href="#watch">
-            Enter the field <span aria-hidden="true">↓</span>
-          </a>
-        </section>
-      </div>
-
       <section
         className="field-wrap"
         id="watch"
         aria-labelledby="watch-h"
-        style={{ scrollMarginTop: 90 }}
       >
         <h2 className="sr" id="watch-h">
           Watching thoughts
         </h2>
-        <p className="field-hint">
-          Thoughts float past like distant light. You don&apos;t have to catch
-          them. If you click one, you&apos;ll follow it. Come back when you
-          notice.
-        </p>
         <div
           className={`field${reduceMotion.current.matches ? " still-mode" : ""}`}
           id="field"
@@ -146,7 +148,10 @@ export default function QuietRoom() {
           onKeyDown={(e) => {
             if (e.key === "Escape" && state === "carried") back();
           }}
-          onPointerDown={poke}
+          onPointerDown={() => {
+            setHintOn(false);
+            poke();
+          }}
         >
           <div className="cosmos" aria-hidden="true">
             <div className="cosmos-deep" />
@@ -167,6 +172,17 @@ export default function QuietRoom() {
               />
             ))}
           </div>
+          <div
+            className={`still-point${returned ? " lit" : ""}`}
+            aria-hidden="true"
+          >
+            <span key={watchKey} className="still-ring" />
+          </div>
+          <h1 className="field-title">You are the observer.</h1>
+          <p className={`field-hint${hintOn ? "" : " is-gone"}`}>
+            Thoughts drift through. You don&apos;t have to catch them. Click
+            one to follow it. Come back when you notice.
+          </p>
           {THOUGHTS.map((t, i) => (
             <button
               key={i}
@@ -187,9 +203,11 @@ export default function QuietRoom() {
             </button>
           ))}
           <div className="chain" id="chain" aria-live="polite">
-            {chain.map((t, i) => (
-              <p key={`${i}-${t}`}>{t}</p>
-            ))}
+            {currentThought ? (
+              <p key={`${depth}-${currentThought}`} data-depth={depth}>
+                {currentThought}
+              </p>
+            ) : null}
             {showComeBack ? (
               <button
                 type="button"
@@ -197,98 +215,45 @@ export default function QuietRoom() {
                 autoFocus
                 onClick={back}
               >
-                Oh. Come back
+                Come back
               </button>
             ) : null}
           </div>
-        </div>
-        <div className="field-meta">
-          <p id="returns" aria-live="polite">
+          <p
+            className={`field-note${meta ? "" : " sr"}`}
+            id="returns"
+            aria-live="polite"
+          >
             {meta}
           </p>
-        </div>
-      </section>
-
-      <div className="q">
-        <section className="q-sec q-sec-tight" aria-labelledby="voices">
-          <p className="kicker" id="voices">
-            Voices I keep returning to
-          </p>
-          <p className="small">
-            I&apos;m a listener here, not a student of any one of them.
-          </p>
-          <ul className="voices">
-            {VOICES.map((v) => (
-              <li key={v.href}>
-                <a href={v.href} rel="noreferrer">
-                  <span>{v.name}</span>
-                  <span>{v.note}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="small" style={{ marginTop: 28 }}>
-            Practice I return to:{" "}
-            <a
-              className="textlink"
-              href="https://www.ishafoundation.org/inner-engineering"
-              rel="noreferrer"
+          <div className="field-sound" role="group" aria-label="Sound">
+            <button
+              type="button"
+              aria-pressed={!droneOn}
+              onClick={silence}
             >
-              Shambhavi Mahamudra
-            </a>
-            , from Isha. For simpler guided sessions,{" "}
-            <a
-              className="textlink"
-              href="https://www.thinkright.me"
-              rel="noreferrer"
-            >
-              Think Right
-            </a>
-            .
-          </p>
-        </section>
-
-        <section
-          className="q-sec q-sec-tight"
-          aria-labelledby="sound-h"
-          style={{ paddingBottom: 40 }}
-        >
-          <p className="kicker" id="sound-h">
-            What&apos;s playing
-          </p>
-          <p>
-            Silence by default. Or a soft calm tone — steady, quiet, made to sit
-            in the background while you watch.
-          </p>
-          <div className="sound">
+              Silence
+            </button>
             <button
               type="button"
               id="calm-tone"
               aria-pressed={droneOn}
-              aria-label={
-                droneOn ? "Stop calm tone" : "Play soft calm tone"
-              }
               onClick={() => {
-                if (isDroneOn()) {
-                  stopDrone();
-                  setDroneOn(false);
-                } else {
-                  startDrone(vol / 100);
-                  setDroneOn(true);
-                }
+                if (!isDroneOn()) playTone();
               }}
             >
-              {droneOn ? "Calm tone on · stop" : "Play calm tone"}
+              Soft tone
             </button>
             {droneOn ? (
               <label htmlFor="vol">
-                Volume{" "}
+                <span className="sr">Volume</span>
                 <input
                   id="vol"
                   type="range"
                   min={0}
                   max={100}
                   value={vol}
+                  aria-label="Volume"
                   onChange={(e) => {
                     const v = Number(e.target.value);
                     setVol(v);
@@ -297,12 +262,22 @@ export default function QuietRoom() {
                 />
               </label>
             ) : null}
-            <p>
-              A soft 432&nbsp;Hz tone your browser generates — no track, no
-              copyright. Stops when you leave this page.
-            </p>
           </div>
-        </section>
+        </div>
+      </section>
+
+      <div className="q">
+        <p className="q-practice">
+          Practice I return to:{" "}
+          <a
+            className="textlink"
+            href="https://www.ishafoundation.org/inner-engineering"
+            rel="noreferrer"
+          >
+            Shambhavi Mahamudra
+          </a>
+          , from Isha.
+        </p>
         <NextSide
           prev={{ key: "build", name: "Build something", label: "Back to" }}
           next={{ key: "try", name: "Try what I've made" }}
