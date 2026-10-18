@@ -501,6 +501,12 @@ function RegionMap({
   );
 }
 
+const SLAM_WHISPERS: Record<Exclude<SlamPageId, "cover">, string> = {
+  food: "Where I eat when the week finally exhales.",
+  sports: "Who I cheer for when the room goes quiet.",
+  travel: "Every border I've crossed — and three I haven't yet.",
+};
+
 function SlamBook({
   page,
   setPage,
@@ -517,18 +523,45 @@ function SlamBook({
   const prev = index > 0 ? SLAM_PAGES[index - 1] : null;
   const next = index < SLAM_PAGES.length - 1 ? SLAM_PAGES[index + 1] : null;
   const bookId = useId();
-  const [turnDir, setTurnDir] = useState<"next" | "prev">("next");
+  const [turnDir, setTurnDir] = useState<"next" | "prev" | "open" | null>(null);
+  const [flipping, setFlipping] = useState(false);
+  const flipTimer = useRef<number | null>(null);
 
   useEffect(() => {
     if (page !== "travel") setActivePin(null);
   }, [page, setActivePin]);
 
-  const go = (target: SlamPageId, dir: "next" | "prev") => {
+  useEffect(() => {
+    return () => {
+      if (flipTimer.current) window.clearTimeout(flipTimer.current);
+    };
+  }, []);
+
+  const go = (target: SlamPageId, dir: "next" | "prev" | "open") => {
+    if (flipping || target === page) return;
+    if (flipTimer.current) window.clearTimeout(flipTimer.current);
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     setTurnDir(dir);
-    setPage(target);
+    if (reduceMotion || dir === "open") {
+      setPage(target);
+      setTurnDir(null);
+      return;
+    }
+
+    setFlipping(true);
+    flipTimer.current = window.setTimeout(() => {
+      setPage(target);
+      setFlipping(false);
+      setTurnDir(null);
+    }, 620);
   };
 
   const isCover = page === "cover";
+  const contentPage = page === "cover" ? null : page;
 
   return (
     <section className="slam" aria-labelledby="slam-heading">
@@ -536,128 +569,173 @@ function SlamBook({
         <p className="life-aspect-kicker">Slam book</p>
         <h2 id="slam-heading">A book of my life.</h2>
         <p>
-          Open it like someone handed you the notebook — food-stained pages,
-          match-day scribbles, and maps with every stamp I&apos;ve collected.
+          Pick it up. Open the cover. Turn the pages — food-stained notes,
+          match-day scribbles, and every stamp I&apos;ve collected.
         </p>
       </header>
 
       <div
-        className={`slam-book${isCover ? " is-cover" : " is-open"}`}
+        className={[
+          "slam-book",
+          isCover ? "is-closed" : "is-open",
+          flipping ? "is-flipping" : "",
+          turnDir ? `turn-${turnDir}` : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         data-page={page}
-        data-turn={turnDir}
-        style={{ "--slam-folio": `"${index + 1}"` } as CSSProperties}
       >
-        <div className="slam-desk" aria-hidden="true" />
-
-        <nav className="slam-tabs" aria-label="Slam book pages">
-          {SLAM_PAGES.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              className={`slam-tab${page === p.id ? " is-current" : ""}`}
-              aria-current={page === p.id ? "page" : undefined}
-              onClick={() =>
-                go(p.id, SLAM_PAGES.indexOf(p) < index ? "prev" : "next")
-              }
-            >
-              {p.tab}
-            </button>
-          ))}
-        </nav>
-
-        <article
-          className="slam-spread"
-          key={page}
-          aria-labelledby={`${bookId}-title`}
-        >
+        <div className="slam-stage">
           {isCover ? (
-            <div className="slam-cover-board">
-              <div className="slam-cover-foil">
-                <p className="slam-cover-from">Property of Debjeet</p>
-                <h3 id={`${bookId}-title`}>Slam book</h3>
-                <p className="slam-cover-sub">Off the clock · a life in pages</p>
-                <p className="slam-cover-blurb">
-                  Tables in Bangalore, matches I never miss, and the stamps
-                  I&apos;ve collected so far. Flip the page — it&apos;s meant to
-                  be read.
-                </p>
-                <button
-                  type="button"
-                  className="slam-open-cta"
-                  onClick={() => go("food", "next")}
-                >
-                  Open the book
-                </button>
-                <ol className="slam-toc">
-                  {SLAM_PAGES.filter((p) => p.id !== "cover").map((p, i) => (
-                    <li key={p.id}>
-                      <button type="button" onClick={() => go(p.id, "next")}>
-                        <span>{String(i + 1).padStart(2, "0")}</span>
-                        {p.title}
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+            <div className="slam-closed-wrap">
+              <button
+                type="button"
+                className="slam-closed"
+                onClick={() => go("food", "open")}
+                aria-label="Open Debjeet's slam book"
+              >
+                <span className="slam-closed-shadow" aria-hidden="true" />
+                <span className="slam-closed-block" aria-hidden="true">
+                  <span className="slam-closed-spine" />
+                  <span className="slam-closed-pages" />
+                  <span className="slam-closed-front">
+                    <span className="slam-closed-grain" />
+                    <span className="slam-closed-plate">
+                      <span className="slam-cover-from">Property of Debjeet</span>
+                      <span className="slam-cover-title" id={`${bookId}-title`}>
+                        Slam book
+                      </span>
+                      <span className="slam-cover-sub">
+                        Off the clock · a life in pages
+                      </span>
+                    </span>
+                    <span className="slam-closed-hint">Lift the cover →</span>
+                  </span>
+                </span>
+              </button>
+              <ol className="slam-toc" aria-label="Contents">
+                {SLAM_PAGES.filter((p) => p.id !== "cover").map((p, i) => (
+                  <li key={p.id}>
+                    <button type="button" onClick={() => go(p.id, "open")}>
+                      <span>{String(i + 1).padStart(2, "0")}</span>
+                      {p.title}
+                    </button>
+                  </li>
+                ))}
+              </ol>
             </div>
           ) : (
             <div
-              className={`slam-open-leaves${page === "travel" ? " is-wide" : ""}`}
+              className={`slam-opened${page === "travel" ? " is-wide" : ""}`}
+              aria-labelledby={`${bookId}-title`}
             >
-              <div className="slam-leaf slam-leaf-left" aria-hidden="true">
-                <div className="slam-leaf-inner">
-                  <p className="slam-leaf-kicker">Chapter</p>
-                  <p className="slam-leaf-chapter">{meta.tab}</p>
-                  <p className="slam-leaf-whisper">
-                    {page === "food" &&
-                      "Where I eat when the week finally exhales."}
-                    {page === "sports" &&
-                      "Who I cheer for when the room goes quiet."}
-                    {page === "travel" &&
-                      "Every border I've crossed — and three I haven't yet."}
-                  </p>
-                  <div className="slam-leaf-ornament" />
+              <div className="slam-boards" aria-hidden="true">
+                <div className="slam-board slam-board-left" />
+                <div className="slam-board slam-board-right" />
+              </div>
+
+              <nav className="slam-ribbons" aria-label="Chapters">
+                {SLAM_PAGES.filter((p) => p.id !== "cover").map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={`slam-ribbon slam-ribbon-${p.id}${page === p.id ? " is-current" : ""}`}
+                    aria-current={page === p.id ? "page" : undefined}
+                    onClick={() =>
+                      go(
+                        p.id,
+                        SLAM_PAGES.indexOf(p) < index ? "prev" : "next",
+                      )
+                    }
+                  >
+                    {p.tab}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="slam-stack-edge slam-stack-left" aria-hidden="true" />
+              <div className="slam-stack-edge slam-stack-right" aria-hidden="true" />
+              <div className="slam-gutter" aria-hidden="true" />
+
+              <div className="slam-leaves">
+                <div className="slam-leaf slam-leaf-left">
+                  <div className="slam-leaf-paper">
+                    <p className="slam-leaf-kicker">Chapter</p>
+                    <p className="slam-leaf-chapter">{meta.tab}</p>
+                    {contentPage ? (
+                      <p className="slam-leaf-whisper">
+                        {SLAM_WHISPERS[contentPage]}
+                      </p>
+                    ) : null}
+                    <div className="slam-leaf-mark" aria-hidden="true" />
+                    <p className="slam-page-num slam-page-num-left">
+                      {index * 2 - 1}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="slam-leaf slam-leaf-right">
+                  <div className="slam-leaf-paper">
+                    <h3 className="slam-page-title" id={`${bookId}-title`}>
+                      {meta.title}
+                    </h3>
+                    {page === "food" ? <FoodPage /> : null}
+                    {page === "sports" ? <SportsPage /> : null}
+                    {page === "travel" ? (
+                      <TravelPage
+                        activePin={activePin}
+                        setActivePin={setActivePin}
+                      />
+                    ) : null}
+                    <p className="slam-page-num slam-page-num-right">
+                      {index * 2}
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className={`slam-flip${flipping ? " is-on" : ""}`}
+                  aria-hidden="true"
+                >
+                  <div className="slam-flip-front" />
+                  <div className="slam-flip-back" />
                 </div>
               </div>
-              <div className="slam-leaf slam-leaf-right">
-                <div className="slam-leaf-inner">
-                  <h3 className="slam-page-title" id={`${bookId}-title`}>
-                    {meta.title}
-                  </h3>
-                  {page === "food" ? <FoodPage /> : null}
-                  {page === "sports" ? <SportsPage /> : null}
-                  {page === "travel" ? (
-                    <TravelPage
-                      activePin={activePin}
-                      setActivePin={setActivePin}
-                    />
-                  ) : null}
-                </div>
+
+              <button
+                type="button"
+                className="slam-corner slam-corner-prev"
+                disabled={!prev || flipping}
+                onClick={() => prev && go(prev.id, "prev")}
+                aria-label={prev ? `Turn back to ${prev.tab}` : "No previous page"}
+              >
+                <span>‹</span>
+              </button>
+              <button
+                type="button"
+                className="slam-corner slam-corner-next"
+                disabled={!next || flipping}
+                onClick={() => next && go(next.id, "next")}
+                aria-label={next ? `Turn to ${next.tab}` : "No next page"}
+              >
+                <span>›</span>
+              </button>
+
+              <div className="slam-foot">
+                <button
+                  type="button"
+                  className="slam-close-cover"
+                  disabled={flipping}
+                  onClick={() => go("cover", "prev")}
+                >
+                  Close cover
+                </button>
+                <span className="slam-folio">
+                  {meta.tab} · {index} / {SLAM_PAGES.length - 1}
+                </span>
               </div>
             </div>
           )}
-        </article>
-
-        <div className="slam-nav">
-          <button
-            type="button"
-            className="slam-turn slam-turn-prev"
-            disabled={!prev}
-            onClick={() => prev && go(prev.id, "prev")}
-          >
-            {prev ? `← ${prev.tab}` : "·"}
-          </button>
-          <span className="slam-folio">
-            Page {index + 1} of {SLAM_PAGES.length}
-          </span>
-          <button
-            type="button"
-            className="slam-turn slam-turn-next"
-            disabled={!next}
-            onClick={() => next && go(next.id, "next")}
-          >
-            {next ? `${next.tab} →` : "·"}
-          </button>
         </div>
       </div>
     </section>
