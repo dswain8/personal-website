@@ -19,12 +19,6 @@ import {
 import { SKILLS, groupColor, spineH, spineW } from "./data/toolkit";
 import { GADGET_SVG } from "./data/bench";
 
-const WELCOME_FACTS = [
-  "Wonder Journal started as something for my daughter.",
-  "There's a golden retriever in the family, too.",
-  "Fast on decisions. Slow on small details.",
-] as const;
-
 const RAIN_DROPS = Array.from({ length: 12 }, (_, i) => ({
   x: 6 + ((i * 37) % 89),
   wait: -(i * 2.7),
@@ -127,14 +121,14 @@ export default function PocketRadio() {
   const [gliding, setGliding] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
-  const [factIndex, setFactIndex] = useState(-1);
+  const [introduced, setIntroduced] = useState(false);
 
   const vRef = useRef(v);
+  const introducedRef = useRef(false);
   const lockedRef = useRef<Station | null>(null);
   const soundRef = useRef<RadioSound | null>(null);
   const bandRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const factRef = useRef<HTMLParagraphElement>(null);
   const knobStart = useRef<{ x: number; y: number; v: number } | null>(null);
   const reduceMotion = useRef(
     window.matchMedia("(prefers-reduced-motion: reduce)"),
@@ -146,6 +140,10 @@ export default function PocketRadio() {
   useEffect(() => {
     vRef.current = v;
   }, [v]);
+
+  useEffect(() => {
+    introducedRef.current = introduced;
+  }, [introduced]);
 
   useEffect(() => {
     if (locked?.key !== lockedRef.current?.key) {
@@ -212,16 +210,22 @@ export default function PocketRadio() {
       if (n >= 1 && n <= STATIONS.length) {
         const st = STATIONS[n - 1];
         e.preventDefault();
-        if (lockedRef.current && lockedRef.current.at === st.at) {
+        if (
+          introducedRef.current &&
+          lockedRef.current &&
+          lockedRef.current.at === st.at
+        ) {
           goIn(st);
           return;
         }
         setTouched(true);
+        setIntroduced(true);
         setGliding(true);
         apply(st.at);
         setTimeout(() => setGliding(false), 500);
       } else if (
         e.key === "Enter" &&
+        introducedRef.current &&
         lockedRef.current &&
         e.target === document.body
       ) {
@@ -264,21 +268,6 @@ export default function PocketRadio() {
       className={i % 10 === 0 ? "maj" : i % 2 === 0 ? "mid" : ""}
     />
   ));
-
-  const cycleFact = () => {
-    const next = (factIndex + 1) % WELCOME_FACTS.length;
-    setFactIndex(next);
-    const el = factRef.current;
-    if (el && !reduceMotion.current.matches) {
-      el.animate(
-        [
-          { opacity: 0.25, transform: "translateY(3px)" },
-          { opacity: 1, transform: "translateY(0)" },
-        ],
-        { duration: 180, easing: "ease-out" },
-      );
-    }
-  };
 
   return (
     <div className="wrap home">
@@ -342,7 +331,7 @@ export default function PocketRadio() {
             aria-labelledby="who"
             id="radio"
             data-locked={locked?.key ?? ""}
-            data-idle={String(!locked && !touched)}
+            data-idle={String(!introduced)}
           >
             <div className="r-top">
               <div className="screen">
@@ -366,41 +355,16 @@ export default function PocketRadio() {
                 />
                 <div className="scan" aria-hidden="true" />
                 <div className="idle welcome-screen">
-                  <p className="welcome-kicker">A few sides of the same person</p>
                   <p className="welcome-name">Hi, I&apos;m Debjeet.</p>
                   <p className="welcome-bio">
-                    Product leader at Rippling.
-                    <br />
-                    Husband, dad, and keeper of too many side projects.
-                  </p>
-                  <div className="welcome-extra">
-                    <p
-                      className="welcome-fact"
-                      id="welcome-fact"
-                      ref={factRef}
-                      aria-live="polite"
-                      aria-atomic="true"
-                    >
-                      {factIndex >= 0 ? WELCOME_FACTS[factIndex] : ""}
-                    </p>
-                    <button
-                      type="button"
-                      className="welcome-next"
-                      id="welcome-next"
-                      onClick={cycleFact}
-                    >
-                      One more thing <span aria-hidden="true">↻</span>
-                    </button>
-                  </div>
-                  <p className="welcome-invite">
-                    Pick a station. See where it takes you.
+                    Hit the stations to see what I&apos;m up to in my life.
                   </p>
                 </div>
                 <p className="between" id="between" aria-live="polite">
                   {betweenLine}
                 </p>
                 <div className="preview" id="preview" aria-live="polite">
-                  {locked ? <StationPreview s={locked} /> : null}
+                  {introduced && locked ? <StationPreview s={locked} /> : null}
                 </div>
               </div>
               <div className="side-col">
@@ -430,6 +394,7 @@ export default function PocketRadio() {
               onPointerDown={(e) => {
                 setDragging(true);
                 setTouched(true);
+                setIntroduced(true);
                 (e.target as HTMLElement).setPointerCapture(e.pointerId);
                 apply(fromPointer(e));
               }}
@@ -448,6 +413,7 @@ export default function PocketRadio() {
               }}
               onKeyDown={(e) => {
                 setTouched(true);
+                setIntroduced(true);
                 const order = STATIONS.map((s) => s.at);
                 const nextAt = order.find((a) => a > v + 1);
                 const prevAt = [...order].reverse().find((a) => a < v - 1);
@@ -515,11 +481,12 @@ export default function PocketRadio() {
                     aria-pressed={!!locked && locked.at === s.at}
                     aria-label={`${s.name}, ${s.freq}. Press again to go in.`}
                     onClick={() => {
-                      if (locked && locked.at === s.at) {
+                      if (introduced && locked && locked.at === s.at) {
                         goIn(s);
                         return;
                       }
                       setTouched(true);
+                      setIntroduced(true);
                       setGliding(true);
                       apply(s.at);
                       setTimeout(() => setGliding(false), 500);
@@ -560,6 +527,7 @@ export default function PocketRadio() {
                       v: vRef.current,
                     };
                     setTouched(true);
+                    setIntroduced(true);
                     (e.target as HTMLElement).setPointerCapture(e.pointerId);
                   }}
                   onPointerMove={(e) => {
