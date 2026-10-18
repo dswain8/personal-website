@@ -23,8 +23,8 @@ export type HouseRoom = {
   className: string;
   /** Brand shelf hosted in this room, if any */
   shelfId?: LifeShelfId;
-  /** Living-room only: short personal note instead of brands */
-  note?: string;
+  /** One sentence when the room is open. Brands, if any, sit a step further in. */
+  line: string;
   /** Closed-state tease */
   tease: string;
   /** Door / window / cabinet label */
@@ -197,7 +197,8 @@ export const HOUSE_ROOMS: HouseRoom[] = [
     room: "Kitchen",
     className: "kitchen",
     shelfId: "fuel",
-    tease: "What I put in — food, drink, supplements.",
+    tease: "Breakfast usually happens out.",
+    line: "Home stays plain. The queue I actually join is Thindi — that list lives in the book.",
     portal: "Open the pantry",
     portalKind: "door",
   },
@@ -206,7 +207,8 @@ export const HOUSE_ROOMS: HouseRoom[] = [
     room: "Bathroom",
     className: "bath",
     shelfId: "care",
-    tease: "What I put on — skin, hair, body care.",
+    tease: "A short shelf.",
+    line: "A few things that don't argue with my skin.",
     portal: "Open the cabinet",
     portalKind: "cabinet",
   },
@@ -215,7 +217,8 @@ export const HOUSE_ROOMS: HouseRoom[] = [
     room: "Bedroom",
     className: "bedroom",
     shelfId: "wear",
-    tease: "What I wear — fibres, everyday pieces, craft.",
+    tease: "Cloth before logos.",
+    line: "Odisha handloom in here — the same thread as Richu's Odissi on the wall, and Puri in the book.",
     portal: "Open the wardrobe",
     portalKind: "wardrobe",
   },
@@ -223,8 +226,8 @@ export const HOUSE_ROOMS: HouseRoom[] = [
     id: "living",
     room: "Living room",
     className: "living",
-    note: "Where the rest of the Sunday goes — board games, a slow cup of something, Tokyo claiming the sofa. No brands here on purpose.",
-    tease: "Sunday light, no shopping list.",
+    tease: "Tokyo has the sofa.",
+    line: "Sunday is a slow cup and Tokyo deciding the seats. The certificate stays up whether anyone is dancing.",
     portal: "Look out the window",
     portalKind: "window",
   },
@@ -268,23 +271,23 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "Malgudi Mylari Mane",
-        note: "Proper Karnataka food. Mylari dosa and the kind of curry that makes you quiet at the table.",
+        note: "Mylari dosa, then quiet.",
       },
       {
         name: "Taaza Thindi",
-        note: "Fast, no-frills Thindi. Idli, vada, filter coffee — done before you’ve checked your phone.",
+        note: "Idli, vada, filter coffee — gone before the phone comes out.",
       },
       {
         name: "Bangalore Cafe",
-        note: "One of those reliable neighbourhood Thindi stops that still feels like Bangalore.",
+        note: "Neighbourhood Thindi that still feels like this city.",
       },
       {
         name: "CTR",
-        note: "Butter dosa pilgrimage. Worth the wait, every time.",
+        note: "Butter dosa. Worth the wait.",
       },
       {
         name: "MTR",
-        note: "The old guard. Rava idli and the sense that the recipe hasn’t flinched in decades.",
+        note: "Rava idli that hasn't flinched in decades.",
       },
     ],
   },
@@ -295,15 +298,15 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "Eating Love",
-        note: "Neapolitan pizza the way I want it — brick oven, slow dough, no shortcuts.",
+        note: "Brick oven, slow dough.",
       },
       {
         name: "Pizza 4P's",
-        note: "Japanese-Italian pizza and that house cheese. Book ahead or don’t bother.",
+        note: "House cheese. Book ahead.",
       },
       {
         name: "Bologna",
-        note: "Pasta in Indiranagar. When I want Italian that isn’t performing for Instagram.",
+        note: "Pasta in Indiranagar, without the performance.",
       },
     ],
   },
@@ -314,19 +317,19 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "Naru",
-        note: "Ramen that actually tastes like a ramen bar. Twenty seats — watch the reservation drop.",
+        note: "Twenty seats. Real ramen.",
       },
       {
         name: "Yuki",
-        note: "Pan-Asian comfort. Reliable when the whole table wants something different.",
+        note: "When the whole table can't agree.",
       },
       {
         name: "Azuki",
-        note: "Japanese done with care. Tempura prawns that ruin other tempura for you.",
+        note: "Tempura prawns that ruin the others.",
       },
       {
         name: "Cha",
-        note: "Hong Kong eating house — leaner Asian, bright flavours, easy to return to.",
+        note: "Hong Kong flavours I can return to.",
       },
     ],
   },
@@ -337,11 +340,11 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "Phurr",
-        note: "Elevated pure veg without the lecture. Still rooted in South Indian comfort.",
+        note: "Pure veg, no lecture.",
       },
       {
         name: "Kalpaney",
-        note: "Modern vegetarian with a South Indian abode feeling. Quietly ambitious.",
+        note: "South Indian, quietly ambitious.",
       },
     ],
   },
@@ -352,7 +355,7 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "Nagarjuna",
-        note: "Andhra meals and biryani since forever. Bhojanam when I want the full ritual.",
+        note: "Bhojanam, when I want the full ritual.",
       },
     ],
   },
@@ -363,11 +366,11 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "Blue Tokai",
-        note: "My default pour-over / filter stop across the city.",
+        note: "The default cup.",
       },
       {
         name: "Subko",
-        note: "When I want the cup to be a little more considered — cortados and the good beans.",
+        note: "When the cup should be considered.",
       },
     ],
   },
@@ -378,7 +381,7 @@ export const FOOD_GROUPS: FoodGroup[] = [
     places: [
       {
         name: "The Conservatory",
-        note: "Been to multiple pop-ups here. Terrace kitchen energy — always worth clearing the calendar.",
+        note: "I clear the calendar.",
       },
     ],
   },
@@ -396,31 +399,31 @@ export const SPORTS_LOVES: SportLove[] = [
     id: "cricket",
     sport: "Cricket",
     loves: ["India", "RCB"],
-    note: "Follow every India series. Bleed red and gold for RCB — hope is a recurring subscription.",
+    note: "Every India series. RCB hope, on subscription.",
   },
   {
     id: "ufc",
     sport: "UFC",
     loves: ["Justin Gaethje"],
-    note: "Favourite MMA fighter. Gaethje fights like the clock is personal.",
+    note: "Gaethje fights like the clock is personal.",
   },
   {
     id: "f1",
     sport: "Formula 1",
     loves: ["Max Verstappen"],
-    note: "Passionate Verstappen fan. Race Sundays are non-negotiable calendar blocks.",
+    note: "Verstappen. Race Sunday is blocked.",
   },
   {
     id: "tennis",
     sport: "Tennis",
     loves: ["Roger Federer", "Carlos Alcaraz"],
-    note: "Federer first — still the elegance standard. Alcaraz now for the future of the sport.",
+    note: "Federer for the standard. Alcaraz for what's next.",
   },
   {
     id: "football",
     sport: "Football",
     loves: ["Manchester United"],
-    note: "Purely love the game. Passionately follow United through every season plot twist.",
+    note: "United, through every plot twist.",
   },
 ];
 
@@ -430,6 +433,8 @@ export type MapPin = {
   /** SVG path id(s) that light up for this place */
   regions: string[];
   note?: string;
+  /** A place worth a paragraph — shown under the map */
+  story?: boolean;
 };
 
 /** Visited Indian states — all except Arunachal, Mizoram, Nagaland. */
@@ -450,14 +455,14 @@ export const INDIA_PINS: MapPin[] = [
   { id: "MN", label: "Manipur", regions: ["MN"], note: "Imphal valley — green, proud, unforgettable." },
   { id: "WB", label: "West Bengal", regions: ["WB"], note: "Kolkata conversations and mishti after every argument." },
   { id: "JH", label: "Jharkhand", regions: ["JH"], note: "Forest roads and waterfalls between the cities." },
-  { id: "OR", label: "Odisha", regions: ["OR"], note: "Puri waves, temple stone, and Richu's Odissi roots." },
+  { id: "OR", label: "Odisha", regions: ["OR"], story: true, note: "Puri, and Richu's Odissi. The same Odisha as the handloom in the wardrobe and the certificate on the wall." },
   { id: "CT", label: "Chhattisgarh", regions: ["CT"], note: "Underrated — forests and frank hospitality." },
   { id: "MP", label: "Madhya Pradesh", regions: ["MP"], note: "The heart of India — Khajuraho, Mandu, long drives." },
   { id: "GJ", label: "Gujarat", regions: ["GJ"], note: "White desert nights and Gujarati thali discipline." },
   { id: "MH", label: "Maharashtra", regions: ["MH"], note: "Mumbai energy, Western Ghats weekends." },
   { id: "TS", label: "Telangana", regions: ["TS"], note: "Hyderabad biryani — argument settled." },
   { id: "AP", label: "Andhra Pradesh", regions: ["AP"], note: "Spice with conviction. Coast and red chili." },
-  { id: "KA", label: "Karnataka", regions: ["KA"], note: "Home base. Bangalore is the kitchen I return to." },
+  { id: "KA", label: "Karnataka", regions: ["KA"], story: true, note: "Home. Bangalore is the kitchen I come back to — Thindi first, then the rest of the city." },
   { id: "GA", label: "Goa", regions: ["GA"], note: "Salt air, slow mornings, no agenda." },
   { id: "KL", label: "Kerala", regions: ["KL"], note: "Backwaters, filter coffee, green that doesn't quit." },
   { id: "TN", label: "Tamil Nadu", regions: ["TN"], note: "Temple cities and filter-coffee mornings done right." },
@@ -472,12 +477,12 @@ export const WORLD_PINS: MapPin[] = [
   { id: "DE", label: "Germany", regions: ["germany"], note: "Trains on time, bread that means it, museum hours." },
   { id: "AT", label: "Austria", regions: ["austria"], note: "Alpine air and cafés that still feel like cafés." },
   { id: "HU", label: "Hungary", regions: ["hungary"], note: "Budapest baths and ruin-bar nights." },
-  { id: "TR", label: "Turkey", regions: ["turkey"], note: "Istanbul layers — bazaars, Bosphorus, breakfast spreads." },
+  { id: "TR", label: "Istanbul", regions: ["turkey"], story: true, note: "Bazaar, Bosphorus, a breakfast that takes the morning." },
   { id: "AE", label: "Dubai (UAE)", regions: ["emirates"], note: "Layover city that became a desert-and-skyline stamp." },
-  { id: "KE", label: "Kenya", regions: ["kenya"], note: "Savanna light — the trip that recalibrated scale." },
+  { id: "KE", label: "Kenya", regions: ["kenya"], story: true, note: "Savanna light. The trip that changed the scale of a day." },
   { id: "IN", label: "India", regions: ["india"], note: "Home — most of the map, still collecting the Northeast." },
   { id: "NP", label: "Nepal", regions: ["nepal"], note: "Kathmandu dust and Himalaya silhouette." },
-  { id: "BT", label: "Bhutan", regions: ["bhutan"], note: "Quiet roads, dzongs, and happiness measured differently." },
+  { id: "BT", label: "Bhutan", regions: ["bhutan"], story: true, note: "Dzongs, quiet roads, a different measure of a good week." },
   { id: "LK", label: "Sri Lanka", regions: ["sri-lanka"], note: "Tea hills, coast trains, and short-eats between cities." },
   { id: "TH", label: "Thailand", regions: ["thailand"], note: "Street food graduate school." },
   { id: "MY", label: "Malaysia", regions: ["malaysia", "east-malaysia"], note: "KL towers and Borneo green — both count." },

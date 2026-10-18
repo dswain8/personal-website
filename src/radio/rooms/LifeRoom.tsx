@@ -142,6 +142,8 @@ function BrandRoom({
   onToggleBrand: (key: string) => void;
 }) {
   const shelf = room.shelfId ? shelfById(room.shelfId) : null;
+  const [shelfShown, setShelfShown] = useState(false);
+  if (!revealed && shelfShown) setShelfShown(false);
 
   return (
     <section
@@ -171,20 +173,33 @@ function BrandRoom({
           >
             Close
           </button>
-          {shelf ? (
-            <RoomShelf
-              shelf={shelf}
-              open={brandOpen}
-              onToggle={onToggleBrand}
-            />
-          ) : (
-            <div className="living-note">
-              <p>{room.note}</p>
-              <div className="living-window" aria-hidden="true">
-                <span>Sunday light</span>
-              </div>
+          <p className="room-line">{room.line}</p>
+          {shelf && !shelfShown ? (
+            <button
+              type="button"
+              className="room-shelf-open"
+              onClick={() => setShelfShown(true)}
+            >
+              What I keep
+            </button>
+          ) : null}
+          {shelf && shelfShown ? (
+            <>
+              <RoomShelf
+                shelf={shelf}
+                open={brandOpen}
+                onToggle={onToggleBrand}
+              />
+              <p className="room-shelf-fine">
+                Things I use. Not a catalogue, and not affiliate links.
+              </p>
+            </>
+          ) : null}
+          {!shelf ? (
+            <div className="living-window" aria-hidden="true">
+              <span>Sunday light</span>
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </section>
@@ -195,7 +210,6 @@ function FoodGroupBlock({ group }: { group: FoodGroup }) {
   return (
     <div className="food-group">
       <h3>{group.title}</h3>
-      <p className="food-group-blurb">{group.blurb}</p>
       <ul className="food-list">
         {group.places.map((place) => (
           <li key={place.name}>
@@ -212,7 +226,6 @@ function SportCard({ sport }: { sport: SportLove }) {
   return (
     <li className={`sport-card sport-${sport.id}`}>
       <h3>{sport.sport}</h3>
-      <p className="sport-loves">{sport.loves.join(" · ")}</p>
       <p>{sport.note}</p>
     </li>
   );
@@ -260,6 +273,7 @@ function RegionMap({
   activePin,
   setActivePin,
   compact = false,
+  quietTitle,
 }: {
   title: string;
   subtitle: string;
@@ -270,6 +284,7 @@ function RegionMap({
   activePin: string | null;
   setActivePin: (id: string | null) => void;
   compact?: boolean;
+  quietTitle: string;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
@@ -382,15 +397,11 @@ function RegionMap({
   const ghostId = activePin?.startsWith(`${variant}:ghost:`)
     ? activePin.slice(`${variant}:ghost:`.length)
     : null;
+  const stories = pins.filter((pin) => pin.story);
   const readoutTitle =
-    active?.label || ghostLabel || hoverName || "Tap a region";
+    active?.label || ghostLabel || hoverName || quietTitle;
   const readoutNote =
-    active?.note ||
-    (ghostId
-      ? skipped.has(ghostId)
-        ? "Still on the list — not yet."
-        : "Not stamped yet — but every border is clickable."
-      : null);
+    active?.note || (ghostId && skipped.has(ghostId) ? "Not yet." : null);
 
   return (
     <div
@@ -434,7 +445,7 @@ function RegionMap({
           {variant === "india" ? (
             <span className="leg leg-skip">Not yet</span>
           ) : (
-            <span className="leg leg-rest">Tap any country</span>
+            <span className="leg leg-rest">Elsewhere</span>
           )}
         </div>
       </div>
@@ -442,32 +453,34 @@ function RegionMap({
         <b>{readoutTitle}</b>
         {readoutNote ? <p>{readoutNote}</p> : null}
       </div>
-      <ul className="map-chip-rail" aria-label={`${title} visited list`}>
-        {pins.map((pin) => {
-          const key = `${variant}:${pin.id}`;
-          const isOn = activePin === key;
-          return (
-            <li key={pin.id}>
-              <button
-                type="button"
-                className={`map-chip${isOn ? " is-on" : ""}`}
-                aria-pressed={isOn}
-                onClick={() => setActivePin(isOn ? null : key)}
-              >
-                {pin.label}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {stories.length > 0 ? (
+        <ul className="map-stories" aria-label={`${title} stories`}>
+          {stories.map((pin) => {
+            const key = `${variant}:${pin.id}`;
+            const isOn = activePin === key;
+            return (
+              <li key={pin.id}>
+                <button
+                  type="button"
+                  className={`map-story${isOn ? " is-on" : ""}`}
+                  aria-pressed={isOn}
+                  onClick={() => setActivePin(isOn ? null : key)}
+                >
+                  {pin.label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
     </div>
   );
 }
 
 const SLAM_WHISPERS: Record<Exclude<SlamPageId, "cover">, string> = {
-  food: "Where I eat when the week finally exhales.",
-  sports: "Who I cheer for when the room goes quiet.",
-  travel: "Every border I've crossed — and three I haven't yet.",
+  food: "The orders I repeat.",
+  sports: "Who gets the Sunday.",
+  travel: "The places I still tell.",
 };
 
 function SlamBook({
@@ -531,8 +544,7 @@ function SlamBook({
         <p className="life-aspect-kicker">Slam book</p>
         <h2 id="slam-heading">A book of my life.</h2>
         <p>
-          Pick it up. Open the cover. Turn the pages — food-stained notes,
-          match-day scribbles, and every stamp I&apos;ve collected.
+          Thindi queues, RCB hope, and the stamps I still tell people about.
         </p>
       </header>
 
@@ -571,7 +583,7 @@ function SlamBook({
                         Off the clock · a life in pages
                       </span>
                     </span>
-                    <span className="slam-closed-hint">Lift the cover →</span>
+                    <span className="slam-closed-hint">Bangalore</span>
                   </span>
                 </span>
               </button>
@@ -631,8 +643,7 @@ function SlamBook({
                           titleId={`${bookId}-title`}
                         />
                         <p className="slam-lede">
-                          Native Karnataka plates, Thindi joints, Italian and
-                          Asian obsessions — the first half of the table.
+                          Thindi, then the tables I cross the city for.
                         </p>
                         <div className="food-groups food-groups--page">
                           {FOOD_GROUPS.filter((g) => FOOD_LEFT_IDS.has(g.id)).map(
@@ -653,8 +664,7 @@ function SlamBook({
                           titleId={`${bookId}-title`}
                         />
                         <p className="slam-lede">
-                          Cricket first — then the cage. The rest of the
-                          obsessions sit on the facing page.
+                          India in whites. Gaethje when the room goes loud.
                         </p>
                         <ul className="sports-grid sports-grid--page">
                           {SPORTS_LOVES.filter((s) =>
@@ -677,8 +687,8 @@ function SlamBook({
                             India
                           </h3>
                           <p className="slam-leaf-whisper">
-                            Still missing {INDIA_SKIPPED.join(", ")}. Tap a
-                            state.
+                            Karnataka is home. Odisha is Richu. Still missing{" "}
+                            {INDIA_SKIPPED.join(", ")}.
                           </p>
                         </header>
                         <RegionMap
@@ -692,6 +702,7 @@ function SlamBook({
                           activePin={activePin}
                           setActivePin={setActivePin}
                           compact
+                          quietTitle="Karnataka. Odisha."
                         />
                       </>
                     ) : null}
@@ -709,8 +720,7 @@ function SlamBook({
                         <p className="slam-leaf-kicker">Continued</p>
                         <p className="slam-page-title">Coffee, leaf &amp; pop-ups</p>
                         <p className="slam-lede">
-                          Pure veg rooms, Andhra heat, cups I trust, and
-                          Conservatory nights whenever they land.
+                          Leaf meals, coffee, and the nights I clear.
                         </p>
                         <div className="food-groups food-groups--page">
                           {FOOD_GROUPS.filter((g) =>
@@ -727,8 +737,7 @@ function SlamBook({
                         <p className="slam-leaf-kicker">Continued</p>
                         <p className="slam-page-title">Track, court &amp; pitch</p>
                         <p className="slam-lede">
-                          Race Sundays, Federer elegance, and United through
-                          every plot twist.
+                          Verstappen Sundays. Federer. United anyway.
                         </p>
                         <ul className="sports-grid sports-grid--page">
                           {SPORTS_LOVES.filter((s) =>
@@ -746,8 +755,7 @@ function SlamBook({
                           <p className="slam-leaf-kicker">Abroad</p>
                           <p className="slam-page-title">The world</p>
                           <p className="slam-leaf-whisper">
-                            Clear borders. Visited countries glow — tap any
-                            nation.
+                            Kenya changed the scale. Bhutan and Istanbul stayed.
                           </p>
                         </header>
                         <RegionMap
@@ -761,6 +769,7 @@ function SlamBook({
                           activePin={activePin}
                           setActivePin={setActivePin}
                           compact
+                          quietTitle="Kenya. Bhutan. Istanbul."
                         />
                       </>
                     ) : null}
@@ -848,13 +857,8 @@ export default function LifeRoom() {
         <header className="l4-head">
           <h1 className="reveal">Off the clock.</h1>
           <p className="lede reveal">
-            Outside of work, I&apos;m a family man first — and a foodie,
-            sports obsessive, and restless traveller close behind. My daughter
-            is four. We have a golden retriever named Tokyo.
-          </p>
-          <p className="l4-hint">
-            Open a door or window in the house for what I use. Then flip the
-            slam book for what I love.
+            Sunday in this house: Tokyo has the sofa, Richu&apos;s Odissi
+            certificate is on the wall, and breakfast is already a Thindi plan.
           </p>
         </header>
 
@@ -867,9 +871,8 @@ export default function LifeRoom() {
           >
             <h2 id="family-heading">Family portrait</h2>
             <p className="family-room-lede">
-              My family — Barnali, Richu, Tokyo, and me. Ghibli-flavoured
-              portraits, a birthday morning, Richu&apos;s Odissi certificate day,
-              and the little jharokha that hangs at home.
+              Barnali, Richu, Tokyo, and me. The certificate stays up because
+              Odissi belongs to the house.
             </p>
             <div className="family-wall" role="list">
               {FAMILY_FRAMES.map((frame) => (
@@ -893,11 +896,6 @@ export default function LifeRoom() {
 
           <div className="floor-slab" aria-hidden="true" />
         </div>
-
-        <p className="l4-small">
-          The shelves behind the doors are brands I use. Not exhaustive, and not
-          affiliate links.
-        </p>
 
         <SlamBook
           page={slamPage}

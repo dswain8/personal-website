@@ -1675,6 +1675,31 @@ body[data-side="life"] {
   cursor: pointer;
 }
 .life4 .room-close:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.life4 .room-line {
+  margin: 28px 72px 0 0;
+  max-width: 36ch;
+  font: 400 18px/1.45 var(--serif);
+  color: #3a2a20;
+}
+.life4 .room-shelf-open {
+  margin-top: 16px;
+  align-self: flex-start;
+  border: 1px solid rgba(43, 29, 22, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: #2b1d16;
+  min-height: 36px;
+  padding: 0 14px;
+  font: 600 13px/1 var(--sans);
+  cursor: pointer;
+}
+.life4 .room-shelf-open:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.life4 .room-shelf-fine {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6a4a38;
+}
+.life4 .living .living-window { margin-top: 16px; }
 
 .life4 .room-shelf { display: flex; flex-direction: column; gap: 12px; flex: 1; padding-top: 28px; }
 .life4 .room-shelf-label h3 {
@@ -2607,10 +2632,28 @@ body[data-side="life"] {
   min-height: 240px;
   height: clamp(240px, 32vh, 340px);
 }
-.life4 .slam-opened--travel .map-chip-rail {
-  max-height: 4.8rem;
-  margin-top: 8px;
+.life4 .map-stories {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
 }
+.life4 .map-story {
+  border: 0;
+  border-bottom: 1px solid rgba(90, 66, 52, 0.28);
+  background: transparent;
+  padding: 2px 0 4px;
+  font: 500 15px/1.3 var(--serif);
+  color: #3a2a20;
+  cursor: pointer;
+}
+.life4 .map-story.is-on {
+  color: #8a2f24;
+  border-bottom-color: #8a2f24;
+}
+.life4 .map-story:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .life4 .slam-opened--travel .pin-readout {
   margin-top: 8px;
   min-height: 2.4em;
