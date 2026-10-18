@@ -355,31 +355,29 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
    QUIET: starry field, observer frame, short scroll.
    ================================================================= */
 .q { max-width: 680px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 32px); }
-.q-open {
-  min-height: min(calc(100svh - 64px), 520px);
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 48px 0 36px;
+.q-practice {
+  margin: 0;
+  padding: 28px 0 8px;
+  font: 400 16px/1.65 var(--sans);
+  color: var(--ink-2);
+  max-width: 42ch;
 }
-.q-open h1 { font-weight: 300; font-size: clamp(52px, 9vw, 96px); letter-spacing: -0.02em; }
-.q-open .lede { color: var(--ink-2); margin-top: 22px; max-width: 34ch; }
-.q-open .down {
-  margin-top: 40px; font-size: 15px; color: var(--ink-2); text-decoration: none;
-  display: inline-flex; gap: 10px; align-items: center; min-height: 44px;
-}
-.q-open .down:hover { color: var(--ink); }
 .q-sec { padding: clamp(48px, 8vw, 88px) 0; }
-.q-sec.q-sec-tight { padding: clamp(36px, 6vw, 64px) 0; }
 .q-sec p { font: 300 clamp(20px, 2.2vw, 24px)/1.6 var(--serif); color: var(--ink); max-width: 34ch; }
 .q-sec p.small { font: 400 16px/1.65 var(--sans); color: var(--ink-2); max-width: 52ch; }
 .q-sec h2 { font-weight: 300; margin-bottom: 28px; font-size: clamp(30px, 3.6vw, 42px); }
 .q .kicker { color: var(--ink-2); }
 
-.field-wrap { max-width: 980px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px) clamp(24px, 4vw, 40px); }
-.field {
-  position: relative; height: clamp(480px, 68vh, 640px); border-radius: 20px; overflow: hidden;
+body[data-side="quiet"] .field-wrap { max-width: none; margin: 0; padding: 0; }
+body[data-side="quiet"] .field {
+  position: relative;
+  height: calc(100svh - 58px);
+  min-height: 520px;
+  border-radius: 0;
+  overflow: hidden;
   background: #05060c;
-  border: 1px solid color-mix(in srgb, var(--rule) 70%, #1a2030);
-  box-shadow: inset 0 0 80px rgba(8, 12, 28, 0.55);
+  border: 0;
+  box-shadow: inset 0 0 120px rgba(5, 8, 18, 0.45);
 }
 /* ---- cosmos layers (Milky Way + stars) ---- */
 .field .cosmos { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
@@ -438,6 +436,76 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
   0%, 100% { opacity: 0.35; transform: scale(0.9); }
   50% { opacity: 0.95; transform: scale(1.15); }
 }
+.field .still-point {
+  position: absolute; left: 50%; top: 46%; z-index: 1;
+  width: 88px; height: 88px; margin: -44px 0 0 -44px;
+  pointer-events: none;
+}
+.field .still-ring {
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  border: 1px solid rgba(228, 223, 211, 0.28);
+  box-shadow: 0 0 28px rgba(214, 178, 106, 0.08);
+  opacity: 0.28;
+}
+.field[data-state="watching"] .still-ring {
+  animation: still-breath 7.5s ease-in-out infinite, still-settle 60s linear forwards;
+}
+.field[data-state="watching"] .still-point.lit .still-ring {
+  animation: still-lit 2.2s var(--ease);
+}
+.field[data-state="carried"] .still-point { opacity: 0.4; transition: opacity 0.6s var(--ease); }
+@keyframes still-breath {
+  0%, 100% { transform: scale(0.92); }
+  50% { transform: scale(1.08); }
+}
+@keyframes still-settle {
+  from { opacity: 0.2; border-color: rgba(228, 223, 211, 0.16); }
+  to { opacity: 0.8; border-color: rgba(214, 178, 106, 0.6); box-shadow: 0 0 36px rgba(214, 178, 106, 0.22); }
+}
+@keyframes still-lit {
+  0% { opacity: 1; transform: scale(1.18); box-shadow: 0 0 42px rgba(214, 178, 106, 0.5); }
+  100% { opacity: 0.72; transform: scale(1); }
+}
+.field .field-title {
+  position: absolute; z-index: 4; top: 28px; left: clamp(20px, 4vw, 48px); right: 24px;
+  margin: 0; max-width: 16ch; pointer-events: none;
+  font-weight: 300; font-size: clamp(28px, 3.6vw, 42px); letter-spacing: -0.02em;
+  color: #efe9db;
+  transition: opacity 0.6s var(--ease);
+}
+.field .field-hint {
+  position: absolute; z-index: 4; top: 92px; left: clamp(20px, 4vw, 48px);
+  margin: 0; max-width: 34ch; pointer-events: none;
+  font: 400 15px/1.55 var(--sans); color: #a9a497;
+  transition: opacity 1.4s var(--ease);
+}
+.field .field-hint.is-gone { opacity: 0; }
+.field[data-state="carried"] .field-title,
+.field[data-state="carried"] .field-hint { opacity: 0; }
+.field .field-note {
+  position: absolute; z-index: 4; left: clamp(20px, 4vw, 48px); top: 92px;
+  margin: 0; max-width: 36ch;
+  font: 400 15px/1.5 var(--sans); color: #c8c2b4;
+}
+.field[data-state="carried"] .field-note { opacity: 0; }
+.field .field-sound {
+  position: absolute; z-index: 5; right: clamp(16px, 3vw, 28px); bottom: 16px;
+  display: flex; align-items: center; gap: 6px;
+}
+.field .field-sound button {
+  font: 500 13px/1 var(--sans); min-height: 36px; padding: 0 12px;
+  border-radius: 999px; border: 1px solid rgba(228, 223, 211, 0.28);
+  background: rgba(8, 10, 16, 0.4); color: #c8c2b4; cursor: pointer;
+}
+.field .field-sound button[aria-pressed="true"] {
+  background: #e4dfd3; color: #13151c; border-color: #e4dfd3;
+}
+.field .field-sound label { display: flex; align-items: center; }
+.field .field-sound input[type=range] { width: 84px; accent-color: #d6b26a; }
+@media (max-width: 640px) {
+  .field .field-title { font-size: 28px; }
+  .field .field-hint, .field .field-note { top: 78px; max-width: calc(100% - 40px); }
+}
 .thought {
   position: absolute; left: var(--x); bottom: -40px; z-index: 2;
   font: 400 clamp(15px, 1.6vw, 17px)/1.2 var(--serif); font-style: italic; color: #c8c2b4;
@@ -456,7 +524,7 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
   0% { transform: translateY(0); opacity: 0; }
   12% { opacity: 1; }
   80% { opacity: 1; }
-  100% { transform: translateY(calc(-1 * clamp(500px, 72vh, 680px))); opacity: 0; }
+  100% { transform: translateY(calc(-1 * (100svh - 24px))); opacity: 0; }
 }
 .field-center { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; text-align: center; padding: 24px; }
 .field-center .still { font: 300 15px/1.5 var(--sans); color: #8d897d; max-width: 30ch; }
@@ -470,16 +538,21 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
   pointer-events: none;
 }
 .field[data-state="carried"] .chain { display: flex; }
-.chain p { margin: 0; font: 400 clamp(20px, 2.6vw, 30px)/1.25 var(--serif); font-style: italic; color: #efe9db; animation: link-in .8s var(--ease) both; }
-.chain p:nth-child(2) { font-size: clamp(18px, 2.2vw, 25px); color: #d8d2c4; }
-.chain p:nth-child(3) { font-size: clamp(17px, 2vw, 22px); color: #c4beb0; }
-.chain p:nth-child(4) { font-size: clamp(16px, 1.8vw, 20px); color: #b2ac9f; }
-@keyframes link-in { from { opacity: 0; transform: translateY(8px); } }
+.chain p { margin: 0; font: 400 clamp(22px, 3vw, 32px)/1.25 var(--serif); font-style: italic; color: #d8d2c4; animation: link-in .8s var(--ease) both; }
+.chain p[data-depth="1"] { font-size: clamp(22px, 3vw, 32px); color: #c4beb0; }
+.chain p[data-depth="2"] { font-size: clamp(26px, 3.5vw, 40px); color: #ddd6c8; }
+.chain p[data-depth="3"] { font-size: clamp(30px, 4vw, 48px); color: #efe9db; }
+.chain p[data-depth="4"] { font-size: clamp(34px, 4.6vw, 56px); color: #f7f3ea; }
+@keyframes link-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } }
 .come-back {
-  pointer-events: auto; margin-top: 28px; font: 600 14px/1 var(--sans);
-  min-height: 46px; padding: 0 22px; border-radius: 999px;
-  background: #d6b26a; color: #13151c; border: 0; cursor: pointer;
+  pointer-events: auto; margin-top: 22px;
+  font: italic 400 18px/1.3 var(--serif);
+  min-height: 44px; padding: 8px 4px;
+  background: transparent; color: #d8d2c4; border: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 6px;
+  text-decoration-color: rgba(214, 178, 106, 0.75);
 }
+.come-back:hover, .come-back:focus-visible { color: #f7f3ea; }
 .field-meta { display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding: 14px 4px 0; font-size: 14px; color: var(--ink-2); }
 .field-meta p { margin: 0; max-width: 52ch; }
 /* reduced motion: thoughts sit still, sky holds */
@@ -563,7 +636,7 @@ blockquote.pull cite { display: block; font: 500 12px/1.6 var(--mono); color: va
 
 /* fixes */
 .q-sec p.kicker { font: 600 12px/1.2 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); max-width: none; margin-bottom: 18px; }
-.field-hint { font: 400 15px/1.6 var(--sans); color: var(--ink-2); max-width: 48ch; margin: 0 0 14px 4px; }
+.field .field-hint { font: 400 15px/1.55 var(--sans); color: #a9a497; max-width: 34ch; margin: 0; }
 @media (max-width: 860px) {
   .bar { position: static; }
   .sides { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; margin: 0 -10px; padding: 4px 0 8px; gap: 2px; }
