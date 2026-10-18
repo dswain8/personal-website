@@ -3,6 +3,7 @@ import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
 import { renderMd } from "../markdown";
 import {
+  CLAUDE_SHAPED,
   SKILL_LINES,
   SKILLS,
   START3,
@@ -17,6 +18,8 @@ const cache: Record<string, string> = {};
 
 export default function BuildRoom() {
   const [query, setQuery] = useState("");
+  const [forward, setForward] = useState<string | null>(null);
+  const [travelsOnly, setTravelsOnly] = useState(false);
   const [current, setCurrent] = useState<string>(START3[0]);
   const [bodyHtml, setBodyHtml] = useState("<p class=\"rd-load\">Loading…</p>");
   const [copyLabel, setCopyLabel] = useState("Copy");
@@ -40,10 +43,16 @@ export default function BuildRoom() {
     return dim;
   }, [query]);
 
+  const filtering = Boolean(query.trim() || forward || travelsOnly);
+
   const visibleCount = useMemo(() => {
-    if (!query.trim()) return total;
-    return SKILLS.filter((s) => !dimSet.has(s.f)).length;
-  }, [dimSet, query, total]);
+    return SKILLS.filter((s) => {
+      if (query.trim() && dimSet.has(s.f)) return false;
+      if (travelsOnly && CLAUDE_SHAPED.has(s.f)) return false;
+      if (forward && s.g !== forward) return false;
+      return true;
+    }).length;
+  }, [dimSet, forward, query, travelsOnly]);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,7 +104,7 @@ export default function BuildRoom() {
     if (!["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"].includes(e.key))
       return;
     const books = [
-      ...(bookcaseRef.current?.querySelectorAll(".book") ?? []),
+      ...(bookcaseRef.current?.querySelectorAll(".book:not(.back)") ?? []),
     ] as HTMLButtonElement[];
     const i = books.indexOf(document.activeElement as HTMLButtonElement);
     if (i < 0) return;
@@ -119,12 +128,11 @@ export default function BuildRoom() {
       <StationStrip stationKey="build" />
       <div className="wrap build3">
         <header className="b3-head">
-          <h1 className="reveal">How I build with AI.</h1>
+          <h1 className="reveal">The harness changes. The skills stay.</h1>
           <p className="lede reveal">
-            An interchangeable agentic harness — right now heavy on Codex,
-            Claude Code, and Cursor. Anything I repeat becomes a skill: a plain
-            file that travels with me and fires when I describe the task. Here
-            are all {total} of mine. Read any of them before you take it.
+            Anything I repeat becomes a skill: a plain file that fires when I
+            describe the task. Here are all {total} of mine. A few still assume
+            Claude Code. The rest travel. Read any of them before you take it.
           </p>
           <p className="b3-harness reveal" aria-label="Harnesses in rotation">
             <span>Codex</span>
@@ -135,29 +143,12 @@ export default function BuildRoom() {
           </p>
         </header>
 
-        <ol className="how3" aria-label="How it works">
-          <li>
-            <b>Say the task.</b> A matcher reads the prompt and fires the skill
-            — same idea whether I&apos;m in Codex, Claude Code, or Cursor.
-          </li>
-          <li>
-            <b>Get a second opinion.</b> A different model critiques every draft
-            against the same seven checks.
-          </li>
-          <li>
-            <b>Let it learn.</b> Every Friday it looks at what I repeated and
-            proposes the next skill.
-          </li>
-        </ol>
-
         <section className="lib" id="library" aria-labelledby="lib-h">
           <div className="lib-top">
             <h2 id="lib-h">
               The library{" "}
               <span className="lib-count" id="lib-count">
-                {query.trim()
-                  ? `${visibleCount} of ${total}`
-                  : `${total} skills`}
+                {filtering ? `${visibleCount} of ${total}` : `${total} skills`}
               </span>
             </h2>
             <label className="lib-search">
@@ -172,10 +163,27 @@ export default function BuildRoom() {
               />
             </label>
           </div>
-          <p className="lib-legend">
-            One shelf per kind of work. A thicker spine means a longer file.
-            Pull any book to read it.
-          </p>
+          <div className="lib-tools">
+            <p className="lib-legend">
+              Click a plaque to bring that shelf forward. A thicker spine means
+              a longer file. A gold band means the file still assumes Claude
+              Code.
+            </p>
+            <button
+              type="button"
+              className="lib-travels"
+              aria-pressed={travelsOnly}
+              onClick={() => {
+                setTravelsOnly((on) => {
+                  const next = !on;
+                  if (next && CLAUDE_SHAPED.has(current)) setCurrent(START3[0]);
+                  return next;
+                });
+              }}
+            >
+              What travels
+            </button>
+          </div>
           <div className="lib-body">
             <div
               className="bookcase"
@@ -194,27 +202,64 @@ export default function BuildRoom() {
                       key={`cover-${f}`}
                       skill={s}
                       cover
+                      stays={CLAUDE_SHAPED.has(f)}
                       pressed={current === f}
-                      dim={dimSet.has(f)}
+                      back={
+                        current !== f &&
+                        ((travelsOnly && CLAUDE_SHAPED.has(f)) ||
+                          (forward !== null && s.g !== forward) ||
+                          dimSet.has(f))
+                      }
                       onOpen={() => open(f, true)}
                     />
                   );
                 })}
               </div>
               {TOOLKIT.map(({ g, items }) => (
-                <div key={g} className="shelf-group" aria-label={g}>
+                <div
+                  key={g}
+                  className={`shelf-group${forward === g ? " forward" : ""}`}
+                  aria-label={g}
+                >
                   <div className="books">
                     {items.map(([n, w, d, f]) => (
                       <BookButton
                         key={f}
                         skill={{ g, n, w, d, f }}
+                        stays={CLAUDE_SHAPED.has(f)}
                         pressed={current === f}
-                        dim={dimSet.has(f)}
+                        back={
+                          current !== f &&
+                          ((travelsOnly && CLAUDE_SHAPED.has(f)) ||
+                            (forward !== null && g !== forward) ||
+                            dimSet.has(f))
+                        }
                         onOpen={() => open(f, true)}
                       />
                     ))}
                   </div>
-                  <p className="plaque">{g}</p>
+                  <button
+                    type="button"
+                    className="plaque"
+                    aria-pressed={forward === g}
+                    onClick={(e) => {
+                      const next = forward === g ? null : g;
+                      setForward(next);
+                      if (next) {
+                        (
+                          e.currentTarget.closest(".shelf-group") as HTMLElement | null
+                        )?.scrollIntoView({
+                          block: "nearest",
+                          behavior: matchMedia("(prefers-reduced-motion: reduce)")
+                            .matches
+                            ? "auto"
+                            : "smooth",
+                        });
+                      }
+                    }}
+                  >
+                    {g}
+                  </button>
                 </div>
               ))}
             </div>
@@ -224,6 +269,7 @@ export default function BuildRoom() {
               ref={readerRef}
               aria-live="polite"
               tabIndex={-1}
+              style={{ ["--book" as string]: groupColor(skill.g) }}
             >
               <header className="rd-head">
                 <p className="rd-g">
@@ -231,6 +277,9 @@ export default function BuildRoom() {
                 </p>
                 <h3>{skill.n}</h3>
                 <p className="rd-d">{skill.d}</p>
+                {CLAUDE_SHAPED.has(current) && (
+                  <p className="rd-stay">This file still assumes Claude Code.</p>
+                )}
                 <p className="rd-acts">
                   <a className="btn" href={`/skills-clean/${current}`} download>
                     Download {current}
@@ -277,39 +326,52 @@ export default function BuildRoom() {
 function BookButton({
   skill,
   cover,
+  stays,
   pressed,
-  dim,
+  back,
   onOpen,
 }: {
   skill: Skill;
   cover?: boolean;
+  stays?: boolean;
   pressed: boolean;
-  dim: boolean;
+  back?: boolean;
   onOpen: () => void;
 }) {
+  const stayNote = stays ? ", still assumes Claude Code" : "";
+  const cls = `book${cover ? " cover" : ""}${stays ? " stays" : ""}${back ? " back" : ""}`;
   if (cover) {
     return (
       <button
         type="button"
-        className={`book cover${dim ? " dim" : ""}`}
+        className={cls}
         data-f={skill.f}
         aria-pressed={pressed}
+        aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines${stayNote}`}
         style={{ ["--c" as string]: groupColor(skill.g) }}
         onClick={onOpen}
       >
-        <span className="cv-t">{skill.n}</span>
-        <span className="cv-l">{SKILL_LINES[skill.f] || "?"} lines</span>
+        <span className="bk-cloth">
+          <span className="cv-panel">
+            <span className="cv-t">{skill.n}</span>
+            <span className="cv-l">
+              {SKILL_LINES[skill.f] || "?"} lines
+              {stays ? " · Claude" : ""}
+            </span>
+          </span>
+        </span>
+        <span className="bk-pages" aria-hidden="true" />
       </button>
     );
   }
   return (
     <button
       type="button"
-      className={`book${dim ? " dim" : ""}`}
+      className={cls}
       data-f={skill.f}
       aria-pressed={pressed}
-      aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines`}
-      title={skill.n}
+      aria-label={`${skill.n}, ${SKILL_LINES[skill.f] || "?"} lines${stayNote}`}
+      title={stays ? `${skill.n} — still assumes Claude Code` : skill.n}
       style={{
         ["--w" as string]: `${spineW(skill.f)}px`,
         ["--h" as string]: `${spineH(skill.f)}px`,
@@ -317,7 +379,10 @@ function BookButton({
       }}
       onClick={onOpen}
     >
-      <span>{skill.n}</span>
+      <span className="bk-cloth">
+        <span className="bk-title">{skill.n}</span>
+      </span>
+      <span className="bk-pages" aria-hidden="true" />
     </button>
   );
 }

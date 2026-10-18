@@ -44,6 +44,12 @@ export const TOOLKIT: ToolkitGroup[] = [
         "spec.md",
       ],
       [
+        "Spec writer",
+        "PRDs",
+        "A shorter feature spec. Three questions, then it writes.",
+        "spec-writer.md",
+      ],
+      [
         "Launch draft",
         "Announcements",
         "Drafts a launch post and loops with Codex. Stops at five rounds.",
@@ -136,10 +142,70 @@ export const TOOLKIT: ToolkitGroup[] = [
         "daci-draft.md",
       ],
       [
+        "DACI generator",
+        "As needed",
+        "A shorter DACI when you don't already have a thread.",
+        "daci-generator.md",
+      ],
+      [
         "Autodecision",
         "When the call is yours",
         "Lays out a decision in small, honest steps.",
         "autodecision.md",
+      ],
+      [
+        "Autodecision plan",
+        "Before the call",
+        "Breaks the decision into scope before the full loop.",
+        "autodecision-plan.md",
+      ],
+      [
+        "Autodecision quick",
+        "When it's small",
+        "One pass. No council, no iteration.",
+        "autodecision-quick.md",
+      ],
+      [
+        "Autodecision challenge",
+        "Before you commit",
+        "Stress-tests the action. Adversary only.",
+        "autodecision-challenge.md",
+      ],
+      [
+        "Autodecision compare",
+        "Two options",
+        "Puts two decisions side by side.",
+        "autodecision-compare.md",
+      ],
+      [
+        "Autodecision revise",
+        "When the facts change",
+        "Rewrites a past call with new assumptions or data.",
+        "autodecision-revise.md",
+      ],
+      [
+        "Autodecision review",
+        "After",
+        "Checks what you predicted against what happened.",
+        "autodecision-review.md",
+      ],
+      [
+        "Autodecision summarize",
+        "To share",
+        "Compresses a brief to one page.",
+        "autodecision-summarize.md",
+      ],
+      [
+        "Autodecision publish",
+        "To send",
+        "Makes a PDF and a place to share it.",
+        "autodecision-publish.md",
+      ],
+      [
+        "Autodecision export",
+        "To keep",
+        "Packs the journal, assumptions, and briefs into an archive.",
+        "autodecision-export.md",
       ],
       [
         "Zoom out",
@@ -257,11 +323,24 @@ export const SKILLS: Skill[] = TOOLKIT.flatMap(({ g, items }) =>
   items.map(([n, w, d, f]) => ({ g, n, w, d, f })),
 );
 
+/** Face-out books. These travel; the library opens on the first. */
 export const START3 = [
+  "universal-rubric.md",
+  "review.md",
+  "handoff.md",
+];
+
+/**
+ * Files whose job is still a Claude Code install path.
+ * Other skills mention ~/.claude in passing; these ones do not travel as-is.
+ */
+export const CLAUDE_SHAPED = new Set([
   "claude-md-template.md",
   "skill-keyword-matcher.py",
-  "universal-rubric.md",
-];
+  "install-dojo.md",
+  "dojo-moment.md",
+  "find-session.md",
+]);
 
 export const GROUP_COLORS = [
   "#7a3b2e",
