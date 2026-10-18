@@ -143,61 +143,6 @@ export default function BuildRoom() {
           </p>
         </header>
 
-        <section className="pass" aria-labelledby="pass-h">
-          <h2 id="pass-h">One pass</h2>
-          <div className="pass-body">
-            <div className="pass-score">
-              <p>
-                <b>Review fires.</b> A different model scores the same seven
-                checks.
-              </p>
-              <ol>
-                <li data-fail>
-                  <span>Point up front</span>
-                  <em>Buried.</em>
-                </li>
-                <li data-fail>
-                  <span>Specific</span>
-                  <em>No date, no name.</em>
-                </li>
-                <li data-fail>
-                  <span>Recommendation</span>
-                  <em>None.</em>
-                </li>
-                <li>
-                  <span>Matches the reader</span>
-                  <em>Could.</em>
-                </li>
-                <li data-fail>
-                  <span>Tradeoffs</span>
-                  <em>Unnamed.</em>
-                </li>
-                <li data-fail>
-                  <span>Assumptions</span>
-                  <em>Unnamed.</em>
-                </li>
-                <li data-fail>
-                  <span>Closes with an action</span>
-                  <em>No ask.</em>
-                </li>
-              </ol>
-            </div>
-            <figure className="pass-rewrite">
-              <figcaption>The rewrite</figcaption>
-              <blockquote>
-                <p>
-                  Ship the shared draft Thursday. Design owns the empty state;
-                  I own the note. The cost is slipping Friday&apos;s demo. I
-                  need a yes on the date by noon.
-                </p>
-              </blockquote>
-            </figure>
-          </div>
-          <p className="pass-next">
-            If I do that twice, Friday writes it down as the next skill.
-          </p>
-        </section>
-
         <section className="lib" id="library" aria-labelledby="lib-h">
           <div className="lib-top">
             <h2 id="lib-h">
