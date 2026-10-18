@@ -1070,7 +1070,7 @@ body:not([data-side="radio"]):not([data-side="home"]) .bar { display: none; }
 .build3 .pass h2 { font-size: clamp(28px, 3vw, 40px); }
 .build3 .pass-body {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(220px, 0.85fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.15fr);
   gap: 22px 36px;
   margin-top: 18px;
   align-items: start;
@@ -1085,7 +1085,6 @@ body:not([data-side="radio"]):not([data-side="home"]) .bar { display: none; }
 }
 .build3 .pass blockquote { margin: 0; }
 .build3 .pass blockquote p { margin: 0; font: 400 clamp(20px, 1.8vw, 26px)/1.35 var(--serif); }
-.build3 .pass-draft blockquote p { color: var(--ink-2); }
 .build3 .pass-rewrite blockquote { padding-left: 14px; border-left: 2px solid var(--accent); }
 .build3 .pass-score > p { margin: 0 0 12px; font-size: 15px; line-height: 1.45; }
 .build3 .pass-score b { color: var(--ink); }

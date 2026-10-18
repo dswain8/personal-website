@@ -146,16 +146,6 @@ export default function BuildRoom() {
         <section className="pass" aria-labelledby="pass-h">
           <h2 id="pass-h">One pass</h2>
           <div className="pass-body">
-            <figure className="pass-draft">
-              <figcaption>The draft</figcaption>
-              <blockquote>
-                <p>
-                  Excited to share an update on the launch. We&apos;ve been
-                  working hard and think this will be a great unlock for the
-                  team. Let me know your thoughts.
-                </p>
-              </blockquote>
-            </figure>
             <div className="pass-score">
               <p>
                 <b>Review fires.</b> A different model scores the same seven
@@ -188,7 +178,7 @@ export default function BuildRoom() {
                 </li>
                 <li data-fail>
                   <span>Closes with an action</span>
-                  <em>Thoughts?</em>
+                  <em>No ask.</em>
                 </li>
               </ol>
             </div>
