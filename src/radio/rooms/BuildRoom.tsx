@@ -416,11 +416,16 @@ function BookButton({
         style={{ ["--c" as string]: groupColor(skill.g) }}
         onClick={onOpen}
       >
-        <span className="cv-t">{skill.n}</span>
-        <span className="cv-l">
-          {SKILL_LINES[skill.f] || "?"} lines
-          {stays ? " · Claude" : ""}
+        <span className="bk-cloth">
+          <span className="cv-panel">
+            <span className="cv-t">{skill.n}</span>
+            <span className="cv-l">
+              {SKILL_LINES[skill.f] || "?"} lines
+              {stays ? " · Claude" : ""}
+            </span>
+          </span>
         </span>
+        <span className="bk-pages" aria-hidden="true" />
       </button>
     );
   }
@@ -439,7 +444,10 @@ function BookButton({
       }}
       onClick={onOpen}
     >
-      <span>{skill.n}</span>
+      <span className="bk-cloth">
+        <span className="bk-title">{skill.n}</span>
+      </span>
+      <span className="bk-pages" aria-hidden="true" />
     </button>
   );
 }

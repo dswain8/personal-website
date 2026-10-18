@@ -1460,19 +1460,35 @@ body[data-side="build"] .plaque:focus-visible { outline: 2px solid #f0c64a; outl
   body[data-side="build"] .plaque:not([aria-pressed="true"]):hover { filter: brightness(1.06); }
 }
 body[data-side="build"] .book {
-  position: relative; width: var(--w); height: var(--h); flex: none; border: 0;
-  padding: 8px 0; border-radius: 4px 4px 2px 2px; cursor: pointer; overflow: hidden;
-  background:
-    linear-gradient(105deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,.08) 18%, transparent 38%),
-    linear-gradient(90deg, rgba(255,255,255,.16), transparent 28%, rgba(0,0,0,.22)),
-    var(--c);
-  color: #fff8ec;
-  box-shadow:
-    inset 0 10px 0 -6px rgba(255,255,255,.38),
-    inset 0 -12px 0 -8px rgba(0,0,0,.28),
-    inset 1px 0 0 rgba(255,255,255,.18),
-    1px 2px 0 rgba(0,0,0,.18);
+  position: relative; display: flex; align-items: stretch;
+  width: var(--w); height: var(--h); flex: none; border: 0; padding: 0;
+  border-radius: 2px 2px 1px 1px; cursor: pointer; overflow: hidden;
+  background: color-mix(in srgb, var(--c) 62%, #140c08);
+  color: #fff6e8;
+  box-shadow: 1px 2px 0 rgba(0,0,0,.22);
   transition: transform .28s var(--ease), opacity .2s var(--ease), box-shadow .28s var(--ease), filter .28s var(--ease);
+}
+body[data-side="build"] .book:not(.cover) .bk-cloth { padding: 8px 0; }
+body[data-side="build"] .bk-cloth {
+  position: relative; flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px),
+    linear-gradient(90deg, rgba(255,255,255,.22) 0%, transparent 26%, rgba(0,0,0,.22) 100%),
+    var(--c);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset -3px 0 0 rgba(0,0,0,.38);
+}
+body[data-side="build"] .bk-cloth::before,
+body[data-side="build"] .bk-cloth::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 4px; pointer-events: none;
+  background: rgba(0,0,0,.32);
+}
+body[data-side="build"] .bk-cloth::before { top: 0; }
+body[data-side="build"] .bk-cloth::after { bottom: 0; }
+body[data-side="build"] .bk-pages {
+  flex: 0 0 4px; align-self: center; height: calc(100% - 8px);
+  background: repeating-linear-gradient(#f7efe2 0 1px, #e4d2b4 1px 2px);
+  box-shadow: inset 1px 0 0 rgba(255,255,255,.7);
 }
 body[data-side="build"] .book::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -1490,19 +1506,17 @@ body[data-side="build"] .book.back {
   filter: brightness(0.55) saturate(0.62);
   opacity: 0.7;
 }
-body[data-side="build"] .book span {
-  display: block; writing-mode: vertical-rl; transform: rotate(180deg); margin: 0 auto;
-  max-height: calc(var(--h) - 18px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font: 600 12px/1 var(--sans); letter-spacing: .01em; text-shadow: 0 1px 0 rgba(0,0,0,.28);
+body[data-side="build"] .bk-title {
+  display: block; writing-mode: vertical-rl; transform: rotate(180deg);
+  max-height: calc(var(--h) - 16px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font: 600 11px/1.05 var(--sans); letter-spacing: .03em; color: #fff6e8;
+  text-shadow: 0 1px 0 rgba(0,0,0,.35);
 }
 @media (hover: hover) {
   body[data-side="build"] .book:not(.cover):hover {
     transform: translateY(-10px) rotate(-1.2deg) scale(1.02);
     filter: saturate(1.08) brightness(1.05);
-    box-shadow:
-      inset 0 10px 0 -6px rgba(255,255,255,.45),
-      inset 0 -12px 0 -8px rgba(0,0,0,.28),
-      0 10px 16px -10px rgba(40, 18, 6, .55);
+    box-shadow: 0 10px 16px -10px rgba(40, 18, 6, .55);
   }
   body[data-side="build"] .book:not(.cover):hover::after {
     opacity: 1; animation: b3-book-shine .55s var(--ease);
@@ -1514,39 +1528,42 @@ body[data-side="build"] .book span {
 }
 body[data-side="build"] .book[aria-pressed="true"]:not(.cover) {
   transform: translateY(-20px) rotate(-1.5deg);
-  box-shadow: 0 0 0 2px #f0c64a, inset 0 10px 0 -6px rgba(255,255,255,.4), 0 14px 18px -12px rgba(40,18,6,.5);
+  box-shadow: 0 0 0 2px #f0c64a, 0 14px 18px -12px rgba(40,18,6,.5);
 }
 body[data-side="build"] .book:focus-visible { outline: 2px solid #f0c64a; outline-offset: 2px; }
-body[data-side="build"] .book.stays::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; top: 0;
-  height: 8px;
-  background: linear-gradient(180deg, #f8e7b0, #c9952e);
+body[data-side="build"] .book.stays .bk-cloth::before {
+  height: 6px;
+  background: linear-gradient(180deg, #f8e7b0, #c9952e 70%, rgba(0,0,0,.3));
   box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
-  pointer-events: none;
 }
-body[data-side="build"] .book.cover.stays::before { height: 6px; }
 body[data-side="build"] .book.cover.back {
   transform: translateY(8px) scale(0.95);
   filter: brightness(0.62) saturate(0.7);
   opacity: 0.72;
 }
 body[data-side="build"] .book.cover {
-  width: 112px; height: 140px; display: flex; flex-direction: column;
-  justify-content: space-between; align-items: flex-start; padding: 12px 10px;
-  text-align: left; border-radius: 4px 8px 8px 4px; overflow: hidden;
-  background:
-    linear-gradient(125deg, rgba(255,255,255,.38) 0%, rgba(255,255,255,.06) 26%, transparent 48%),
-    linear-gradient(90deg, rgba(0,0,0,.18), transparent 40%),
-    var(--c);
-  box-shadow:
-    inset 7px 0 0 rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.35),
-    0 8px 14px -8px rgba(0,0,0,.55);
+  width: 118px; height: 150px; display: flex; flex-direction: row;
+  align-items: stretch; padding: 0; text-align: left;
+  border-radius: 3px 2px 2px 3px; overflow: hidden;
+  box-shadow: 0 8px 14px -8px rgba(0,0,0,.55);
 }
-body[data-side="build"] .cv-t { font: 500 16px/1.15 var(--serif); text-shadow: 0 1px 0 rgba(0,0,0,.25); }
-body[data-side="build"] .cv-l { font: 500 11px/1 var(--mono); opacity: .9; }
+body[data-side="build"] .book.cover .bk-cloth {
+  flex-direction: column; align-items: stretch; justify-content: stretch;
+  padding: 10px 7px 10px 9px;
+}
+body[data-side="build"] .book.cover .bk-pages { flex-basis: 8px; height: calc(100% - 12px); }
+body[data-side="build"] .cv-panel {
+  flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 0; padding: 8px 7px 6px;
+  background: color-mix(in srgb, #fff6e8 16%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(255,246,232,.34);
+}
+body[data-side="build"] .cv-t {
+  font: 500 15px/1.15 var(--serif); color: #fff6e8; text-shadow: 0 1px 0 rgba(0,0,0,.3);
+}
+body[data-side="build"] .cv-l {
+  font: 500 10px/1.2 var(--mono); letter-spacing: .03em; color: #fff6e8; opacity: .88;
+}
 @media (hover: hover) {
   body[data-side="build"] .book.cover:hover {
     transform: translateY(-6px) rotate(-2.5deg) scale(1.03);
@@ -1557,7 +1574,7 @@ body[data-side="build"] .cv-l { font: 500 11px/1 var(--mono); opacity: .9; }
   }
 }
 body[data-side="build"] .book.cover[aria-pressed="true"] {
-  box-shadow: 0 0 0 3px #f0c64a, inset 7px 0 0 rgba(0,0,0,.28), 0 10px 16px -8px rgba(0,0,0,.5);
+  box-shadow: 0 0 0 3px #f0c64a, 0 10px 16px -8px rgba(0,0,0,.5);
   transform: translateY(-6px) rotate(-1.5deg);
 }
 body[data-side="build"] .reader {
@@ -1591,7 +1608,14 @@ body[data-side="build"] .rd-body pre { background: #f7eee2; border-color: #e4d2b
   body[data-side="build"] .lib-body { grid-template-columns: 1fr; }
   body[data-side="build"] .bookcase { padding: 12px 10px 0; }
   body[data-side="build"] .books { min-height: 176px; }
-  body[data-side="build"] .book.cover { width: 92px; height: 120px; }
+  body[data-side="build"] .bookcase,
+  body[data-side="build"] .shelf-group,
+  body[data-side="build"] .face-out { max-width: 100%; }
+  body[data-side="build"] .face-out { flex-wrap: wrap; }
+  body[data-side="build"] .book:not(.cover) { width: calc(var(--w) * 0.82); }
+  body[data-side="build"] .books { gap: 2px; }
+  body[data-side="build"] .book.cover { width: 88px; height: 116px; }
+  body[data-side="build"] .book.cover .cv-t { font-size: 13px; }
   body[data-side="build"] .reader { margin-top: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1601,7 +1625,8 @@ body[data-side="build"] .rd-body pre { background: #f7eee2; border-color: #e4d2b
   body[data-side="build"] .book:not(.cover):hover::after,
   body[data-side="build"] .book.cover:hover::after { animation: none; opacity: 0; }
 }
-body[data-side="build"] .book.cover span {
+body[data-side="build"] .book.cover .cv-t,
+body[data-side="build"] .book.cover .cv-l {
   writing-mode: horizontal-tb; transform: none; margin: 0;
   max-height: none; white-space: normal; overflow: visible;
 }
