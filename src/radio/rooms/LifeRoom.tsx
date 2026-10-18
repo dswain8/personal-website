@@ -306,6 +306,12 @@ function RegionMap({
         const root = hostRef.current.querySelector("svg");
         if (!root) throw new Error("no svg");
         root.setAttribute("focusable", "false");
+        root.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        if (variant === "world") {
+          root.setAttribute("viewBox", "0 18 950 520");
+        } else {
+          root.setAttribute("viewBox", "8 60 786 776");
+        }
         hostRef.current
           .querySelectorAll<SVGPathElement>("path.region")
           .forEach((path) => {

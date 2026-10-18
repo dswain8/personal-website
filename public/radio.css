@@ -1780,14 +1780,63 @@ body[data-side="life"] {
   background: #f0c64a;
   box-shadow: 0 0 0 2px #6b4f17;
 }
-.life4 .portal-cabinet .portal-face {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.35), transparent 40%),
-    linear-gradient(135deg, #e9f2ee, #cfe0d8 60%, #f4f9f7);
-  box-shadow: inset 0 0 0 3px #9fb3aa, inset 0 0 0 14px rgba(255,255,255,.35);
+.life4 .portal-cabinet {
+  align-self: center;
+  width: min(78%, 210px);
+  min-height: 176px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  border-radius: 3px;
+  color: #3a2a1c;
+  background: #efe4d2;
+  box-shadow:
+    0 0 0 9px #efe4d2,
+    0 0 0 13px #b89a78,
+    0 18px 22px -14px rgba(40, 24, 12, 0.5);
 }
-.life4 .portal-cabinet { color: #2b1d16; }
-.life4 .portal-cabinet .portal-label { background: rgba(255, 250, 242, 0.88); color: #2b1d16; }
+.life4 .portal-cabinet .portal-face {
+  inset: 8px 8px 40px;
+  border-radius: 2px;
+  background:
+    linear-gradient(118deg, rgba(255,255,255,.72) 0 18%, transparent 42%),
+    linear-gradient(180deg, #d7ebe6, #f4faf8 55%, #c5ddd6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+    inset 0 0 18px rgba(90, 140, 140, 0.18);
+}
+.life4 .portal-cabinet .portal-face::before {
+  content: "";
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  left: 50%;
+  width: 4px;
+  margin-left: -2px;
+  background: linear-gradient(90deg, #c4b49a, #efe4d2 45%, #a89074);
+}
+.life4 .portal-cabinet .portal-face::after {
+  content: "";
+  position: absolute;
+  top: 46%;
+  left: 36%;
+  width: 7px;
+  height: 18px;
+  border-radius: 2px;
+  background: linear-gradient(#d8c7a4, #8d7356);
+  box-shadow:
+    0 0 0 1px #6e5840,
+    42px 0 0 #cbb892,
+    42px 0 0 1px #6e5840;
+}
+.life4 .portal-cabinet .portal-label {
+  margin: 0 auto 10px;
+  padding: 0;
+  background: transparent;
+  color: #5c4634;
+  font: 700 11px/1 var(--sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .life4 .portal-wardrobe .portal-face {
   background:
     linear-gradient(90deg, #6e4a2c 0 48%, #4a3122 48% 52%, #6e4a2c 52% 100%);
@@ -2777,17 +2826,35 @@ body[data-side="life"] {
 .life4 .pin-map.is-compact .pin-stage {
   min-height: 260px;
 }
-.life4 .slam-opened--travel .pin-map--india .pin-stage {
-  aspect-ratio: 4 / 4.1;
+.life4 .slam-opened--travel .slam-leaves {
+  min-height: 0;
+  align-items: stretch;
+  filter: none;
+}
+.life4 .slam-opened--travel .slam-leaf {
+  display: flex;
+  min-height: 0;
+}
+.life4 .slam-opened--travel .slam-leaf-paper {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
   max-height: none;
-  min-height: 320px;
-  height: clamp(300px, 38vh, 400px);
+  overflow: visible;
+  transform: none;
+}
+.life4 .slam-opened--travel .pin-map--india .pin-stage {
+  aspect-ratio: 800 / 860;
+  height: auto;
+  min-height: 0;
+  max-height: none;
 }
 .life4 .slam-opened--travel .pin-map--world .pin-stage {
-  aspect-ratio: 950 / 620;
+  aspect-ratio: 950 / 520;
+  height: auto;
+  min-height: 0;
   max-height: none;
-  min-height: 240px;
-  height: clamp(240px, 32vh, 340px);
 }
 .life4 .map-stories {
   list-style: none;
@@ -2882,9 +2949,7 @@ body[data-side="life"] {
   stroke-width: 0.45;
 }
 .life4 .map-svg-host path.region.polar {
-  fill: #eef4f7;
-  stroke: #9ab0bd;
-  cursor: default;
+  display: none;
 }
 .life4 .map-svg-host path.region.is-visited {
   fill: #c9844a;
