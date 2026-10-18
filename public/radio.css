@@ -2214,21 +2214,24 @@ body[data-side="life"] {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  min-height: min(72vh, 640px);
+  min-height: min(78vh, 720px);
+  align-items: stretch;
   transform-style: preserve-3d;
   filter: drop-shadow(0 22px 28px rgba(20, 8, 0, 0.28));
 }
-.life4 .slam-opened.is-wide .slam-leaves {
-  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
-}
 .life4 .slam-leaf {
   position: relative;
-  min-height: min(72vh, 640px);
+  min-height: min(78vh, 720px);
+  min-width: 0;
 }
 .life4 .slam-leaf-paper {
   position: relative;
   height: 100%;
-  padding: clamp(28px, 3.5vw, 44px) clamp(22px, 3vw, 40px) 48px;
+  max-height: min(78vh, 720px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(22px, 3vw, 36px) clamp(18px, 2.6vw, 32px) 52px;
   color: var(--slam-ink);
   background:
     linear-gradient(90deg, rgba(90, 50, 24, 0.07), transparent 22px),
@@ -2240,6 +2243,8 @@ body[data-side="life"] {
     radial-gradient(ellipse at 20% 0%, rgba(210, 160, 100, 0.12), transparent 45%),
     linear-gradient(180deg, var(--slam-paper), var(--slam-paper-2));
   box-shadow: inset 0 0 0 1px rgba(90, 66, 52, 0.1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(90, 66, 52, 0.35) transparent;
 }
 .life4 .slam-leaf-left .slam-leaf-paper {
   border-radius: 4px 0 0 4px;
@@ -2267,6 +2272,7 @@ body[data-side="life"] {
     inset 0 0 0 1px rgba(90, 66, 52, 0.1);
 }
 
+.life4 .slam-leaf-intro { margin-bottom: 8px; }
 .life4 .slam-leaf-kicker {
   margin: 0;
   font: 600 11px/1 var(--mono);
@@ -2275,21 +2281,19 @@ body[data-side="life"] {
   color: #8a2f24;
 }
 .life4 .slam-leaf-chapter {
-  margin: 16px 0 0;
-  font: 400 clamp(40px, 5vw, 58px)/0.98 "Fraunces", var(--serif);
+  margin: 10px 0 0;
+  font: 400 clamp(34px, 4.2vw, 48px)/0.98 "Fraunces", var(--serif);
   letter-spacing: -0.03em;
 }
-.life4 .slam-leaf-whisper {
-  margin: 22px 0 0;
-  max-width: 20ch;
-  font: italic 400 18px/1.45 var(--serif);
-  color: #6a4a34;
+.life4 .slam-leaf-intro .slam-page-title {
+  margin-top: 8px;
+  font-size: clamp(22px, 2.6vw, 30px);
 }
-.life4 .slam-leaf-mark {
-  margin-top: 40px;
-  width: 54px;
-  height: 2px;
-  background: linear-gradient(90deg, #8a2f24, transparent);
+.life4 .slam-leaf-whisper {
+  margin: 10px 0 0;
+  max-width: 28ch;
+  font: italic 400 16px/1.45 var(--serif);
+  color: #6a4a34;
 }
 .life4 .slam-page-num {
   position: absolute;
@@ -2328,7 +2332,6 @@ body[data-side="life"] {
   opacity: 0;
   visibility: hidden;
 }
-.life4 .slam-opened.is-wide .slam-flip { width: 56%; }
 .life4 .slam-flip.is-on {
   opacity: 1;
   visibility: visible;
@@ -2467,12 +2470,18 @@ body[data-side="life"] {
 @media (max-width: 900px) {
   .life4 .slam-closed-wrap { grid-template-columns: 1fr; }
   .life4 .slam-toc { max-width: 360px; margin: 0 auto; }
-  .life4 .slam-leaves { grid-template-columns: 1fr; }
-  .life4 .slam-opened.is-wide .slam-leaves { grid-template-columns: 1fr; }
-  .life4 .slam-leaf-left { display: none; }
-  .life4 .slam-leaf-right .slam-leaf-paper {
-    border-radius: 6px;
-    transform: none;
+  .life4 .slam-leaves {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 14px;
+  }
+  .life4 .slam-leaf {
+    min-height: 0;
+  }
+  .life4 .slam-leaf-paper {
+    max-height: none;
+    border-radius: 8px !important;
+    transform: none !important;
   }
   .life4 .slam-boards { display: none; }
   .life4 .slam-gutter,
@@ -2496,6 +2505,10 @@ body[data-side="life"] {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: clamp(22px, 3vw, 32px) clamp(20px, 3vw, 36px);
+}
+.life4 .food-groups--page {
+  grid-template-columns: 1fr;
+  gap: 18px;
 }
 .life4 .food-group h3 {
   font: 400 24px/1.15 var(--serif);
@@ -2538,6 +2551,10 @@ body[data-side="life"] {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
 }
+.life4 .sports-grid--page {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
 .life4 .sport-card {
   padding: 18px 18px 20px;
   border-radius: 4px;
@@ -2566,9 +2583,47 @@ body[data-side="life"] {
 .life4 .sport-football { background: linear-gradient(160deg, #efe8e4, #e5d2c8); }
 
 .life4 .travel-maps {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(28px, 4vw, 44px);
+  display: contents;
+}
+.life4 .slam-leaf-intro--tight { margin-bottom: 4px; }
+.life4 .slam-leaf-intro--tight .slam-page-title { margin-bottom: 4px; }
+.life4 .slam-leaf-intro--tight .slam-leaf-whisper {
+  margin-top: 6px;
+  max-width: 34ch;
+  font-size: 15px;
+}
+.life4 .pin-map.is-compact .pin-stage {
+  min-height: 260px;
+}
+.life4 .slam-opened--travel .pin-map--india .pin-stage {
+  aspect-ratio: 4 / 4.1;
+  max-height: none;
+  min-height: 320px;
+  height: clamp(300px, 38vh, 400px);
+}
+.life4 .slam-opened--travel .pin-map--world .pin-stage {
+  aspect-ratio: 950 / 620;
+  max-height: none;
+  min-height: 240px;
+  height: clamp(240px, 32vh, 340px);
+}
+.life4 .slam-opened--travel .map-chip-rail {
+  max-height: 4.8rem;
+  margin-top: 8px;
+}
+.life4 .slam-opened--travel .pin-readout {
+  margin-top: 8px;
+  min-height: 2.4em;
+  padding: 8px 10px;
+}
+.life4 .slam-opened--travel .pin-readout b { font-size: 15px; }
+.life4 .slam-opened--travel .pin-readout p {
+  margin-top: 4px;
+  font-size: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .life4 .pin-map-head h3 {
   font: 400 26px/1.15 var(--serif);
@@ -2582,7 +2637,7 @@ body[data-side="life"] {
 }
 .life4 .pin-stage {
   position: relative;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 30% 15%, rgba(255, 255, 255, 0.45), transparent 45%),
@@ -2590,7 +2645,7 @@ body[data-side="life"] {
   box-shadow:
     inset 0 0 0 1px rgba(90, 66, 52, 0.18),
     0 14px 28px -22px rgba(40, 20, 8, 0.45);
-  min-height: 280px;
+  min-height: 220px;
 }
 .life4 .pin-map--india .pin-stage {
   aspect-ratio: 4 / 4.4;

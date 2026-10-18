@@ -191,22 +191,6 @@ function BrandRoom({
   );
 }
 
-function FoodPage() {
-  return (
-    <div className="slam-page-body">
-      <p className="slam-lede">
-        Native Karnataka plates, tindi joints, Italian and Asian obsessions,
-        coffee I trust, and Conservatory pop-ups whenever they land.
-      </p>
-      <div className="food-groups">
-        {FOOD_GROUPS.map((group) => (
-          <FoodGroupBlock key={group.id} group={group} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function FoodGroupBlock({ group }: { group: FoodGroup }) {
   return (
     <div className="food-group">
@@ -224,22 +208,6 @@ function FoodGroupBlock({ group }: { group: FoodGroup }) {
   );
 }
 
-function SportsPage() {
-  return (
-    <div className="slam-page-body">
-      <p className="slam-lede">
-        Cricket first, then the other obsessions — cage, track, court, and
-        pitch.
-      </p>
-      <ul className="sports-grid">
-        {SPORTS_LOVES.map((s) => (
-          <SportCard key={s.id} sport={s} />
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 function SportCard({ sport }: { sport: SportLove }) {
   return (
     <li className={`sport-card sport-${sport.id}`}>
@@ -250,44 +218,35 @@ function SportCard({ sport }: { sport: SportLove }) {
   );
 }
 
-function TravelPage({
-  activePin,
-  setActivePin,
+const FOOD_LEFT_IDS = new Set(["karnataka", "italian", "asian"]);
+const FOOD_RIGHT_IDS = new Set(["veg", "meals", "coffee", "popups"]);
+const SPORTS_LEFT_IDS = new Set(["cricket", "ufc"]);
+const SPORTS_RIGHT_IDS = new Set(["f1", "tennis", "football"]);
+
+function SlamLeafIntro({
+  tab,
+  title,
+  whisper,
+  titleId,
 }: {
-  activePin: string | null;
-  setActivePin: (id: string | null) => void;
+  tab: string;
+  title: string;
+  whisper: string;
+  titleId?: string;
 }) {
   return (
-    <div className="slam-page-body">
-      <p className="slam-lede">
-        Tap any state or country. Visited places glow warm — still missing{" "}
-        {INDIA_SKIPPED.join(", ")} at home, collecting stamps abroad.
-      </p>
-      <div className="travel-maps">
-        <RegionMap
-          key="india-map"
-          title="India"
-          subtitle="Every state I've stood in — except three in the Northeast. Hover, tap, read."
-          variant="india"
-          src="/life/maps/india.svg"
-          pins={INDIA_PINS}
-          skippedIds={INDIA_SKIPPED_IDS}
-          activePin={activePin}
-          setActivePin={setActivePin}
-        />
-        <RegionMap
-          key="world-map"
-          title="The world"
-          subtitle="Countries with clear borders. Visited ones light up — tap any nation to name it."
-          variant="world"
-          src="/life/maps/world.svg"
-          pins={WORLD_PINS}
-          skippedIds={WORLD_SKIPPED_IDS}
-          activePin={activePin}
-          setActivePin={setActivePin}
-        />
-      </div>
-    </div>
+    <header className="slam-leaf-intro">
+      <p className="slam-leaf-kicker">Chapter</p>
+      <p className="slam-leaf-chapter">{tab}</p>
+      {titleId ? (
+        <h3 className="slam-page-title" id={titleId}>
+          {title}
+        </h3>
+      ) : (
+        <p className="slam-page-title">{title}</p>
+      )}
+      <p className="slam-leaf-whisper">{whisper}</p>
+    </header>
   );
 }
 
@@ -300,6 +259,7 @@ function RegionMap({
   skippedIds,
   activePin,
   setActivePin,
+  compact = false,
 }: {
   title: string;
   subtitle: string;
@@ -309,6 +269,7 @@ function RegionMap({
   skippedIds: readonly string[];
   activePin: string | null;
   setActivePin: (id: string | null) => void;
+  compact?: boolean;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
@@ -432,11 +393,15 @@ function RegionMap({
       : null);
 
   return (
-    <div className={`pin-map pin-map--${variant}${ready ? " is-ready" : ""}`}>
-      <div className="pin-map-head">
-        <h3>{title}</h3>
-        <p>{subtitle}</p>
-      </div>
+    <div
+      className={`pin-map pin-map--${variant}${ready ? " is-ready" : ""}${compact ? " is-compact" : ""}`}
+    >
+      {subtitle ? (
+        <div className="pin-map-head">
+          {!compact ? <h3>{title}</h3> : null}
+          <p>{subtitle}</p>
+        </div>
+      ) : null}
       <div
         className="pin-stage"
         role="group"
@@ -477,26 +442,24 @@ function RegionMap({
         <b>{readoutTitle}</b>
         {readoutNote ? <p>{readoutNote}</p> : null}
       </div>
-      {variant === "india" || variant === "world" ? (
-        <ul className="map-chip-rail" aria-label={`${title} visited list`}>
-          {pins.map((pin) => {
-            const key = `${variant}:${pin.id}`;
-            const isOn = activePin === key;
-            return (
-              <li key={pin.id}>
-                <button
-                  type="button"
-                  className={`map-chip${isOn ? " is-on" : ""}`}
-                  aria-pressed={isOn}
-                  onClick={() => setActivePin(isOn ? null : key)}
-                >
-                  {pin.label}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
+      <ul className="map-chip-rail" aria-label={`${title} visited list`}>
+        {pins.map((pin) => {
+          const key = `${variant}:${pin.id}`;
+          const isOn = activePin === key;
+          return (
+            <li key={pin.id}>
+              <button
+                type="button"
+                className={`map-chip${isOn ? " is-on" : ""}`}
+                aria-pressed={isOn}
+                onClick={() => setActivePin(isOn ? null : key)}
+              >
+                {pin.label}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
@@ -561,7 +524,6 @@ function SlamBook({
   };
 
   const isCover = page === "cover";
-  const contentPage = page === "cover" ? null : page;
 
   return (
     <section className="slam" aria-labelledby="slam-heading">
@@ -626,7 +588,7 @@ function SlamBook({
             </div>
           ) : (
             <div
-              className={`slam-opened${page === "travel" ? " is-wide" : ""}`}
+              className={`slam-opened slam-opened--${page}`}
               aria-labelledby={`${bookId}-title`}
             >
               <div className="slam-boards" aria-hidden="true">
@@ -660,14 +622,80 @@ function SlamBook({
               <div className="slam-leaves">
                 <div className="slam-leaf slam-leaf-left">
                   <div className="slam-leaf-paper">
-                    <p className="slam-leaf-kicker">Chapter</p>
-                    <p className="slam-leaf-chapter">{meta.tab}</p>
-                    {contentPage ? (
-                      <p className="slam-leaf-whisper">
-                        {SLAM_WHISPERS[contentPage]}
-                      </p>
+                    {page === "food" ? (
+                      <>
+                        <SlamLeafIntro
+                          tab={meta.tab}
+                          title={meta.title}
+                          whisper={SLAM_WHISPERS.food}
+                          titleId={`${bookId}-title`}
+                        />
+                        <p className="slam-lede">
+                          Native Karnataka plates, Thindi joints, Italian and
+                          Asian obsessions — the first half of the table.
+                        </p>
+                        <div className="food-groups food-groups--page">
+                          {FOOD_GROUPS.filter((g) => FOOD_LEFT_IDS.has(g.id)).map(
+                            (group) => (
+                              <FoodGroupBlock key={group.id} group={group} />
+                            ),
+                          )}
+                        </div>
+                      </>
                     ) : null}
-                    <div className="slam-leaf-mark" aria-hidden="true" />
+
+                    {page === "sports" ? (
+                      <>
+                        <SlamLeafIntro
+                          tab={meta.tab}
+                          title={meta.title}
+                          whisper={SLAM_WHISPERS.sports}
+                          titleId={`${bookId}-title`}
+                        />
+                        <p className="slam-lede">
+                          Cricket first — then the cage. The rest of the
+                          obsessions sit on the facing page.
+                        </p>
+                        <ul className="sports-grid sports-grid--page">
+                          {SPORTS_LOVES.filter((s) =>
+                            SPORTS_LEFT_IDS.has(s.id),
+                          ).map((s) => (
+                            <SportCard key={s.id} sport={s} />
+                          ))}
+                        </ul>
+                      </>
+                    ) : null}
+
+                    {page === "travel" ? (
+                      <>
+                        <header className="slam-leaf-intro slam-leaf-intro--tight">
+                          <p className="slam-leaf-kicker">Chapter · Travel</p>
+                          <h3
+                            className="slam-page-title"
+                            id={`${bookId}-title`}
+                          >
+                            India
+                          </h3>
+                          <p className="slam-leaf-whisper">
+                            Still missing {INDIA_SKIPPED.join(", ")}. Tap a
+                            state.
+                          </p>
+                        </header>
+                        <RegionMap
+                          key="india-map"
+                          title="India"
+                          subtitle=""
+                          variant="india"
+                          src="/life/maps/india.svg"
+                          pins={INDIA_PINS}
+                          skippedIds={INDIA_SKIPPED_IDS}
+                          activePin={activePin}
+                          setActivePin={setActivePin}
+                          compact
+                        />
+                      </>
+                    ) : null}
+
                     <p className="slam-page-num slam-page-num-left">
                       {index * 2 - 1}
                     </p>
@@ -676,17 +704,67 @@ function SlamBook({
 
                 <div className="slam-leaf slam-leaf-right">
                   <div className="slam-leaf-paper">
-                    <h3 className="slam-page-title" id={`${bookId}-title`}>
-                      {meta.title}
-                    </h3>
-                    {page === "food" ? <FoodPage /> : null}
-                    {page === "sports" ? <SportsPage /> : null}
-                    {page === "travel" ? (
-                      <TravelPage
-                        activePin={activePin}
-                        setActivePin={setActivePin}
-                      />
+                    {page === "food" ? (
+                      <>
+                        <p className="slam-leaf-kicker">Continued</p>
+                        <p className="slam-page-title">Coffee, leaf &amp; pop-ups</p>
+                        <p className="slam-lede">
+                          Pure veg rooms, Andhra heat, cups I trust, and
+                          Conservatory nights whenever they land.
+                        </p>
+                        <div className="food-groups food-groups--page">
+                          {FOOD_GROUPS.filter((g) =>
+                            FOOD_RIGHT_IDS.has(g.id),
+                          ).map((group) => (
+                            <FoodGroupBlock key={group.id} group={group} />
+                          ))}
+                        </div>
+                      </>
                     ) : null}
+
+                    {page === "sports" ? (
+                      <>
+                        <p className="slam-leaf-kicker">Continued</p>
+                        <p className="slam-page-title">Track, court &amp; pitch</p>
+                        <p className="slam-lede">
+                          Race Sundays, Federer elegance, and United through
+                          every plot twist.
+                        </p>
+                        <ul className="sports-grid sports-grid--page">
+                          {SPORTS_LOVES.filter((s) =>
+                            SPORTS_RIGHT_IDS.has(s.id),
+                          ).map((s) => (
+                            <SportCard key={s.id} sport={s} />
+                          ))}
+                        </ul>
+                      </>
+                    ) : null}
+
+                    {page === "travel" ? (
+                      <>
+                        <header className="slam-leaf-intro slam-leaf-intro--tight">
+                          <p className="slam-leaf-kicker">Abroad</p>
+                          <p className="slam-page-title">The world</p>
+                          <p className="slam-leaf-whisper">
+                            Clear borders. Visited countries glow — tap any
+                            nation.
+                          </p>
+                        </header>
+                        <RegionMap
+                          key="world-map"
+                          title="The world"
+                          subtitle=""
+                          variant="world"
+                          src="/life/maps/world.svg"
+                          pins={WORLD_PINS}
+                          skippedIds={WORLD_SKIPPED_IDS}
+                          activePin={activePin}
+                          setActivePin={setActivePin}
+                          compact
+                        />
+                      </>
+                    ) : null}
+
                     <p className="slam-page-num slam-page-num-right">
                       {index * 2}
                     </p>

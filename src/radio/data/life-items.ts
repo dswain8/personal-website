@@ -263,7 +263,7 @@ export type FoodGroup = {
 export const FOOD_GROUPS: FoodGroup[] = [
   {
     id: "karnataka",
-    title: "Karnataka & tindi",
+    title: "Karnataka & Thindi",
     blurb: "Native cuisine and the breakfast joints that keep the city honest.",
     places: [
       {
@@ -272,11 +272,11 @@ export const FOOD_GROUPS: FoodGroup[] = [
       },
       {
         name: "Taaza Thindi",
-        note: "Fast, no-frills tindi. Idli, vada, filter coffee — done before you’ve checked your phone.",
+        note: "Fast, no-frills Thindi. Idli, vada, filter coffee — done before you’ve checked your phone.",
       },
       {
         name: "Bangalore Cafe",
-        note: "One of those reliable neighbourhood tindi stops that still feels like Bangalore.",
+        note: "One of those reliable neighbourhood Thindi stops that still feels like Bangalore.",
       },
       {
         name: "CTR",
