@@ -1370,39 +1370,141 @@ body[data-side="life"] {
 .life4 .l4-small { margin: 14px 0 0; font-size: 14px; color: var(--ink-2); }
 
 /* —— House shell —— */
-.life4 .house {
-  --wall: 3px solid #3a2a20;
+.life4 .house-yard {
   position: relative;
+  margin-top: 28px;
+  padding: 18px 0 36px;
+}
+.life4 .house-yard::before {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 0;
+  height: 120px;
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(255, 236, 210, 0.5), transparent 70%);
+  pointer-events: none;
+}
+.life4 .house-yard::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 0;
+  height: 42px;
+  background:
+    radial-gradient(ellipse at 12% 0, #d5e2b4 0 18%, transparent 19%),
+    radial-gradient(ellipse at 78% 10%, #c9d7a4 0 14%, transparent 15%),
+    linear-gradient(180deg, #cbb892 0 10px, #b7c49a 10px);
+  border-radius: 0 0 48% 48% / 0 0 100% 100%;
+  z-index: 0;
+}
+.life4 .house {
+  --plaster: #f4eadc;
+  --mortar: #e4d2b8;
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1.15fr 1fr;
   grid-template-rows: auto auto auto;
-  margin-top: 70px;
-  border: var(--wall);
+  margin-top: 0;
+  padding: 10px 10px 0;
+  gap: 10px;
+  background: var(--mortar);
+  border: 12px solid var(--plaster);
   border-top: 0;
-  background: #3a2a20;
-  gap: 3px;
+  border-radius: 2px 2px 0 0;
+  box-shadow:
+    inset 0 0 0 3px #e7d4b6,
+    0 0 0 1px #c9b089,
+    0 22px 0 #b08968,
+    0 34px 28px -20px rgba(50, 28, 12, 0.45);
 }
 .life4 .roof {
-  position: absolute;
-  left: -3%;
-  right: -3%;
-  top: -64px;
-  height: 66px;
-  background: #a8391f;
-  clip-path: polygon(6% 100%, 50% 0, 94% 100%);
+  position: relative;
+  grid-column: 1 / -1;
+  height: 148px;
+  margin: 0 -26px;
+  background:
+    repeating-linear-gradient(
+      105deg,
+      #8a3828 0 16px,
+      #a34832 16px 18px,
+      #732e22 18px 34px
+    );
+  clip-path: polygon(2% 100%, 50% 0, 98% 100%);
+  filter: drop-shadow(0 8px 0 #5a2818);
+  z-index: 2;
 }
 .life4 .roof::after {
   content: "";
   position: absolute;
-  inset: 10px 14% 0;
-  background: #c2502c;
-  clip-path: polygon(0 100%, 50% 0, 100% 100%);
-  opacity: 0.35;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 228, 190, 0.28), transparent 42%),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 13px,
+      rgba(50, 16, 8, 0.18) 13px 14px
+    );
+  clip-path: polygon(2% 100%, 50% 0, 98% 100%);
+}
+.life4 .chimney {
+  position: absolute;
+  right: 16%;
+  top: 54px;
+  width: 42px;
+  height: 78px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      #a85a48 0 8px,
+      #c4a48a 8px 11px
+    );
+  box-shadow:
+    inset 0 0 0 2px #4a2c22,
+    inset 0 -10px 0 #3e241c;
+  z-index: 3;
+}
+.life4 .chimney::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: -6px;
+  height: 10px;
+  background: #4a2c22;
+  border-radius: 1px;
+}
+.life4 .chimney::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  height: 7px;
+  background: #24140e;
+  border-radius: 1px;
+  box-shadow: 0 -10px 8px 2px rgba(80, 80, 80, 0.15);
+}
+.life4 .eave {
+  position: relative;
+  grid-column: 1 / -1;
+  height: 16px;
+  margin: -6px -18px 0;
+  background: linear-gradient(180deg, #7a4630, #4e2a1c);
+  border-radius: 2px;
+  box-shadow: 0 8px 12px rgba(40, 18, 8, 0.28);
+  z-index: 4;
 }
 .life4 .floor-slab {
   grid-column: 1 / -1;
-  height: 14px;
-  background: repeating-linear-gradient(90deg, #c79a6a 0 46px, #bb8d5e 46px 48px);
+  height: 22px;
+  margin: 0 -10px;
+  background:
+    linear-gradient(180deg, #efe2cc 0 6px, #d7c09a 6px 10px, #b8926a 10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .life4 .room {
@@ -1419,8 +1521,10 @@ body[data-side="life"] {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 16px;
-  background: repeating-linear-gradient(90deg, #c79a6a 0 46px, #bb8d5e 46px 48px);
+  height: 12px;
+  background: linear-gradient(180deg, #fbf6ee, #e6d3b8);
+  box-shadow: 0 -1px 0 rgba(90, 66, 52, 0.22);
+  pointer-events: none;
 }
 .life4 .room > h2 {
   font: 600 12px/1 var(--sans);
@@ -1435,8 +1539,9 @@ body[data-side="life"] {
   min-height: 0;
   padding-bottom: 32px;
   background:
-    radial-gradient(ellipse at 80% 10%, rgba(255, 240, 210, 0.7), transparent 50%),
-    #f7e8d0;
+    linear-gradient(#c9a67a, #c9a67a) 0 58px / 100% 3px no-repeat,
+    radial-gradient(ellipse at 80% 0%, rgba(255, 244, 220, 0.85), transparent 46%),
+    linear-gradient(180deg, #fbf4e8, #f3e4cc);
 }
 .life4 .family-room > h2 {
   font: 400 clamp(28px, 3.6vw, 40px)/1.1 var(--serif);
@@ -1547,9 +1652,21 @@ body[data-side="life"] {
 .life4 .library-room {
   grid-column: 1 / -1;
   min-height: 0;
-  padding-bottom: 28px;
+  padding: 16px 44px 28px;
   background:
-    linear-gradient(180deg, #f6ead6 0%, #ead6b8 100%);
+    repeating-linear-gradient(
+      180deg,
+      #6a4330 0 18px,
+      #8d5c40 18px 20px,
+      #5c3828 20px 40px
+    ) left / 26px 100% no-repeat,
+    repeating-linear-gradient(
+      180deg,
+      #6a4330 0 18px,
+      #8d5c40 18px 20px,
+      #5c3828 20px 40px
+    ) right / 26px 100% no-repeat,
+    linear-gradient(180deg, #f6ead6, #ead6b8);
 }
 .life4 .library-room::after { display: none; }
 .life4 .library-room .slam {
@@ -1558,10 +1675,40 @@ body[data-side="life"] {
   border-top: 0;
 }
 
-.life4 .kitchen { background: #f6e3c8; }
-.life4 .bath { background: #dfe9e4; }
-.life4 .bedroom { background: #ecd9d2; }
-.life4 .living { background: #f1e6cc; }
+.life4 .kitchen {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 22%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 26px,
+      rgba(255, 255, 255, 0.28) 26px 27px
+    ),
+    #f4d2b4;
+}
+.life4 .bath {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent 30%),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 18px,
+      rgba(255, 255, 255, 0.35) 18px 19px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 18px,
+      rgba(255, 255, 255, 0.35) 18px 19px
+    ),
+    #d5e6df;
+}
+.life4 .bedroom {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255, 220, 200, 0.7), transparent 42%),
+    #f0ddd2;
+}
+.life4 .living {
+  background:
+    linear-gradient(180deg, #f8efd8, #e8d7b6);
+}
 .life4 .room-tease {
   margin: 0;
   font-size: 15px;
@@ -1585,8 +1732,14 @@ body[data-side="life"] {
   justify-content: flex-end;
   text-align: left;
   overflow: hidden;
-  border-radius: 6px 6px 0 0;
+  border-radius: 4px 4px 0 0;
+  box-shadow:
+    0 0 0 7px rgba(255, 250, 242, 0.72),
+    0 0 0 9px #c4a27a;
   transition: transform 0.35s var(--ease), filter 0.35s var(--ease);
+}
+.life4 .portal-door {
+  border-radius: 90px 90px 4px 4px;
 }
 @media (hover: hover) {
   .life4 .room-portal:hover { transform: translateY(-4px); filter: brightness(1.05); }
@@ -1834,11 +1987,14 @@ body[data-side="life"] {
 }
 
 @media (max-width: 860px) {
+  .life4 .house-yard { padding-top: 12px; }
   .life4 .house {
     grid-template-columns: 1fr;
-    margin-top: 56px;
+    margin-top: 0;
   }
-  .life4 .roof { top: -50px; height: 52px; }
+  .life4 .roof { height: 100px; margin-left: -16px; margin-right: -16px; }
+  .life4 .chimney { top: 18px; height: 52px; }
+  .life4 .eave { margin-left: -12px; margin-right: -12px; }
   .life4 .family-wall { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .life4 .family-wall > :nth-child(1) { grid-column: span 6; }
   .life4 .family-wall > :nth-child(2),

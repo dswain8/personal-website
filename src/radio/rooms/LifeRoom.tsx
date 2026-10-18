@@ -843,8 +843,11 @@ export default function LifeRoom() {
           </p>
         </header>
 
+        <div className="house-yard">
         <div className="house" id="house">
+          <div className="chimney" aria-hidden="true" />
           <div className="roof" aria-hidden="true" />
+          <div className="eave" aria-hidden="true" />
 
           <section
             className="room family-room"
@@ -893,6 +896,7 @@ export default function LifeRoom() {
           </section>
 
           <div className="floor-slab" aria-hidden="true" />
+        </div>
         </div>
 
         <NextSide
