@@ -84,7 +84,7 @@ export const BENCH: BenchProject[] = [
     name: "The Postcard Desk",
     status: "Live",
     statusKind: "live",
-    pitch: "Claude Code as the backend — cron pokes an agent, the app just reads JSON.",
+    pitch: "A desk that stays honest when the sources go quiet.",
     what: "A personal dashboard where Claude Code is the backend. A cron job pokes a headless agent; the agent writes JSON; the app reads it.",
     why: "Every AI dashboard tries to be live and ends up stale. This one is honest about it.",
     trick:
@@ -101,7 +101,7 @@ export const BENCH: BenchProject[] = [
     name: "Wonder Journal",
     status: "Runs on your laptop",
     statusKind: "local",
-    pitch: "A curiosity journal for kids — answer first, then picture and slow read-aloud.",
+    pitch: "Slow answers, kept on the machine.",
     what: "A curiosity journal I built for my daughter. A picture clue, a slow read-aloud, and a journal that stays on the laptop.",
     why: "Kids do not need another chatbot. They need curiosity answered well.",
     trick:
@@ -121,7 +121,7 @@ export const BENCH: BenchProject[] = [
     name: "PM Dojo",
     status: "Live",
     statusKind: "live",
-    pitch: "Timed PM sparring on a wiki of 258+ sources — rounds, rewrites, score.",
+    pitch: "Reps for PM judgment, under a clock.",
     what: "A sparring arena for PM writing and judgment, built on a wiki of 258+ sources. Timed rounds and scored rewrites.",
     why: "PM knowledge compounds slowly. The principle was right there; the muscle wasn't.",
     trick:
@@ -138,7 +138,7 @@ export const BENCH: BenchProject[] = [
     name: "Lenny Boardroom",
     status: "Offline",
     statusKind: "offline",
-    pitch: "Lenny Buildathon: three operator lenses pressure-test a decision into a memo.",
+    pitch: "Bring a decision. Leave with a memo you can defend.",
     what: "A PM decision-sparring board built for Lenny Rachitsky’s Buildathon. You enter a decision; three operator lenses from Lenny’s archive pressure-test the tradeoff and return a memo — recommendation, risks, kill criteria, next actions.",
     why: "Fun way to spar PM materials against real operator voices, not generic advice.",
     trick:
@@ -156,7 +156,7 @@ export const BENCH: BenchProject[] = [
     name: "Trust website",
     status: "Live",
     statusKind: "live",
-    pitch: "First real ship — a family trust site taken live from scratch.",
+    pitch: "A family trust, finished and on the internet.",
     what: "My first real shipped site, built from scratch for a family trust.",
     why: "It taught me the difference between finishing something and actually shipping it.",
     trick: "Ship beats polish. A live URL taught more than another draft ever could.",
