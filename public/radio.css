@@ -1982,6 +1982,30 @@ body[data-theme="murphy"] .needle { background: #b3200f; box-shadow: 0 0 0 1px r
 body[data-theme="murphy"] .key { background: linear-gradient(180deg, #fbf5e6, #eadfc6); color: #2b1d12; box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(62,36,20,.45), 0 5px 0 #8b6a45, 0 6px 6px -2px rgba(0,0,0,.4); }
 body[data-theme="murphy"] .key:active, body[data-theme="murphy"] .key[aria-pressed="true"] { background: #e3d4b4; box-shadow: inset 0 2px 5px rgba(0,0,0,.25), 0 0 0 1px rgba(62,36,20,.45); }
 body[data-theme="murphy"] .key small { color: #5a3e26; }
+body[data-theme="murphy"] .key .k-face { display: flex; align-items: center; gap: 6px; }
+body[data-theme="murphy"] .key .k-name {
+  display: block;
+  margin-top: 3px;
+  max-width: 14ch;
+  font: 500 11px/1.2 var(--sans);
+  letter-spacing: 0;
+  color: #5a3e26;
+}
+body[data-side="radio"] .key { min-height: 76px; }
+@media (max-width: 860px) {
+  body[data-theme="murphy"] .key .k-name { display: none; }
+  body[data-side="radio"] .key { min-height: 52px; }
+}
+body[data-theme="murphy"] .face-hello {
+  margin-left: auto;
+  color: #f4ecd8;
+  font: 600 12px/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+body[data-theme="murphy"] .face-hello:hover { text-decoration: underline; text-underline-offset: 3px; }
+body[data-theme="murphy"] .face-hello:focus-visible { outline: 2px solid #f2c56b; outline-offset: 3px; }
 body[data-theme="murphy"] .kicon { color: #6b4a2c; }
 body[data-theme="murphy"] .key[aria-pressed="true"] .kled { background: #f2a43a; box-shadow: 0 0 8px #f2a43a; }
 /* brass knob */
