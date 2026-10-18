@@ -121,8 +121,8 @@ function StationPreview({ s }: { s: Station }) {
 export default function PocketRadio() {
   const navigate = useNavigate();
 
-  // Every home visit starts between stations (approved handoff).
-  const [v, setV] = useState(80);
+  // Open already tuned, so the first screen is a station.
+  const [v, setV] = useState(STATIONS[0].at);
   const [touched, setTouched] = useState(false);
   const [gliding, setGliding] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -528,14 +528,17 @@ export default function PocketRadio() {
                     <i className="kled" aria-hidden="true" />
                     <small aria-hidden="true">{i + 1}</small>
                     <span className="short" aria-hidden="true">
-                      <svg
-                        className="kicon"
-                        viewBox="0 0 16 16"
-                        width={16}
-                        height={16}
-                        dangerouslySetInnerHTML={{ __html: KEY_ICONS[s.key] }}
-                      />
-                      {s.short}
+                      <span className="k-face">
+                        <svg
+                          className="kicon"
+                          viewBox="0 0 16 16"
+                          width={16}
+                          height={16}
+                          dangerouslySetInnerHTML={{ __html: KEY_ICONS[s.key] }}
+                        />
+                        {s.short}
+                      </span>
+                      <span className="k-name">{s.name}</span>
                     </span>
                   </button>
                 ))}
@@ -625,13 +628,12 @@ export default function PocketRadio() {
                   </span>
                 </span>
               </div>
+              <a className="face-hello" href="#hello-h">
+                Say hello
+              </a>
             </div>
           </section>
         </div>
-
-        <a className="room-scroll" href="#hello-h">
-          Say hello
-        </a>
       </div>
 
       <section className="home-contact" aria-labelledby="hello-h">
