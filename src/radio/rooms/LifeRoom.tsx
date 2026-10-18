@@ -142,8 +142,6 @@ function BrandRoom({
   onToggleBrand: (key: string) => void;
 }) {
   const shelf = room.shelfId ? shelfById(room.shelfId) : null;
-  const [shelfShown, setShelfShown] = useState(false);
-  if (!revealed && shelfShown) setShelfShown(false);
 
   return (
     <section
@@ -174,16 +172,7 @@ function BrandRoom({
             Close
           </button>
           <p className="room-line">{room.line}</p>
-          {shelf && !shelfShown ? (
-            <button
-              type="button"
-              className="room-shelf-open"
-              onClick={() => setShelfShown(true)}
-            >
-              What I keep
-            </button>
-          ) : null}
-          {shelf && shelfShown ? (
+          {shelf ? (
             <>
               <RoomShelf
                 shelf={shelf}
@@ -539,15 +528,7 @@ function SlamBook({
   const isCover = page === "cover";
 
   return (
-    <section className="slam" aria-labelledby="slam-heading">
-      <header className="slam-head">
-        <p className="life-aspect-kicker">Slam book</p>
-        <h2 id="slam-heading">A book of my life.</h2>
-        <p>
-          Thindi queues, RCB hope, and the stamps I still tell people about.
-        </p>
-      </header>
-
+    <div className="slam">
       <div
         className={[
           "slam-book",
@@ -825,7 +806,7 @@ function SlamBook({
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -894,15 +875,25 @@ export default function LifeRoom() {
             />
           ))}
 
+          <section
+            className="room library-room"
+            aria-labelledby="library-heading"
+          >
+            <h2 id="library-heading">Library</h2>
+            <p className="family-room-lede">
+              The book of the house — Thindi queues, RCB hope, and the stamps
+              I still tell.
+            </p>
+            <SlamBook
+              page={slamPage}
+              setPage={setSlamPage}
+              activePin={activePin}
+              setActivePin={setActivePin}
+            />
+          </section>
+
           <div className="floor-slab" aria-hidden="true" />
         </div>
-
-        <SlamBook
-          page={slamPage}
-          setPage={setSlamPage}
-          activePin={activePin}
-          setActivePin={setActivePin}
-        />
 
         <NextSide
           prev={{ key: "try", name: "Try what I've made", label: "Back to" }}

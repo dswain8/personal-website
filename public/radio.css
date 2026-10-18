@@ -1544,6 +1544,20 @@ body[data-side="life"] {
 }
 
 /* Four rooms below — shut until you open a portal */
+.life4 .library-room {
+  grid-column: 1 / -1;
+  min-height: 0;
+  padding-bottom: 28px;
+  background:
+    linear-gradient(180deg, #f6ead6 0%, #ead6b8 100%);
+}
+.life4 .library-room::after { display: none; }
+.life4 .library-room .slam {
+  margin-top: 4px;
+  padding-top: 0;
+  border-top: 0;
+}
+
 .life4 .kitchen { background: #f6e3c8; }
 .life4 .bath { background: #dfe9e4; }
 .life4 .bedroom { background: #ecd9d2; }
@@ -1681,19 +1695,6 @@ body[data-side="life"] {
   font: 400 18px/1.45 var(--serif);
   color: #3a2a20;
 }
-.life4 .room-shelf-open {
-  margin-top: 16px;
-  align-self: flex-start;
-  border: 1px solid rgba(43, 29, 22, 0.28);
-  border-radius: 999px;
-  background: transparent;
-  color: #2b1d16;
-  min-height: 36px;
-  padding: 0 14px;
-  font: 600 13px/1 var(--sans);
-  cursor: pointer;
-}
-.life4 .room-shelf-open:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .life4 .room-shelf-fine {
   margin: 4px 0 0;
   font-size: 13px;
