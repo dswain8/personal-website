@@ -1,7 +1,7 @@
 /**
  * Quiet page data.
- * Calm tone: synthesized in `audio.ts` as a soft 432 Hz pad (Web Audio API) —
- * no audio file, no license. UI label is "calm tone", not "drone".
+ * The soft tone is synthesized in `audio.ts` (Web Audio, no file, no license).
+ * The page only labels it "Soft tone".
  */
 
 /** Thought chains for the Quiet field — each opens with the floating label. */
@@ -65,21 +65,3 @@ export const STARS: { x: number; y: number; s: number; d: number }[] = [
   { x: 73, y: 40, s: 0.5, d: 1.6 },
   { x: 88, y: 36, s: 0.7, d: 0.1 },
 ];
-
-export const VOICES = [
-  {
-    name: "Sadhguru",
-    note: "YouTube",
-    href: "https://www.youtube.com/@sadhguru",
-  },
-  {
-    name: "Dandapani",
-    note: "YouTube",
-    href: "https://www.youtube.com/@Dandapani",
-  },
-  {
-    name: "Swami Sarvapriyananda",
-    note: "Vedanta Society of New York, YouTube",
-    href: "https://www.youtube.com/@VedantaNY",
-  },
-] as const;
