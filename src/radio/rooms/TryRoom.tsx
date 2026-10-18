@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NextSide } from "../components/NextSide";
 import { StationStrip } from "../components/StationStrip";
@@ -6,7 +6,6 @@ import {
   BENCH,
   GADGET_SVG,
   TOOLS,
-  TOOL_SHAPES,
   type BenchProject,
 } from "../data/bench";
 
@@ -18,10 +17,44 @@ function BuildCard({ p }: { p: BenchProject }) {
   return (
     <>
       <header className="bc-head">
-        <p className="bc-k">Build card</p>
-        <h2>{p.name}</h2>
-        <span className="bc-status">{p.status}</span>
+        <p className="bc-k">On the tag</p>
+        <div className="bc-title-row">
+          <h2>{p.name}</h2>
+          <span className={`bc-status bc-status--${p.statusKind}`}>
+            {p.status}
+          </span>
+        </div>
+        <p className="bc-pitch">{p.pitch}</p>
       </header>
+
+      <div className="bc-acts">
+        {p.links.length ? (
+          p.links.map(([label, href], k) =>
+            isInternal(href) ? (
+              <Link
+                key={label}
+                className={`bc-btn${k === 0 ? " primary" : ""}`}
+                to={href}
+              >
+                {label}
+              </Link>
+            ) : (
+              <a
+                key={label}
+                className={`bc-btn${k === 0 ? " primary" : ""}`}
+                href={href}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {label}
+              </a>
+            ),
+          )
+        ) : (
+          <span className="bc-off">Private for now. No button to press.</span>
+        )}
+      </div>
+
       <dl className="bc-grid">
         <div>
           <dt>What it is</dt>
@@ -52,44 +85,25 @@ function BuildCard({ p }: { p: BenchProject }) {
           </dd>
         </div>
       </dl>
-      <div className="bc-acts">
-        {p.links.length ? (
-          p.links.map(([label, href], k) =>
-            isInternal(href) ? (
-              <Link
-                key={label}
-                className={`bc-btn${k === 0 ? " primary" : ""}`}
-                to={href}
-              >
-                {label}
-              </Link>
-            ) : (
-              <a
-                key={label}
-                className={`bc-btn${k === 0 ? " primary" : ""}`}
-                href={href}
-                rel="noreferrer"
-              >
-                {label}
-              </a>
-            ),
-          )
-        ) : (
-          <span className="bc-off">Private for now. No button to press.</span>
-        )}
-      </div>
     </>
   );
 }
 
 export default function TryRoom() {
   const [selected, setSelected] = useState(0);
+  const [cardTick, setCardTick] = useState(0);
   const p = BENCH[selected];
+
+  useEffect(() => {
+    setCardTick((n) => n + 1);
+  }, [selected]);
 
   const pick = (i: number, focus = false) => {
     setSelected(i);
     if (focus) {
-      const btn = document.querySelectorAll<HTMLButtonElement>(".gadget")[i];
+      const btn = document.querySelectorAll<HTMLButtonElement>(
+        ".bench-page .gadget",
+      )[i];
       btn?.focus();
     }
     if (matchMedia("(max-width: 860px)").matches) {
@@ -107,35 +121,40 @@ export default function TryRoom() {
       <StationStrip stationKey="try" />
       <div className="wrap bench-page">
         <header className="bp-head">
+          <p className="bp-stamp" aria-hidden="true">
+            Workshop
+          </p>
           <h1 className="reveal">I tinker.</h1>
           <p className="lede reveal">
-            AI is how I explore different ideas and turn the good ones into
-            something that runs. These are the things on my bench. Pick one up.
+            AI is how I explore different ideas until one of them runs. Pick
+            something up.
           </p>
         </header>
 
         <div className="workshop" id="workshop">
           <div className="pegboard" aria-label="Tools I reach for">
-            {TOOLS.map((t, i) => (
+            {TOOLS.map((t) => (
               <span
-                key={t}
-                className={`tool${p.stack.includes(t) ? " lit" : ""}`}
-                data-tool={t}
+                key={t.name}
+                className={`tool${p.stack.includes(t.name) ? " lit" : ""}`}
+                data-tool={t.name}
               >
                 <svg
                   viewBox="0 0 42 48"
                   width={42}
                   height={48}
                   aria-hidden="true"
-                  dangerouslySetInnerHTML={{
-                    __html: TOOL_SHAPES[i % TOOL_SHAPES.length],
-                  }}
+                  dangerouslySetInnerHTML={{ __html: t.shape }}
                 />
-                <b>{t}</b>
+                <b>{t.name}</b>
               </span>
             ))}
           </div>
-          <div className="bench" role="group" aria-label="Projects on the bench">
+          <div
+            className="bench"
+            role="group"
+            aria-label="Projects on the bench"
+          >
             {BENCH.map((proj, i) => (
               <button
                 key={proj.key}
@@ -168,7 +187,12 @@ export default function TryRoom() {
           </div>
         </div>
 
-        <article className="buildcard" id="buildcard" aria-live="polite">
+        <article
+          className="buildcard"
+          id="buildcard"
+          aria-live="polite"
+          key={cardTick}
+        >
           <BuildCard p={p} />
         </article>
 
