@@ -1,0 +1,24 @@
+{
+  "name": "Sakshi · The Witness",
+  "short_name": "Sakshi",
+  "description": "The Witness Consciousness · A Contemplative Sanctuary & Desk Altar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080907",
+  "theme_color": "#080907",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

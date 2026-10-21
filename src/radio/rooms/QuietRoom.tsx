@@ -200,7 +200,7 @@ export default function QuietRoom() {
 
         {viewMode === "sakshi" && (
           <a
-            href="https://sakshi.debjeetswain.com"
+            href="/sakshi/"
             target="_blank"
             rel="noreferrer"
             style={{

@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/_expo/:path*", "destination": "/_expo/:path*" },
+    { "source": "/assets/node_modules/:path*", "destination": "/assets/node_modules/:path*" },
     { "source": "/sakshi/:match*", "destination": "/sakshi/:match*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
