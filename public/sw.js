@@ -1,13 +1,13 @@
-const CACHE_NAME = 'sakshi-sanctuary-v1';
+const CACHE_NAME = 'sakshi-sanctuary-v3';
 
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/favicon.ico',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/apple-touch-icon.png',
+  '/sakshi/',
+  '/sakshi/index.html',
+  '/sakshi/manifest.json',
+  '/sakshi/favicon.ico',
+  '/sakshi/icon-192.png',
+  '/sakshi/icon-512.png',
+  '/sakshi/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', (event) => {
@@ -31,45 +31,31 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
-  const url = new URL(event.request.url);
-
-  // For HTML navigations, try network then cache fallback
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          return response;
-        })
-        .catch(async () => {
-          const cached = await caches.match(event.request);
-          if (cached) return cached;
-          return (await caches.match('/index.html')) || (await caches.match('/'));
-        }),
-    );
-    return;
-  }
-
-  // For static assets (scripts, fonts, wasm, images), try cache first, then network
+  // Network-first strategy so deployments appear immediately when online,
+  // with offline fallback from cache.
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200 && response.type === 'basic') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, clone);
+          });
         }
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, clone);
-        });
         return response;
-      });
-    }),
+      })
+      .catch(async () => {
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        if (event.request.mode === 'navigate') {
+          return (
+            (await caches.match('/sakshi/index.html')) ||
+            (await caches.match('/sakshi/'))
+          );
+        }
+        return Response.error();
+      }),
   );
 });

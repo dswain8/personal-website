@@ -240,7 +240,7 @@ export default function QuietRoom() {
             }}
           >
             <iframe
-              src="/sakshi/"
+              src="/sakshi/?v=3"
               title="Sakshi · The Witness"
               style={{
                 width: "100%",
