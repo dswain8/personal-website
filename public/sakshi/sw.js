@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sakshi-sanctuary-v4';
+const CACHE_NAME = 'sakshi-sanctuary-v5';
 
 const STATIC_ASSETS = [
   '/sakshi/',
